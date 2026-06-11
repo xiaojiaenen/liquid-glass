@@ -37,15 +37,21 @@
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  /* 外圈细亮边 + 内圈高光,模拟玻璃棱镜反光 */
+}
+
+/* glass 模式下 rim light 由 SVG 滤镜绘制,这里只补一圈极细边框 */
+.liquid-glass.is-glass .liquid-glass__specular {
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.22);
+}
+
+/* fallback 模式没有 SVG 高光,用 CSS 模拟棱镜反光 */
+.liquid-glass.is-fallback .liquid-glass__specular {
   box-shadow:
     inset 0 1px 1px rgba(255, 255, 255, 0.55),
     inset 0 -1px 1px rgba(255, 255, 255, 0.18),
     inset 0 0 0 1px rgba(255, 255, 255, 0.18);
 }
-
-/* 顶部斜向高光 */
-.liquid-glass__specular::before {
+.liquid-glass.is-fallback .liquid-glass__specular::before {
   content: '';
   position: absolute;
   inset: 0;

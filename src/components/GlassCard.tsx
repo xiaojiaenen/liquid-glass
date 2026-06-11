@@ -10,9 +10,11 @@ export function GlassCard({
   return (
     <LiquidGlass
       radius={32}
-      bezel={20}
-      strength={1.4}
+      bezel={24}
+      thickness={40}
+      strength={1}
       blur={0.5}
+      specularOpacity={0.4}
       tint="rgba(255,255,255,0.1)"
       style={{ width: 320, padding: 28, flexDirection: 'column' }}
     >

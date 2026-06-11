@@ -12,9 +12,11 @@ export function GlassButton({
       as="button"
       onClick={onClick}
       radius={22}
-      bezel={11}
-      strength={1.5}
+      bezel={14}
+      thickness={26}
+      strength={1}
       blur={0}
+      specularOpacity={0.5}
       tint="rgba(255,255,255,0.14)"
       style={{ padding: '12px 26px', fontSize: 16, fontWeight: 600 }}
     >

@@ -1,10 +1,10 @@
 export { LiquidGlass } from './LiquidGlass'
 export type { LiquidGlassProps } from './LiquidGlass'
 export { useLiquidGlass } from './useLiquidGlass'
-export { generateDisplacementMap } from './displacementMap'
+export { generateLiquidGlassMaps } from './displacementMap'
 export type {
   BezelProfile,
-  DisplacementMapOptions,
-  DisplacementMapResult,
+  LiquidGlassMapOptions,
+  LiquidGlassMaps,
 } from './displacementMap'
 export { supportsSvgBackdrop } from './capabilities'

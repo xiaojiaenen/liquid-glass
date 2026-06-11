@@ -10,13 +10,21 @@ export interface LiquidGlassProps {
   radius?: number
   /** 棱镜宽度(px):边缘折射区厚度 */
   bezel?: number
+  /** 玻璃厚度(px):折射光穿过深度,越大折射越强 */
+  thickness?: number
+  /** 折射率,文章用 1.5 */
+  refractiveIndex?: number
   /** 截面轮廓 */
   profile?: BezelProfile
-  /** 折射强度 */
+  /** 折射强度倍率 */
   strength?: number
   /** 磨砂模糊半径 */
   blur?: number
-  /** 着色:浅色玻璃用半透明白,深色玻璃用半透明黑 */
+  /** 镜面高光强度 0..1 */
+  specularOpacity?: number
+  /** 光源方向角(度) */
+  specularAngle?: number
+  /** 着色:半透明背景 */
   tint?: string
   className?: string
   style?: CSSProperties
@@ -25,21 +33,22 @@ export interface LiquidGlassProps {
 }
 
 /**
- * 液态玻璃容器:三层叠加
- *  1. 折射层  backdrop-filter: url(#filter)  —— 弯曲背后内容
- *  2. 着色层  半透明背景色
- *  3. 高光层  inset box-shadow + 渐变,模拟边缘反光
- *
- * 非 Chromium 浏览器自动降级为 blur 毛玻璃(.is-fallback)。
+ * 液态玻璃容器。
+ * Chromium:backdrop-filter 调用内联 SVG 滤镜(折射 + 高光)。
+ * 非 Chromium:自动降级为 blur 毛玻璃(.is-fallback)。
  */
 export function LiquidGlass({
   children,
   radius = 28,
   bezel = 16,
+  thickness,
+  refractiveIndex = 1.5,
   profile = 'squircle',
   strength = 1,
   blur = 0,
-  tint = 'rgba(255, 255, 255, 0.12)',
+  specularOpacity = 0.5,
+  specularAngle = -60,
+  tint = 'rgba(255, 255, 255, 0.1)',
   className = '',
   style,
   as = 'div',
@@ -47,16 +56,23 @@ export function LiquidGlass({
 }: LiquidGlassProps) {
   const reactId = useId()
   const filterId = `lg-${reactId.replace(/[:]/g, '')}`
-  const { ref, map, scale, supported } = useLiquidGlass({
+  const { ref, maps, scale, supported } = useLiquidGlass({
     radius,
     bezel,
+    thickness,
+    refractiveIndex,
     profile,
     strength,
+    specularOpacity,
+    specularAngle,
   })
 
   const refractionStyle: CSSProperties =
-    supported && map
-      ? { backdropFilter: `url(#${filterId})`, WebkitBackdropFilter: `url(#${filterId})` }
+    supported && maps
+      ? {
+          backdropFilter: `url(#${filterId})`,
+          WebkitBackdropFilter: `url(#${filterId})`,
+        }
       : {}
 
   const Tag = as
@@ -74,28 +90,20 @@ export function LiquidGlass({
         } as CSSProperties
       }
     >
-      {/* 折射层:实际产生扭曲的伪元素由 CSS 绘制,这里只贴 backdrop-filter */}
       <span
         aria-hidden
         className="liquid-glass__refraction"
         style={{ borderRadius: radius, ...refractionStyle }}
       />
-      {/* 高光描边层 */}
       <span
         aria-hidden
         className="liquid-glass__specular"
         style={{ borderRadius: radius }}
       />
-      {/* 内容 */}
       <span className="liquid-glass__content">{children}</span>
 
-      {supported && map && (
-        <LiquidGlassFilter
-          id={filterId}
-          map={map}
-          scale={scale}
-          blur={blur}
-        />
+      {supported && maps && (
+        <LiquidGlassFilter id={filterId} maps={maps} scale={scale} blur={blur} />
       )}
     </Tag>
   )
