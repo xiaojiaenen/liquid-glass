@@ -50,7 +50,7 @@ export function GlassDatePicker({ value, onChange, width = 280 }: GlassDatePicke
     <LiquidGlass
       radius={16}
       bezelWidth={18}
-      glassThickness={90}
+      glassThickness={55}
       refractionScale={0.9}
       blur={0.3}
       tint="rgba(255,255,255,0.06)"

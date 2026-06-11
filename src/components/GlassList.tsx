@@ -19,7 +19,7 @@ export function GlassList({ items, width = 320 }: GlassListProps) {
     <LiquidGlass
       radius={16}
       bezelWidth={18}
-      glassThickness={85}
+      glassThickness={50}
       refractionScale={0.9}
       blur={0.3}
       tint="rgba(255,255,255,0.05)"

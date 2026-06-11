@@ -14,10 +14,10 @@ export function GlassCard({
     <LiquidGlass
       radius={28}
       bezelWidth={55}
-      glassThickness={130}
-      refractionScale={1.1}
-      blur={0.2}
-      saturate={1.3}
+      glassThickness={70}
+      refractionScale={1}
+      blur={0.3}
+      saturate={1.2}
       tint="rgba(255,255,255,0.03)"
       style={{ width: 300, padding: 26, flexDirection: 'column' }}
     >

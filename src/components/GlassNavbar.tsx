@@ -13,7 +13,7 @@ export function GlassNavbar({ title, left, right, onBack }: GlassNavbarProps) {
     <LiquidGlass
       radius={16}
       bezelWidth={16}
-      glassThickness={70}
+      glassThickness={50}
       refractionScale={0.85}
       blur={0.3}
       tint="rgba(255,255,255,0.05)"

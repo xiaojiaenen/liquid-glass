@@ -46,7 +46,7 @@ export function GlassModal({ open, onClose, title, children, width = 320 }: Glas
         <LiquidGlass
           radius={20}
           bezelWidth={24}
-          glassThickness={120}
+          glassThickness={70}
           refractionScale={0.95}
           blur={0.4}
           tint="rgba(255,255,255,0.08)"

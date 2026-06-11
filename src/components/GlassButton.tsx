@@ -26,11 +26,11 @@ export function GlassButton({
       onClick={onClick}
       radius={h / 2}
       bezelWidth={isSmall ? 16 : 22}
-      glassThickness={prominent ? 65 : 95}
+      glassThickness={prominent ? 50 : 70}
       refractionScale={1}
-      blur={0.2}
-      saturate={1.2}
-      tint={prominent ? 'rgba(10,132,255,0.5)' : 'rgba(255,255,255,0.06)'}
+      blur={0.3}
+      saturate={1.3}
+      tint={prominent ? 'rgba(10,132,255,0.45)' : 'rgba(255,255,255,0.04)'}
       style={{
         height: h,
         padding: `0 ${px}px`,

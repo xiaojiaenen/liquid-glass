@@ -16,7 +16,7 @@ export function GlassSegmented({
     <LiquidGlass
       radius={H / 2}
       bezelWidth={12}
-      glassThickness={50}
+      glassThickness={35}
       refractionScale={0.8}
       blur={0.2}
       tint="rgba(255,255,255,0.06)"

@@ -49,7 +49,7 @@ export function GlassSelect({
         <LiquidGlass
           radius={12}
           bezelWidth={16}
-          glassThickness={65}
+          glassThickness={45}
           refractionScale={0.9}
           blur={0.2}
           tint="rgba(255,255,255,0.06)"

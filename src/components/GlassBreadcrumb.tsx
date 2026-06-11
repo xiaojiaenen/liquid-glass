@@ -15,7 +15,7 @@ export function GlassBreadcrumb({ items }: GlassBreadcrumbProps) {
     <LiquidGlass
       radius={10}
       bezelWidth={10}
-      glassThickness={45}
+      glassThickness={30}
       refractionScale={0.7}
       blur={0.15}
       tint="rgba(255,255,255,0.05)"
