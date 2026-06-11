@@ -88,6 +88,6 @@ button.liquid-glass:hover {
     inset 0 0 14px rgba(255, 255, 255, 0.04);
 }
 button.liquid-glass:active {
-  transform: scale(0.96);
-  transition: transform 0.1s ease;
+  filter: brightness(0.92);
+  transition: filter 0.1s ease;
 }

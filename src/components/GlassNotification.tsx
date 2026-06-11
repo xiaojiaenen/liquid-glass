@@ -1,5 +1,5 @@
 import { LiquidGlass } from '../lib/LiquidGlass'
-import { fontStack, spring } from '../lib/tokens'
+import { fontStack } from '../lib/tokens'
 
 export interface GlassNotificationProps {
   icon?: string
@@ -21,11 +21,11 @@ export function GlassNotification({
   return (
     <div
       style={{
-        transition: `transform 0.3s ${spring.default}`,
+        transition: `filter 0.3s ease`,
         cursor: 'default',
       }}
-      onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.02)' }}
-      onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)' }}
+      onMouseEnter={(e) => { e.currentTarget.style.filter = 'brightness(1.06)' }}
+      onMouseLeave={(e) => { e.currentTarget.style.filter = 'brightness(1)' }}
     >
     <LiquidGlass
       radius={22}

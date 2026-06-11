@@ -87,11 +87,10 @@ export function GlassSelect({
             top: '100%',
             left: 0,
             right: 0,
-            marginTop: 6,
             zIndex: 100,
             opacity: open ? 1 : 0,
-            transform: `translateY(${open ? 0 : -8}px)`,
-            transition: `all 0.2s ${spring.default}`,
+            marginTop: open ? 6 : -2,
+            transition: `opacity 0.2s ${spring.default}, margin-top 0.2s ${spring.default}`,
           }}
         >
           <LiquidGlass

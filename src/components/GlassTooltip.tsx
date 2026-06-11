@@ -12,11 +12,12 @@ export function GlassTooltip({ content, children, position = 'top' }: GlassToolt
   const [show, setShow] = useState(false)
   const timerRef = useRef<number>(0)
 
-  const posMap = {
-    top: { bottom: '100%', left: '50%', transform: 'translateX(-50%)', marginBottom: 8 },
-    bottom: { top: '100%', left: '50%', transform: 'translateX(-50%)', marginTop: 8 },
-    left: { right: '100%', top: '50%', transform: 'translateY(-50%)', marginRight: 8 },
-    right: { left: '100%', top: '50%', transform: 'translateY(-50%)', marginLeft: 8 },
+  // 用 margin 做定位偏移,避免 transform(会创建合成层破坏 backdrop-filter)
+  const posMap: Record<string, React.CSSProperties> = {
+    top:    { bottom: '100%', left: 0, right: 0, display: 'flex', justifyContent: 'center', marginBottom: 8 },
+    bottom: { top: '100%',    left: 0, right: 0, display: 'flex', justifyContent: 'center', marginTop: 8 },
+    left:   { right: '100%',  top: '50%', display: 'flex', alignItems: 'center', marginRight: 8, marginTop: '-0.6em' },
+    right:  { left: '100%',   top: '50%', display: 'flex', alignItems: 'center', marginLeft: 8, marginTop: '-0.6em' },
   }
 
   return (
@@ -38,8 +39,7 @@ export function GlassTooltip({ content, children, position = 'top' }: GlassToolt
             zIndex: 9999,
             ...posMap[position],
             opacity: show ? 1 : 0,
-            transform: `scale(${show ? 1 : 0.92}) ${posMap[position].transform || ''}`,
-            transition: `opacity 0.18s ${spring.default}, transform 0.25s ${spring.default}`,
+            transition: `opacity 0.18s ${spring.default}`,
             pointerEvents: 'none',
           }}
         >

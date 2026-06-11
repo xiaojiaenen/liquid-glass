@@ -25,14 +25,21 @@ export function GlassToast({ message, icon = '✓', duration = 2000, onClose }: 
       style={{
         position: 'fixed',
         top: 60,
-        left: '50%',
-        transform: `translateX(-50%) translateY(${visible ? 0 : -20}px)`,
-        opacity: visible ? 1 : 0,
-        transition: `all 0.3s ${spring.default}`,
+        left: 0,
+        right: 0,
+        display: 'flex',
+        justifyContent: 'center',
         zIndex: 9999,
         pointerEvents: visible ? 'auto' : 'none',
       }}
     >
+      <div
+        style={{
+          opacity: visible ? 1 : 0,
+          marginTop: visible ? 0 : -20,
+          transition: `opacity 0.3s ${spring.default}, margin-top 0.3s ${spring.default}`,
+        }}
+      >
       <LiquidGlass
         radius={20}
         bezelWidth={20}
@@ -47,6 +54,7 @@ export function GlassToast({ message, icon = '✓', duration = 2000, onClose }: 
           <span style={{ fontSize: 15, fontWeight: 500, letterSpacing: -0.3 }}>{message}</span>
         </div>
       </LiquidGlass>
+      </div>
     </div>
   )
 }

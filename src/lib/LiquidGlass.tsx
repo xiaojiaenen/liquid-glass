@@ -31,6 +31,8 @@ export interface LiquidGlassProps {
   profile?: BezelProfile
   /** 启用鼠标视差:高光跟随指针方向,默认 false */
   parallax?: boolean
+  /** 背景模糊(px):与折射合并在同一个 backdrop-filter 中,避免嵌套冲突。默认 0 = 无 */
+  backdropBlur?: number
 }
 
 /**
@@ -54,6 +56,7 @@ export function LiquidGlass({
   onClick,
   profile,
   parallax = false,
+  backdropBlur = 0,
 }: LiquidGlassProps) {
   const reactId = useId()
   const filterId = `lg-${reactId.replace(/[:]/g, '')}`
@@ -87,8 +90,8 @@ export function LiquidGlass({
   const refractionStyle: CSSProperties =
     supported && maps
       ? {
-          backdropFilter: `url(#${filterId})`,
-          WebkitBackdropFilter: `url(#${filterId})`,
+          backdropFilter: `${backdropBlur > 0 ? `blur(${backdropBlur}px) ` : ''}url(#${filterId})`,
+          WebkitBackdropFilter: `${backdropBlur > 0 ? `blur(${backdropBlur}px) ` : ''}url(#${filterId})`,
         }
       : {}
 

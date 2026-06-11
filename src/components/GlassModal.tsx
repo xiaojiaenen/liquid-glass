@@ -28,7 +28,6 @@ export function GlassModal({ open, onClose, title, children, width = 320 }: Glas
         alignItems: 'center',
         justifyContent: 'center',
         background: open ? 'rgba(0,0,0,0.5)' : 'transparent',
-        backdropFilter: open ? 'blur(20px)' : 'none',
         opacity: open ? 1 : 0,
         pointerEvents: open ? 'auto' : 'none',
         transition: `all 0.25s ease`,
@@ -37,9 +36,8 @@ export function GlassModal({ open, onClose, title, children, width = 320 }: Glas
     >
       <div
         style={{
-          transform: `scale(${open ? 1 : 0.95})`,
           opacity: open ? 1 : 0,
-          transition: `all 0.3s ${spring.default}`,
+          transition: `opacity 0.3s ${spring.default}`,
         }}
         onClick={(e) => e.stopPropagation()}
       >
@@ -50,7 +48,12 @@ export function GlassModal({ open, onClose, title, children, width = 320 }: Glas
           refractionScale={0.95}
           blur={0.5}
           tint="rgba(255,255,255,0.08)"
-          style={{ width, padding: '20px 20px 14px', flexDirection: 'column' }}
+          style={{
+            width,
+            padding: '20px 20px 14px',
+            flexDirection: 'column',
+            transition: `opacity 0.3s ${spring.default}`,
+          }}
         >
           {title && (
             <h3

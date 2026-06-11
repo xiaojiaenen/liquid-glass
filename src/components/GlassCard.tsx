@@ -1,5 +1,5 @@
 import { LiquidGlass } from '../lib/LiquidGlass'
-import { fontStack, spring } from '../lib/tokens'
+import { fontStack } from '../lib/tokens'
 
 export interface GlassCardProps {
   title: string
@@ -15,15 +15,13 @@ export function GlassCard({
   return (
     <div
       style={{
-        transition: `transform 0.3s ${spring.default}, filter 0.25s ease`,
+        transition: `filter 0.25s ease`,
         cursor: 'default',
       }}
       onMouseEnter={(e) => {
-        e.currentTarget.style.transform = 'scale(1.02)'
-        e.currentTarget.style.filter = 'brightness(1.05)'
+        e.currentTarget.style.filter = 'brightness(1.06)'
       }}
       onMouseLeave={(e) => {
-        e.currentTarget.style.transform = 'scale(1)'
         e.currentTarget.style.filter = 'brightness(1)'
       }}
     >

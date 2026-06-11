@@ -50,25 +50,17 @@ export function GlassSheet({
   useEffect(() => {
     if (open) {
       setVisible(true)
-      // 下一个 tick 触发入场动画
-      requestAnimationFrame(() => {
-        setTranslateY(0)
-      })
+      setTranslateY(0)
     } else {
-      setTranslateY(300)
-      const timer = setTimeout(() => setVisible(false), 300)
+      setTranslateY(0)
+      const timer = setTimeout(() => setVisible(false), 400)
       return () => clearTimeout(timer)
     }
   }, [open])
 
   useEffect(() => {
-    if (!open) {
-      setTranslateY(300)
-    } else {
-      // 重置拖拽偏移
-      translateRef.current = 0
-      setTranslateY(0)
-    }
+    setTranslateY(0)
+    translateRef.current = 0
   }, [open])
 
   // Escape 关闭
@@ -135,10 +127,8 @@ export function GlassSheet({
           position: 'absolute',
           inset: 0,
           background: open ? 'rgba(0,0,0,0.4)' : 'transparent',
-          backdropFilter: open ? 'blur(10px)' : 'none',
           opacity: open ? 1 : 0,
           transition: `all 0.35s ${spring.gentle}`,
-          WebkitBackdropFilter: open ? 'blur(10px)' : 'none',
         }}
       />
 
@@ -152,14 +142,10 @@ export function GlassSheet({
         style={{
           position: 'relative',
           zIndex: 2,
-          transform: `translateY(${translateY}px)`,
-          transition: dragging
-            ? 'none'
-            : `transform 0.4s ${spring.gentle}, opacity 0.3s ease`,
           opacity: open ? 1 : 0,
-          touchAction: 'none',
-          userSelect: 'none',
+          transition: `opacity 0.4s ${spring.gentle}`,
           maxHeight: detent === 'full' ? '92vh' : detent === 'half' ? '55vh' : '75vh',
+          pointerEvents: open ? 'auto' : 'none',
         }}
       >
         <LiquidGlass
@@ -180,6 +166,10 @@ export function GlassSheet({
             color: '#fff',
             borderBottomLeftRadius: 0,
             borderBottomRightRadius: 0,
+            transform: dragging || translateY !== 0 ? `translateY(${translateY}px)` : undefined,
+            transition: dragging ? 'none' : `transform 0.4s ${spring.gentle}`,
+            touchAction: 'none',
+            userSelect: 'none',
           }}
         >
           {/* 拖拽手柄 */}

@@ -111,8 +111,7 @@ export function GlassContextMenu({ items, children }: GlassContextMenuProps) {
             top: pos.y,
             zIndex: 10000,
             opacity: open ? 1 : 0,
-            transform: `scale(${open ? 1 : 0.95})`,
-            transition: `opacity 0.18s ${spring.default}, transform 0.25s ${spring.default}`,
+            transition: `opacity 0.18s ${spring.default}`,
           }}
         >
           <LiquidGlass
