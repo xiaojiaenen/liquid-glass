@@ -2,23 +2,16 @@ import { LiquidGlass } from '../lib/LiquidGlass'
 import { fontStack, radii, spring } from '../lib/tokens'
 
 export interface GlassEmptyStateProps {
-  /** 图标（emoji 或 SVG） */
   icon?: React.ReactNode
-  /** 主标题 */
   title: string
-  /** 副标题（可选） */
   subtitle?: string
-  /** 操作按钮文本（可选） */
   actionLabel?: string
-  /** 操作回调 */
   onAction?: () => void
 }
 
 /**
  * GlassEmptyState — 空状态视图。
- * 对标 ContentUnavailableView (iOS 17+)。
- * 图标 + 标题 + 副标题 + 可选操作按钮，居中布局。
- * 按钮复用 LiquidGlass 风格。
+ * 图标 + 标题 + 副标题 + 可选液态玻璃操作按钮。
  */
 export function GlassEmptyState({
   icon,
@@ -77,35 +70,31 @@ export function GlassEmptyState({
       )}
 
       {actionLabel && onAction && (
-        <button
-          onClick={onAction}
-          style={{
-            marginTop: 24,
-            border: 'none',
-            borderRadius: radii.pill,
-            padding: '10px 24px',
-            background: 'rgba(10,132,255,0.3)',
-            color: '#fff',
-            fontSize: 15,
-            fontWeight: 600,
-            cursor: 'pointer',
-            fontFamily: fontStack,
-            letterSpacing: -0.2,
-            transition: `background 0.25s ${spring.default}, transform 0.2s ${spring.default}`,
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = 'rgba(10,132,255,0.45)'
-            e.currentTarget.style.transform = 'scale(1.03)'
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = 'rgba(10,132,255,0.3)'
-            e.currentTarget.style.transform = 'scale(1)'
-          }}
-          onMouseDown={(e) => { e.currentTarget.style.transform = 'scale(0.97)' }}
-          onMouseUp={(e) => { e.currentTarget.style.transform = 'scale(1.03)' }}
+        <div style={{ marginTop: 24, transition: `transform 0.2s ${spring.default}` }}
+          onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.03)')}
+          onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
         >
-          {actionLabel}
-        </button>
+          <LiquidGlass
+            as="button"
+            onClick={onAction}
+            radius={radii.pill}
+            bezelWidth={16}
+            glassThickness={62}
+            refractionScale={0.618}
+            blur={0.35}
+            tint="rgba(10,132,255,0.25)"
+            style={{
+              padding: '10px 24px',
+              fontFamily: fontStack,
+              fontSize: 15,
+              fontWeight: 600,
+              letterSpacing: -0.2,
+              color: '#fff',
+            }}
+          >
+            {actionLabel}
+          </LiquidGlass>
+        </div>
       )}
     </LiquidGlass>
   )

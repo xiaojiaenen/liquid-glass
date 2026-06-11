@@ -61,10 +61,12 @@
 .liquid-glass__content {
   position: relative;
   z-index: 2;
-  display: inline-flex;
+  display: flex;
+  flex-direction: inherit;
   align-items: center;
   justify-content: center;
   width: 100%;
+  flex-wrap: wrap;
 }
 
 /* 按钮形态 */

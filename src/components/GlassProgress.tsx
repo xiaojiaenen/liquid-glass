@@ -9,6 +9,10 @@ export interface GlassProgressProps {
   showText?: boolean
 }
 
+/**
+ * GlassProgress — 液态玻璃进度条。
+ * 轨道是液态玻璃容器，填充条也是液态玻璃。
+ */
 export function GlassProgress({
   percent,
   color = systemColors.blue,
@@ -20,27 +24,41 @@ export function GlassProgress({
 
   return (
     <div style={{ width, display: 'flex', alignItems: 'center', gap: 10 }}>
-      <LiquidGlass
-        radius={height / 2}
-        bezelWidth={10}
-        glassThickness={40}
-        refractionScale={0.7}
-        blur={0.3}
-        tint="rgba(255,255,255,0.08)"
-        style={{ flex: 1, height, overflow: 'hidden' }}
-      >
-        <div
+      <div style={{ flex: 1, height, position: 'relative', borderRadius: height / 2, overflow: 'hidden' }}>
+        {/* 轨道 */}
+        <LiquidGlass
+          radius={height / 2}
+          bezelWidth={6}
+          glassThickness={22}
+          refractionScale={0.5}
+          blur={0.15}
+          tint="rgba(255,255,255,0.06)"
           style={{
-            width: `${clamped}%`,
-            height: '100%',
-            borderRadius: height / 2,
-            background: color,
-            transition: 'width 0.3s ease',
+            position: 'absolute',
+            inset: 0,
+            height,
           }}
         />
-      </LiquidGlass>
+        {/* 填充条 — 液态玻璃 */}
+        <LiquidGlass
+          radius={height / 2}
+          bezelWidth={6}
+          glassThickness={22}
+          refractionScale={0.5}
+          blur={0.15}
+          tint={`${color}99`}
+          style={{
+            position: 'absolute',
+            left: 0,
+            top: 0,
+            width: `${clamped}%`,
+            height,
+            transition: `width 0.4s ${'cubic-bezier(0.34, 1.56, 0.64, 1)'}`,
+          }}
+        />
+      </div>
       {showText && (
-        <span style={{ fontSize: 13, color: '#fff', opacity: 0.6, minWidth: 32, textAlign: 'right' }}>
+        <span style={{ fontSize: 13, color: '#fff', opacity: 0.6, minWidth: 32, textAlign: 'right', fontVariantNumeric: 'tabular-nums' }}>
           {Math.round(clamped)}%
         </span>
       )}

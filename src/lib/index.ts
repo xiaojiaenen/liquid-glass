@@ -12,7 +12,7 @@ export type {
 export { supportsSvgBackdrop } from './capabilities'
 
 // ── 设计令牌 ──
-export { spring, systemColors, fontStack, radii } from './tokens'
+export { spring, systemColors, fontStack, radii, glassPresets } from './tokens'
 
 // ── 组件 ──
 export { GlassAccordion } from '../components/GlassAccordion'

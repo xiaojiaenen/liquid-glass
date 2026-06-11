@@ -36,3 +36,32 @@ export const radii = {
   sheet: 38,
   pill: 999,
 }
+
+/** 黄金分割(φ≈1.618)液态玻璃参数预设。
+ *  refractionScale 固定为 1/φ ≈ 0.618,
+ *  glassThickness ≈ bezelWidth × φ²
+ *  圆角遵循 radii 令牌
+ */
+export const glassPresets = {
+  /** 小胶囊/指示器: 分段控制选中块、标签、开关 knob */
+  pill: {
+    bezelWidth: 10,
+    glassThickness: 38,
+    refractionScale: 0.618,
+    blur: 0.2,
+  } as const,
+  /** 控件: 按钮、输入框、复选框、分段控制容器 */
+  control: {
+    bezelWidth: 16,
+    glassThickness: 62,
+    refractionScale: 0.618,
+    blur: 0.35,
+  } as const,
+  /** 卡片/面板: 模态框、卡片、列表 */
+  card: {
+    bezelWidth: 26,
+    glassThickness: 100,
+    refractionScale: 0.618,
+    blur: 0.5,
+  } as const,
+}

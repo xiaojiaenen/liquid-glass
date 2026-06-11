@@ -13,6 +13,10 @@ export interface GlassTabsProps {
   onChange?: (value: string) => void
 }
 
+/**
+ * GlassTabs — 顶部标签页。
+ * 选中项用液态玻璃滑块指示。
+ */
 export function GlassTabs({ tabs, value: controlled, onChange }: GlassTabsProps) {
   const [internal, setInternal] = useState(tabs[0]?.value ?? '')
   const active = controlled ?? internal
@@ -21,6 +25,8 @@ export function GlassTabs({ tabs, value: controlled, onChange }: GlassTabsProps)
     if (controlled === undefined) setInternal(v)
     onChange?.(v)
   }
+
+  const activeIdx = tabs.findIndex((t) => t.value === active)
 
   return (
     <LiquidGlass
@@ -42,7 +48,7 @@ export function GlassTabs({ tabs, value: controlled, onChange }: GlassTabsProps)
               style={{
                 position: 'relative',
                 border: 'none',
-                background: isActive ? 'rgba(255,255,255,0.12)' : 'transparent',
+                background: 'none',
                 color: '#fff',
                 fontFamily: fontStack,
                 fontSize: 13,
@@ -53,13 +59,33 @@ export function GlassTabs({ tabs, value: controlled, onChange }: GlassTabsProps)
                 cursor: 'pointer',
                 opacity: isActive ? 1 : 0.5,
                 transition: `all 0.2s ${spring.default}`,
-                zIndex: 1,
+                zIndex: 2,
+                minWidth: 60,
               }}
             >
               {tab.label}
             </button>
           )
         })}
+        {/* 选中指示器 — 液态玻璃滑块 */}
+        <LiquidGlass
+          radius={9}
+          bezelWidth={8}
+          glassThickness={30}
+          refractionScale={0.618}
+          blur={0.15}
+          tint="rgba(255,255,255,0.15)"
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: `calc(${activeIdx} * 92px + 0px)`,
+            width: 92,
+            height: '100%',
+            transition: `left 0.3s ${spring.default}`,
+            pointerEvents: 'none',
+            zIndex: 1,
+          }}
+        />
       </div>
     </LiquidGlass>
   )

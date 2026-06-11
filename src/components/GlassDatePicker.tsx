@@ -56,69 +56,94 @@ export function GlassDatePicker({ value, onChange, width = 280 }: GlassDatePicke
       tint="rgba(255,255,255,0.06)"
       style={{ width, padding: 16, flexDirection: 'column' }}
     >
-      {/* 头部 */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
-        <button
-          onClick={prevMonth}
-          style={{ border: 'none', background: 'none', color: '#fff', fontSize: 18, cursor: 'pointer', padding: '4px 8px', opacity: 0.5 }}
-        >
-          ‹
-        </button>
-        <span style={{ fontSize: 15, fontWeight: 600, fontFamily: fontStack, letterSpacing: -0.3 }}>
-          {viewYear}年{viewMonth + 1}月
-        </span>
-        <button
-          onClick={nextMonth}
-          style={{ border: 'none', background: 'none', color: '#fff', fontSize: 18, cursor: 'pointer', padding: '4px 8px', opacity: 0.5 }}
-        >
-          ›
-        </button>
-      </div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 0, width: '100%' }}>
+        {/* 头部 */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
+          <button
+            onClick={prevMonth}
+            style={{ border: 'none', background: 'none', color: '#fff', fontSize: 18, cursor: 'pointer', padding: '4px 8px', opacity: 0.5, borderRadius: 6, transition: 'background 0.15s ease' }}
+            onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(255,255,255,0.08)')}
+            onMouseLeave={(e) => (e.currentTarget.style.background = 'none')}
+          >
+            ‹
+          </button>
+          <span style={{ fontSize: 15, fontWeight: 600, fontFamily: fontStack, letterSpacing: -0.3 }}>
+            {viewYear}年{viewMonth + 1}月
+          </span>
+          <button
+            onClick={nextMonth}
+            style={{ border: 'none', background: 'none', color: '#fff', fontSize: 18, cursor: 'pointer', padding: '4px 8px', opacity: 0.5, borderRadius: 6, transition: 'background 0.15s ease' }}
+            onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(255,255,255,0.08)')}
+            onMouseLeave={(e) => (e.currentTarget.style.background = 'none')}
+          >
+            ›
+          </button>
+        </div>
 
-      {/* 星期头 */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 2, marginBottom: 6 }}>
-        {WEEKDAYS.map((d) => (
-          <div key={d} style={{ textAlign: 'center', fontSize: 11, opacity: 0.35, fontFamily: fontStack, padding: '4px 0', fontWeight: 500 }}>
-            {d}
-          </div>
-        ))}
-      </div>
-
-      {/* 日期格 */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 2 }}>
-        {Array.from({ length: firstDay }).map((_, i) => <div key={`e${i}`} />)}
-        {Array.from({ length: daysInMonth }).map((_, i) => {
-          const day = i + 1
-          const active = isSameDay(selected, day)
-          const isToday = isSameDay(today, day)
-          return (
-            <div
-              key={day}
-              onClick={() => pickDay(day)}
-              style={{
-                textAlign: 'center',
-                padding: '6px 0',
-                borderRadius: 10,
-                cursor: 'pointer',
-                fontSize: 15,
-                fontFamily: fontStack,
-                fontWeight: isToday ? 700 : active ? 600 : 400,
-                background: active ? 'rgba(10,132,255,0.5)' : 'transparent',
-                border: '1px solid transparent',
-                transition: `all 0.18s ${spring.default}`,
-                letterSpacing: -0.3,
-              }}
-              onMouseEnter={(e) => {
-                if (!active) (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.08)'
-              }}
-              onMouseLeave={(e) => {
-                if (!active) (e.currentTarget as HTMLElement).style.background = 'transparent'
-              }}
-            >
-              {day}
+        {/* 星期头 */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 2, marginBottom: 6 }}>
+          {WEEKDAYS.map((d) => (
+            <div key={d} style={{ textAlign: 'center', fontSize: 11, opacity: 0.35, fontFamily: fontStack, padding: '4px 0', fontWeight: 500 }}>
+              {d}
             </div>
-          )
-        })}
+          ))}
+        </div>
+
+        {/* 日期格 */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 3 }}>
+          {Array.from({ length: firstDay }).map((_, i) => <div key={`e${i}`} />)}
+          {Array.from({ length: daysInMonth }).map((_, i) => {
+            const day = i + 1
+            const active = isSameDay(selected, day)
+            const isToday = isSameDay(today, day)
+            return (
+              <div
+                key={day}
+                onClick={() => pickDay(day)}
+                style={{
+                  position: 'relative',
+                  textAlign: 'center',
+                  padding: '5px 0',
+                  borderRadius: 10,
+                  cursor: 'pointer',
+                  fontSize: 15,
+                  fontFamily: fontStack,
+                  fontWeight: isToday ? 700 : active ? 600 : 400,
+                  letterSpacing: -0.3,
+                  minHeight: 30,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+                onMouseEnter={(e) => {
+                  if (!active) (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.06)'
+                }}
+                onMouseLeave={(e) => {
+                  if (!active) (e.currentTarget as HTMLElement).style.background = 'transparent'
+                }}
+              >
+                {/* 选中态 — 液态玻璃块 */}
+                {active && (
+                  <LiquidGlass
+                    radius={10}
+                    bezelWidth={8}
+                    glassThickness={30}
+                    refractionScale={0.618}
+                    blur={0.1}
+                    tint="rgba(10,132,255,0.45)"
+                    style={{
+                      position: 'absolute',
+                      inset: 0,
+                      pointerEvents: 'none',
+                      transition: `all 0.2s ${spring.default}`,
+                    }}
+                  />
+                )}
+                <span style={{ position: 'relative', zIndex: 1 }}>{day}</span>
+              </div>
+            )
+          })}
+        </div>
       </div>
     </LiquidGlass>
   )
