@@ -8,6 +8,10 @@ export interface GlassCheckboxProps {
   label?: string
 }
 
+/**
+ * GlassCheckbox — macOS 风格圆角方形勾选框。
+ * 选中时蓝色液态玻璃填充 + 白色勾号。
+ */
 export function GlassCheckbox({ checked: controlled, onChange, label }: GlassCheckboxProps) {
   const [internal, setInternal] = useState(false)
   const checked = controlled ?? internal
@@ -17,8 +21,7 @@ export function GlassCheckbox({ checked: controlled, onChange, label }: GlassChe
     onChange?.(!checked)
   }
 
-  // 苹果风格:圆形勾选框
-  const size = 24
+  const size = 20
 
   return (
     <label
@@ -26,12 +29,12 @@ export function GlassCheckbox({ checked: controlled, onChange, label }: GlassChe
       onClick={toggle}
     >
       <LiquidGlass
-        radius={size / 2}
-        bezelWidth={14}
-        glassThickness={50}
-        refractionScale={0.8}
-        blur={0.3}
-        tint={checked ? 'rgba(10,132,255,0.6)' : 'rgba(255,255,255,0.06)'}
+        radius={5}
+        bezelWidth={12}
+        glassThickness={45}
+        refractionScale={0.75}
+        blur={0.25}
+        tint={checked ? 'rgba(10,132,255,0.55)' : 'rgba(255,255,255,0.04)'}
         style={{
           width: size,
           height: size,
@@ -39,8 +42,8 @@ export function GlassCheckbox({ checked: controlled, onChange, label }: GlassChe
         }}
       >
         <svg
-          width="14"
-          height="14"
+          width="12"
+          height="12"
           viewBox="0 0 14 14"
           fill="none"
           style={{
