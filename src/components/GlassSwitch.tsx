@@ -1,17 +1,20 @@
 import { useState } from 'react'
 import { LiquidGlass } from '../lib/LiquidGlass'
+import { spring, systemColors } from '../lib/tokens'
 
 export function GlassSwitch({ defaultOn = false }: { defaultOn?: boolean }) {
   const [on, setOn] = useState(defaultOn)
-  const W = 64
-  const H = 36
-  const pad = 4
+  // iOS 开关比例 51:31
+  const W = 51
+  const H = 31
+  const pad = 2
   const knob = H - pad * 2
 
   return (
     <button
       onClick={() => setOn((v) => !v)}
-      aria-pressed={on}
+      role="switch"
+      aria-checked={on}
       style={{
         width: W,
         height: H,
@@ -20,11 +23,11 @@ export function GlassSwitch({ defaultOn = false }: { defaultOn?: boolean }) {
         padding: 0,
         cursor: 'pointer',
         position: 'relative',
-        background: on
-          ? 'linear-gradient(135deg, #34d399, #059669)'
-          : 'rgba(255,255,255,0.18)',
-        boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.3)',
-        transition: 'background 0.25s ease',
+        background: on ? systemColors.green : 'rgba(120,120,128,0.32)',
+        boxShadow: on
+          ? `0 0 0 1px ${systemColors.green}, inset 0 0 2px rgba(0,0,0,0.15)`
+          : 'inset 0 0 3px rgba(0,0,0,0.18)',
+        transition: `background 0.3s ${spring.gentle}`,
       }}
     >
       <span
@@ -32,16 +35,17 @@ export function GlassSwitch({ defaultOn = false }: { defaultOn?: boolean }) {
           position: 'absolute',
           top: pad,
           left: on ? W - knob - pad : pad,
-          transition: 'left 0.25s cubic-bezier(0.4, 1.3, 0.6, 1)',
+          filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.25))',
+          transition: `left 0.32s ${spring.default}`,
         }}
       >
         <LiquidGlass
           radius={knob / 2}
           bezelWidth={knob / 2}
-          glassThickness={70}
-          refractionScale={1}
+          glassThickness={60}
+          refractionScale={0.9}
           blur={0.2}
-          tint="rgba(255,255,255,0.35)"
+          tint="rgba(255,255,255,0.55)"
           style={{ width: knob, height: knob }}
         />
       </span>

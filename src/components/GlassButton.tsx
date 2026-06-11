@@ -1,24 +1,36 @@
 import { LiquidGlass } from '../lib/LiquidGlass'
+import { fontStack } from '../lib/tokens'
 
 export function GlassButton({
   children,
   onClick,
+  variant = 'regular',
 }: {
   children: React.ReactNode
   onClick?: () => void
+  /** regular = 通透玻璃,prominent = 蓝色强调 */
+  variant?: 'regular' | 'prominent'
 }) {
+  const prominent = variant === 'prominent'
   return (
     <LiquidGlass
       as="button"
       onClick={onClick}
-      radius={26}
-      bezelWidth={20}
-      glassThickness={90}
-      refractionScale={1}
-      blur={0}
+      radius={999}
+      bezelWidth={22}
+      glassThickness={prominent ? 70 : 110}
+      refractionScale={1.1}
+      blur={0.3}
       saturate={1.2}
-      tint="rgba(255,255,255,0.1)"
-      style={{ padding: '14px 30px', fontSize: 16, fontWeight: 600 }}
+      tint={prominent ? 'rgba(10,132,255,0.55)' : 'rgba(255,255,255,0.06)'}
+      style={{
+        padding: '13px 28px',
+        fontFamily: fontStack,
+        fontSize: 16,
+        fontWeight: 600,
+        letterSpacing: -0.2,
+        color: '#fff',
+      }}
     >
       {children}
     </LiquidGlass>

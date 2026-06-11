@@ -101,7 +101,7 @@ export function App() {
       {/* 按钮 */}
       <Section title="按钮">
         <div className="row">
-          <GlassButton>主要操作</GlassButton>
+          <GlassButton variant="prominent">主要操作</GlassButton>
           <GlassButton>次要</GlassButton>
         </div>
       </Section>
@@ -113,12 +113,14 @@ export function App() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
             <GlassNotification
               icon="💬"
+              iconBg="linear-gradient(160deg,#30d158,#34c759)"
               app="信息"
               title="新消息"
               body="液态玻璃的边缘正在折射你身后的世界。"
             />
             <GlassNotification
               icon="📅"
+              iconBg="linear-gradient(160deg,#ff453a,#ff9f0a)"
               app="日历"
               time="10:30"
               title="设计评审"
@@ -130,10 +132,10 @@ export function App() {
 
       <Section title="信息卡">
         <div className="row">
-          <GlassCard title="真实折射">
+          <GlassCard title="真实折射" icon="🔮">
             边缘像棱镜一样弯曲背后的内容,中心保持通透。位移贴图按元素尺寸实时生成。
           </GlassCard>
-          <GlassCard title="自适应">
+          <GlassCard title="自适应" icon="📐">
             ResizeObserver 跟踪尺寸,改圆角、棱镜宽度、玻璃厚度都会重建贴图。
           </GlassCard>
         </div>

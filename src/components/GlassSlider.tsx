@@ -1,12 +1,19 @@
 import { useRef, useState } from 'react'
 import { LiquidGlass } from '../lib/LiquidGlass'
+import { systemColors } from '../lib/tokens'
 
-export function GlassSlider({ defaultValue = 50 }: { defaultValue?: number }) {
+export function GlassSlider({
+  defaultValue = 50,
+  accent = systemColors.blue,
+}: {
+  defaultValue?: number
+  accent?: string
+}) {
   const [value, setValue] = useState(defaultValue)
   const trackRef = useRef<HTMLDivElement>(null)
   const dragging = useRef(false)
   const W = 260
-  const knob = 30
+  const knob = 28
 
   const setFromClientX = (clientX: number) => {
     const el = trackRef.current
@@ -42,10 +49,9 @@ export function GlassSlider({ defaultValue = 50 }: { defaultValue?: number }) {
           position: 'absolute',
           left: 0,
           right: 0,
-          height: 6,
-          borderRadius: 3,
-          background: 'rgba(255,255,255,0.18)',
-          boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.3)',
+          height: 4,
+          borderRadius: 2,
+          background: 'rgba(120,120,128,0.32)',
         }}
       />
       {/* 已填充 */}
@@ -54,9 +60,9 @@ export function GlassSlider({ defaultValue = 50 }: { defaultValue?: number }) {
           position: 'absolute',
           left: 0,
           width: `${value}%`,
-          height: 6,
-          borderRadius: 3,
-          background: 'linear-gradient(90deg, #60a5fa, #a78bfa)',
+          height: 4,
+          borderRadius: 2,
+          background: accent,
         }}
       />
       {/* 滑块 */}
@@ -64,15 +70,16 @@ export function GlassSlider({ defaultValue = 50 }: { defaultValue?: number }) {
         style={{
           position: 'absolute',
           left: `calc(${value}% - ${knob / 2}px)`,
+          filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.3))',
         }}
       >
         <LiquidGlass
           radius={knob / 2}
           bezelWidth={knob / 2}
-          glassThickness={80}
-          refractionScale={1}
+          glassThickness={55}
+          refractionScale={0.85}
           blur={0}
-          tint="rgba(255,255,255,0.3)"
+          tint="rgba(255,255,255,0.6)"
           style={{ width: knob, height: knob }}
         />
       </span>

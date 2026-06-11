@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { LiquidGlass } from '../lib/LiquidGlass'
+import { fontStack, spring } from '../lib/tokens'
 
 export function GlassSegmented({
   options = ['日', '周', '月'],
@@ -7,22 +8,22 @@ export function GlassSegmented({
   options?: string[]
 }) {
   const [active, setActive] = useState(0)
-  const segW = 72
-  const H = 44
-  const pad = 4
+  const segW = 64
+  const H = 36
+  const pad = 3
 
   return (
     <LiquidGlass
       radius={H / 2}
-      bezelWidth={16}
-      glassThickness={70}
-      refractionScale={1}
-      blur={0.5}
-      tint="rgba(255,255,255,0.06)"
+      bezelWidth={14}
+      glassThickness={60}
+      refractionScale={0.9}
+      blur={0.4}
+      tint="rgba(120,120,128,0.24)"
       style={{ padding: pad, height: H }}
     >
       <div style={{ position: 'relative', display: 'flex' }}>
-        {/* 选中指示器 */}
+        {/* 选中指示器:玻璃质感小块 */}
         <span
           style={{
             position: 'absolute',
@@ -31,9 +32,10 @@ export function GlassSegmented({
             width: segW,
             height: H - pad * 2,
             borderRadius: (H - pad * 2) / 2,
-            background: 'rgba(255,255,255,0.25)',
-            boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.4)',
-            transition: 'left 0.28s cubic-bezier(0.4, 1.1, 0.5, 1)',
+            background: 'rgba(255,255,255,0.28)',
+            boxShadow:
+              'inset 0 1px 1px rgba(255,255,255,0.5), 0 1px 3px rgba(0,0,0,0.2)',
+            transition: `left 0.32s ${spring.default}`,
           }}
         />
         {options.map((opt, i) => (
@@ -47,10 +49,13 @@ export function GlassSegmented({
               border: 'none',
               background: 'transparent',
               color: '#fff',
-              fontSize: 15,
-              fontWeight: active === i ? 700 : 500,
+              fontFamily: fontStack,
+              fontSize: 14,
+              fontWeight: active === i ? 600 : 500,
+              letterSpacing: -0.1,
               cursor: 'pointer',
-              opacity: active === i ? 1 : 0.7,
+              opacity: active === i ? 1 : 0.65,
+              transition: 'opacity 0.2s ease',
             }}
           >
             {opt}
