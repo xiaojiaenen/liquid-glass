@@ -25,10 +25,10 @@
   /* backdrop-filter 由内联 style 注入 url(#id) */
 }
 
-/* 降级:Safari/Firefox 用毛玻璃 */
+/* 降级:Safari/Firefox 用毛玻璃(Safari 无法对背景做 SVG 折射) */
 .liquid-glass.is-fallback .liquid-glass__refraction {
-  backdrop-filter: blur(12px) saturate(1.6);
-  -webkit-backdrop-filter: blur(12px) saturate(1.6);
+  backdrop-filter: blur(6px) saturate(1.8) brightness(1.05);
+  -webkit-backdrop-filter: blur(6px) saturate(1.8) brightness(1.05);
 }
 
 /* ---- 高光描边层 ---- */

@@ -7,8 +7,8 @@ export function Dock() {
     <LiquidGlass
       radius={28}
       bezel={16}
-      strength={1.2}
-      blur={2}
+      strength={1.6}
+      blur={0}
       tint="rgba(255,255,255,0.16)"
       style={{ padding: '12px 16px', gap: 14 }}
     >

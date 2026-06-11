@@ -13,8 +13,8 @@ export function GlassButton({
       onClick={onClick}
       radius={22}
       bezel={11}
-      strength={1.1}
-      blur={1}
+      strength={1.5}
+      blur={0}
       tint="rgba(255,255,255,0.14)"
       style={{ padding: '12px 26px', fontSize: 16, fontWeight: 600 }}
     >

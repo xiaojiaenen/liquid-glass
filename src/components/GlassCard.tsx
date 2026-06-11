@@ -11,8 +11,8 @@ export function GlassCard({
     <LiquidGlass
       radius={32}
       bezel={20}
-      strength={1}
-      blur={3}
+      strength={1.4}
+      blur={0.5}
       tint="rgba(255,255,255,0.1)"
       style={{ width: 320, padding: 28, flexDirection: 'column' }}
     >

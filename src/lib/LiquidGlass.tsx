@@ -38,7 +38,7 @@ export function LiquidGlass({
   bezel = 16,
   profile = 'squircle',
   strength = 1,
-  blur = 2,
+  blur = 0,
   tint = 'rgba(255, 255, 255, 0.12)',
   className = '',
   style,

@@ -130,7 +130,8 @@ export function generateDisplacementMap(
       // 高度函数导数 = 表面斜率,越靠边缘越陡 → 位移越大
       const y1 = heightFn(t - delta, profile)
       const y2 = heightFn(t + delta, profile)
-      const slope = (y2 - y1) / (2 * delta)
+      // 边缘处导数趋于无穷,会形成单像素尖峰压制其余区域;封顶让折射均匀铺满棱镜带
+      const slope = Math.min((y2 - y1) / (2 * delta), 6)
 
       // 位移沿边缘法线方向,指向形状内部(把外侧背景"吸"进来产生放大折射)
       const grad = gradientDir(x + 0.5, y + 0.5, w, h, r)
