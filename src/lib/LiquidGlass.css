@@ -5,17 +5,13 @@
   isolation: isolate;
   color: #fff;
   -webkit-tap-highlight-color: transparent;
-  /* 苹果式分层柔和阴影:近距锐影 + 远距软影 */
-  box-shadow:
-    0 1px 2px rgba(0, 0, 0, 0.18),
-    0 8px 24px rgba(0, 0, 0, 0.28),
-    0 20px 48px rgba(0, 0, 0, 0.22);
+  /* 外阴影由 refraction 层统一承载,容器本身不绘制 */
 }
 
 /*
  * 折射 + 着色 + 高光,全部合并在这一层(参考实现的做法)。
  * - backdrop-filter: 折射背景(glass)或毛玻璃(fallback)
- * - background: 极淡着色
+ * - background: 极淡着色(尽量通透)
  * - box-shadow: 内顶高光 + 内发光,玻璃的核心质感
  * - border: 亮边框
  */
@@ -25,20 +21,24 @@
   z-index: 0;
   border-radius: inherit;
   pointer-events: none;
-  background: var(--lg-tint, rgba(255, 255, 255, 0.04));
-  border: 0.5px solid rgba(255, 255, 255, 0.25);
+  background: var(--lg-tint, rgba(255, 255, 255, 0.02));
+  border: 0.5px solid rgba(255, 255, 255, 0.18);
+  /* 所有阴影统一在这一层:外阴影 + 内高光 */
   box-shadow:
-    inset 0 1px 1px rgba(255, 255, 255, 0.4),
-    inset 0 -1px 3px rgba(255, 255, 255, 0.1),
-    inset 0 0 18px rgba(255, 255, 255, 0.06);
+    0 1px 2px rgba(0, 0, 0, 0.12),
+    0 6px 18px rgba(0, 0, 0, 0.18),
+    0 16px 40px rgba(0, 0, 0, 0.14),
+    inset 0 1px 1px rgba(255, 255, 255, 0.3),
+    inset 0 -1px 2px rgba(255, 255, 255, 0.08),
+    inset 0 0 14px rgba(255, 255, 255, 0.04);
 }
 
 /* glass 模式:backdrop-filter 由内联 style 注入 url(#id) */
 
 /* 降级:Safari/Firefox 用毛玻璃 */
 .liquid-glass.is-fallback .liquid-glass__refraction {
-  backdrop-filter: blur(8px) saturate(1.8) brightness(1.05);
-  -webkit-backdrop-filter: blur(8px) saturate(1.8) brightness(1.05);
+  backdrop-filter: blur(4px) saturate(1.6) brightness(1.04);
+  -webkit-backdrop-filter: blur(4px) saturate(1.6) brightness(1.04);
 }
 
 /* fallback 顶部斜向高光,补偿没有 SVG rim light */
@@ -83,10 +83,15 @@ button.liquid-glass {
 }
 button.liquid-glass:hover {
   filter: brightness(1.05);
+}
+button.liquid-glass:hover .liquid-glass__refraction {
   box-shadow:
     0 2px 4px rgba(0, 0, 0, 0.2),
     0 12px 32px rgba(0, 0, 0, 0.32),
-    0 24px 56px rgba(0, 0, 0, 0.26);
+    0 24px 56px rgba(0, 0, 0, 0.26),
+    inset 0 1px 1px rgba(255, 255, 255, 0.3),
+    inset 0 -1px 2px rgba(255, 255, 255, 0.08),
+    inset 0 0 14px rgba(255, 255, 255, 0.04);
 }
 button.liquid-glass:active {
   transform: scale(0.96);
