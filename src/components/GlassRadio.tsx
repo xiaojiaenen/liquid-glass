@@ -37,10 +37,10 @@ export function GlassRadio({ options, value: controlled, onChange }: GlassRadioP
           >
             <LiquidGlass
               radius={size / 2}
-              bezelWidth={8}
-              glassThickness={35}
-              refractionScale={0.7}
-              blur={0.1}
+              bezelWidth={14}
+              glassThickness={50}
+              refractionScale={0.8}
+              blur={0.3}
               tint={isActive ? 'rgba(10,132,255,0.6)' : 'rgba(255,255,255,0.06)'}
               style={{
                 width: size,

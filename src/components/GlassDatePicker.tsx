@@ -49,10 +49,10 @@ export function GlassDatePicker({ value, onChange, width = 280 }: GlassDatePicke
   return (
     <LiquidGlass
       radius={16}
-      bezelWidth={18}
-      glassThickness={55}
+      bezelWidth={24}
+      glassThickness={100}
       refractionScale={0.9}
-      blur={0.3}
+      blur={0.5}
       tint="rgba(255,255,255,0.06)"
       style={{ width, padding: 16, flexDirection: 'column' }}
     >

@@ -22,10 +22,10 @@ export function GlassProgress({
     <div style={{ width, display: 'flex', alignItems: 'center', gap: 10 }}>
       <LiquidGlass
         radius={height / 2}
-        bezelWidth={3}
-        glassThickness={20}
-        refractionScale={0.5}
-        blur={0.05}
+        bezelWidth={10}
+        glassThickness={40}
+        refractionScale={0.7}
+        blur={0.3}
         tint="rgba(255,255,255,0.08)"
         style={{ flex: 1, height, overflow: 'hidden' }}
       >

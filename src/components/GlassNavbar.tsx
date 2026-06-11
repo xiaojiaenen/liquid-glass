@@ -12,10 +12,10 @@ export function GlassNavbar({ title, left, right, onBack }: GlassNavbarProps) {
   return (
     <LiquidGlass
       radius={16}
-      bezelWidth={16}
-      glassThickness={50}
-      refractionScale={0.85}
-      blur={0.3}
+      bezelWidth={22}
+      glassThickness={80}
+      refractionScale={0.9}
+      blur={0.5}
       tint="rgba(255,255,255,0.05)"
       style={{ width: '100%', padding: '0 16px', height: 44 }}
     >

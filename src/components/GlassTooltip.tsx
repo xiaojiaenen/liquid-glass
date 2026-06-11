@@ -44,10 +44,10 @@ export function GlassTooltip({ content, children, position = 'top' }: GlassToolt
         >
           <LiquidGlass
             radius={10}
-            bezelWidth={8}
-            glassThickness={30}
-            refractionScale={0.75}
-            blur={0.2}
+            bezelWidth={16}
+            glassThickness={60}
+            refractionScale={0.8}
+            blur={0.5}
             tint="rgba(50,50,50,0.85)"
             style={{ padding: '6px 12px' }}
           >

@@ -32,10 +32,10 @@ export function GlassInput({
   return (
     <LiquidGlass
       radius={12}
-      bezelWidth={16}
-      glassThickness={45}
+      bezelWidth={22}
+      glassThickness={80}
       refractionScale={0.9}
-      blur={0.2}
+      blur={0.5}
       tint="rgba(255,255,255,0.06)"
       style={{ width: width || 260, padding: '0 16px', height: 44 }}
     >

@@ -18,10 +18,10 @@ export function GlassList({ items, width = 320 }: GlassListProps) {
   return (
     <LiquidGlass
       radius={16}
-      bezelWidth={18}
-      glassThickness={50}
+      bezelWidth={24}
+      glassThickness={90}
       refractionScale={0.9}
-      blur={0.3}
+      blur={0.5}
       tint="rgba(255,255,255,0.05)"
       style={{ width, padding: 4, flexDirection: 'column' }}
     >

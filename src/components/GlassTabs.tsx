@@ -25,10 +25,10 @@ export function GlassTabs({ tabs, value: controlled, onChange }: GlassTabsProps)
   return (
     <LiquidGlass
       radius={12}
-      bezelWidth={12}
-      glassThickness={35}
-      refractionScale={0.8}
-      blur={0.2}
+      bezelWidth={20}
+      glassThickness={70}
+      refractionScale={0.85}
+      blur={0.5}
       tint="rgba(255,255,255,0.06)"
       style={{ padding: 3 }}
     >

@@ -15,9 +15,9 @@ export function GlassAvatar({ src, alt, size = 40, fallback }: GlassAvatarProps)
     <LiquidGlass
       radius={size / 2}
       bezelWidth={size / 2}
-      glassThickness={45}
-      refractionScale={0.75}
-      blur={0.1}
+      glassThickness={80}
+      refractionScale={0.85}
+      blur={0.4}
       tint="rgba(255,255,255,0.1)"
       style={{ width: size, height: size }}
     >

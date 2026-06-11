@@ -45,10 +45,10 @@ export function GlassModal({ open, onClose, title, children, width = 320 }: Glas
       >
         <LiquidGlass
           radius={20}
-          bezelWidth={24}
-          glassThickness={70}
+          bezelWidth={28}
+          glassThickness={120}
           refractionScale={0.95}
-          blur={0.4}
+          blur={0.5}
           tint="rgba(255,255,255,0.08)"
           style={{ width, padding: '24px 24px 20px', flexDirection: 'column' }}
         >
