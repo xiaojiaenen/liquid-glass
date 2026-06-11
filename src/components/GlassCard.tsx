@@ -36,11 +36,9 @@ export function GlassCard({
               width: 44,
               height: 44,
               borderRadius: 12,
-              background: 'rgba(255,255,255,0.16)',
               display: 'grid',
               placeItems: 'center',
               fontSize: 22,
-              boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.3)',
             }}
           >
             {icon}
