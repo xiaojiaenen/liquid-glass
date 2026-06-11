@@ -36,13 +36,6 @@
 /* 可交互的点击按入 */
 .liquid-glass:active {
   filter: brightness(0.97);
-  box-shadow:
-    0 0px 1px rgba(0, 0, 0, 0.04),
-    0 2px 6px rgba(0, 0, 0, 0.06),
-    0 6px 16px rgba(0, 0, 0, 0.04),
-    inset 0 1px 1px rgba(255, 255, 255, 0.08),
-    inset 0 -1px 1px rgba(255, 255, 255, 0.02);
-  transition: filter 0.15s ease, box-shadow 0.15s ease;
 }
 
 /* glass 模式:backdrop-filter 由内联 style 注入 url(#id) */
@@ -111,5 +104,4 @@ button.liquid-glass:hover {
 }
 button.liquid-glass:active {
   filter: brightness(0.97);
-  transition: filter 0.1s ease, box-shadow 0.1s ease;
 }
