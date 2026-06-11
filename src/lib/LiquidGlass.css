@@ -1,29 +1,13 @@
-/* 容器:完全透明,只负责定位与裁剪。所有玻璃效果集中在 inner 层 */
+/* 容器:背景/边框/阴影/折射全部在这一层,不再有中间 __refraction 层 */
 .liquid-glass {
   position: relative;
   display: inline-flex;
   isolation: isolate;
   color: #fff;
   -webkit-tap-highlight-color: transparent;
-  /* 外阴影由 refraction 层统一承载,容器本身不绘制 */
-}
-
-/*
- * 折射 + 着色 + 高光,全部合并在这一层(参考实现的做法)。
- * - backdrop-filter: 折射背景(glass)或毛玻璃(fallback)
- * - background: 极淡着色(尽量通透)
- * - box-shadow: 内顶高光 + 内发光,玻璃的核心质感
- * - border: 亮边框
- */
-.liquid-glass__refraction {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  border-radius: inherit;
-  pointer-events: none;
   background: var(--lg-tint, rgba(255, 255, 255, 0.02));
   border: 0.5px solid rgba(255, 255, 255, 0.18);
-  /* 所有阴影统一在这一层:外阴影 + 内高光 */
+  /* 所有阴影:外阴影 + 内高光 */
   box-shadow:
     0 1px 2px rgba(0, 0, 0, 0.12),
     0 6px 18px rgba(0, 0, 0, 0.18),
@@ -36,17 +20,19 @@
 /* glass 模式:backdrop-filter 由内联 style 注入 url(#id) */
 
 /* 降级:Safari/Firefox 用毛玻璃 */
-.liquid-glass.is-fallback .liquid-glass__refraction {
+.liquid-glass.is-fallback {
   backdrop-filter: blur(4px) saturate(1.6) brightness(1.04);
   -webkit-backdrop-filter: blur(4px) saturate(1.6) brightness(1.04);
 }
 
 /* fallback 顶部斜向高光,补偿没有 SVG rim light */
-.liquid-glass.is-fallback .liquid-glass__refraction::before {
+.liquid-glass.is-fallback::before {
   content: '';
   position: absolute;
   inset: 0;
+  z-index: 0;
   border-radius: inherit;
+  pointer-events: none;
   background: linear-gradient(
     135deg,
     rgba(255, 255, 255, 0.35) 0%,
@@ -54,11 +40,6 @@
     rgba(255, 255, 255, 0) 70%,
     rgba(255, 255, 255, 0.12) 100%
   );
-}
-
-/* specular 层保留占位(SVG 模式高光在滤镜里,此层不再绘制) */
-.liquid-glass__specular {
-  display: none;
 }
 
 /* ---- 内容层 ---- */
@@ -83,8 +64,6 @@ button.liquid-glass {
 }
 button.liquid-glass:hover {
   filter: brightness(1.05);
-}
-button.liquid-glass:hover .liquid-glass__refraction {
   box-shadow:
     0 2px 4px rgba(0, 0, 0, 0.2),
     0 12px 32px rgba(0, 0, 0, 0.32),

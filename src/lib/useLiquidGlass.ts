@@ -34,8 +34,12 @@ export function useLiquidGlass(opts: UseLiquidGlassOptions): LiquidGlassState {
     const el = ref.current
     if (!el || !supported) return
     let raf = 0
-    const ro = new ResizeObserver((entries) => {
-      const rect = entries[0].contentRect
+    const ro = new ResizeObserver((_entries) => {
+      // 用 getBoundingClientRect 获取 border-box 尺寸，
+      // 保证位移贴图与 backdrop-filter 作用的表面完全对齐。
+      // contentRect 不含 padding，会导致卡片等有 padding 的组件
+      // 贴图偏小，bezel 折射区向内偏移，形成「双层容器」错觉。
+      const rect = el.getBoundingClientRect()
       cancelAnimationFrame(raf)
       raf = requestAnimationFrame(() => {
         setSize({

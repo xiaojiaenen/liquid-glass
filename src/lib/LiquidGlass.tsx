@@ -41,7 +41,7 @@ export function LiquidGlass({
   refractionScale = 1,
   blur = 0.5,
   saturate = 1.3,
-  tint = 'rgba(255, 255, 255, 0.08)',
+  tint = 'rgba(255, 255, 255, 0.03)',
   className = '',
   style,
   as = 'div',
@@ -75,20 +75,11 @@ export function LiquidGlass({
         {
           borderRadius: radius,
           '--lg-tint': tint,
+          ...refractionStyle,
           ...style,
         } as CSSProperties
       }
     >
-      <span
-        aria-hidden
-        className="liquid-glass__refraction"
-        style={{ borderRadius: radius, ...refractionStyle }}
-      />
-      <span
-        aria-hidden
-        className="liquid-glass__specular"
-        style={{ borderRadius: radius }}
-      />
       <span className="liquid-glass__content">{children}</span>
 
       {supported && maps && (
