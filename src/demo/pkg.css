@@ -79,9 +79,44 @@
 }
 
 /* 拖动折射测试区 */
+.pkg-drag-wrap {
+  display: flex;
+  gap: 20px;
+  width: min(100%, 1000px);
+  flex-wrap: wrap;
+}
+.pkg-param-panel {
+  flex: 0 0 230px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 18px;
+  border-radius: 18px;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(10px);
+}
+.pkg-param {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.pkg-param span {
+  font-size: 12px;
+  opacity: 0.8;
+  display: flex;
+  justify-content: space-between;
+}
+.pkg-param b {
+  font-variant-numeric: tabular-nums;
+}
+.pkg-param input[type='range'] {
+  width: 100%;
+  accent-color: #60a5fa;
+}
 .pkg-drag-area {
   position: relative;
-  width: min(100%, 1000px);
+  flex: 1 1 420px;
   height: 420px;
   border-radius: 24px;
   overflow: hidden;

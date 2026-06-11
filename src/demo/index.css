@@ -106,10 +106,46 @@ body,
 }
 
 /* 拖动折射测试区 */
-.drag-area {
-  position: relative;
+.drag-wrap {
+  display: flex;
+  gap: 20px;
   width: 100%;
   max-width: 1000px;
+  flex-wrap: wrap;
+}
+.param-panel {
+  flex: 0 0 230px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 18px;
+  border-radius: 18px;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(10px);
+}
+.param {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.param__label {
+  font-size: 12px;
+  opacity: 0.8;
+  display: flex;
+  justify-content: space-between;
+}
+.param__label b {
+  opacity: 1;
+  font-variant-numeric: tabular-nums;
+}
+.param input[type='range'] {
+  width: 100%;
+  accent-color: #a78bfa;
+}
+.drag-area {
+  position: relative;
+  flex: 1 1 420px;
   height: 420px;
   border-radius: 24px;
   overflow: hidden;

@@ -82,11 +82,53 @@ export function PackageDemo() {
   )
 }
 
-/** 可拖动玻璃块,浮在文字上 */
+/** 参数滑块行 */
+function PkgParam({
+  label,
+  value,
+  min,
+  max,
+  step = 1,
+  onChange,
+}: {
+  label: string
+  value: number
+  min: number
+  max: number
+  step?: number
+  onChange: (v: number) => void
+}) {
+  return (
+    <label className="pkg-param">
+      <span>
+        {label} <b>{value}</b>
+      </span>
+      <input
+        type="range"
+        min={min}
+        max={max}
+        step={step}
+        value={value}
+        onChange={(e) => onChange(Number(e.target.value))}
+      />
+    </label>
+  )
+}
+
+/** 可拖动玻璃块 + 实时参数面板,浮在文字上 */
 function PkgDragGlass() {
   const [pos, setPos] = useState({ x: 40, y: 40 })
+  const [p, setP] = useState({
+    glassThickness: 300,
+    refractionScale: 0.9,
+    refractiveIndex: 1.5,
+    specularOpacity: 0.5,
+    blurStdDev: 0.5,
+    colorSaturate: 1.3,
+  })
   const drag = useRef<{ dx: number; dy: number } | null>(null)
   const areaRef = useRef<HTMLDivElement>(null)
+  const set = (k: keyof typeof p) => (v: number) => setP((s) => ({ ...s, [k]: v }))
 
   const onDown = (e: React.PointerEvent) => {
     const rect = (e.currentTarget as HTMLElement).getBoundingClientRect()
@@ -104,30 +146,45 @@ function PkgDragGlass() {
   const onUp = () => (drag.current = null)
 
   return (
-    <div ref={areaRef} className="pkg-drag-area">
-      <div className="pkg-drag-text">
-        {Array.from({ length: 14 }).map((_, i) => (
-          <p key={i}>
-            液态玻璃 LIQUID GLASS 折射测试 — 拖动玻璃块,看文字边缘是否被弯曲放大。
-            Refraction bends text at the edges. 1234567890
-          </p>
-        ))}
+    <div className="pkg-drag-wrap">
+      <div className="pkg-param-panel">
+        <PkgParam label="厚度 glassThickness" value={p.glassThickness} min={20} max={600} onChange={set('glassThickness')} />
+        <PkgParam label="折射 refractionScale" value={p.refractionScale} min={0} max={2} step={0.05} onChange={set('refractionScale')} />
+        <PkgParam label="折射率 refractiveIndex" value={p.refractiveIndex} min={1} max={2.5} step={0.05} onChange={set('refractiveIndex')} />
+        <PkgParam label="高光 specularOpacity" value={p.specularOpacity} min={0} max={1} step={0.05} onChange={set('specularOpacity')} />
+        <PkgParam label="模糊 blurStdDev" value={p.blurStdDev} min={0} max={6} step={0.1} onChange={set('blurStdDev')} />
+        <PkgParam label="饱和 colorSaturate" value={p.colorSaturate} min={1} max={4} step={0.1} onChange={set('colorSaturate')} />
       </div>
-      <div
-        className="pkg-drag-handle"
-        style={{ left: pos.x, top: pos.y }}
-        onPointerDown={onDown}
-        onPointerMove={onMove}
-        onPointerUp={onUp}
-      >
-        <LiquidGlass
-          variant="surface"
-          className="pkg-drag-glass"
-          glassThickness={300}
-          refractionScale={0.9}
+
+      <div ref={areaRef} className="pkg-drag-area">
+        <div className="pkg-drag-text">
+          {Array.from({ length: 14 }).map((_, i) => (
+            <p key={i}>
+              液态玻璃 LIQUID GLASS 折射测试 — 拖动玻璃块,看文字边缘是否被弯曲放大。
+              Refraction bends text at the edges. 1234567890
+            </p>
+          ))}
+        </div>
+        <div
+          className="pkg-drag-handle"
+          style={{ left: pos.x, top: pos.y }}
+          onPointerDown={onDown}
+          onPointerMove={onMove}
+          onPointerUp={onUp}
         >
-          <span style={{ fontSize: 13, opacity: 0.85 }}>拖我 →</span>
-        </LiquidGlass>
+          <LiquidGlass
+            variant="surface"
+            className="pkg-drag-glass"
+            glassThickness={p.glassThickness}
+            refractionScale={p.refractionScale}
+            refractiveIndex={p.refractiveIndex}
+            specularOpacity={p.specularOpacity}
+            blurStdDev={p.blurStdDev}
+            colorSaturate={p.colorSaturate}
+          >
+            <span style={{ fontSize: 13, opacity: 0.85 }}>拖我 →</span>
+          </LiquidGlass>
+        </div>
       </div>
     </div>
   )
