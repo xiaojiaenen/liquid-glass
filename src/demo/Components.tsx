@@ -35,6 +35,9 @@ import { GlassEmptyState } from '../components/GlassEmptyState'
 import { GlassSheet, type GlassSheetAction } from '../components/GlassSheet'
 import { GlassContextMenu } from '../components/GlassContextMenu'
 import { GlassTabBar } from '../components/GlassTabBar'
+import { GlassSidebar } from '../components/GlassSidebar'
+import { GlassPagination } from '../components/GlassPagination'
+import { withLiquidGlass } from '../lib/withLiquidGlass'
 
 const backgrounds = [
   {
@@ -64,6 +67,8 @@ export function Components() {
   const [stepperVal, setStepperVal] = useState(5)
   const [tabBarVal, setTabBarVal] = useState('home')
   const [pageIdx, setPageIdx] = useState(0)
+  const [sidebarVal, setSidebarVal] = useState('overview')
+  const [paginationPage, setPaginationPage] = useState(1)
   const [menuItems] = useState([
     { label: '复制', icon: '📋', onClick: () => alert('已复制') },
     { label: '重命名', icon: '✏️', onClick: () => alert('重命名') },
@@ -312,6 +317,50 @@ export function Components() {
         />
       </Section>
 
+      {/* 侧边栏 */}
+      <Section title="侧边栏 GlassSidebar">
+        <div className="row" style={{ alignItems: 'stretch' }}>
+          <GlassSidebar
+            value={sidebarVal}
+            onChange={setSidebarVal}
+            side="left"
+            items={[
+              { icon: '📊', label: '概览', value: 'overview' },
+              { icon: '📁', label: '项目', value: 'projects', badge: 5 },
+              { icon: '💬', label: '消息', value: 'messages', badge: 12 },
+              { icon: '⚙️', label: '设置', value: 'settings' },
+            ]}
+            footer={<span style={{ fontSize: 13, opacity: 0.4 }}>👤 用户</span>}
+          />
+          <GlassSidebar
+            value={sidebarVal}
+            onChange={setSidebarVal}
+            side="right"
+            defaultCollapsed
+            items={[
+              { icon: '📊', label: '概览', value: 'overview' },
+              { icon: '⚙️', label: '设置', value: 'settings' },
+            ]}
+          />
+        </div>
+      </Section>
+
+      {/* 分页器 */}
+      <Section title="分页器 GlassPagination">
+        <GlassPagination total={20} current={paginationPage} onChange={setPaginationPage} />
+      </Section>
+
+      {/* 自定义组件转液态玻璃 */}
+      <Section title="二开工具 withLiquidGlass">
+        <div className="row" style={{ flexDirection: 'column', gap: 12 }}>
+          <p style={{ margin: 0, fontSize: 13, opacity: 0.6, fontFamily: '-apple-system, sans-serif' }}>
+            <code style={{ background: 'rgba(255,255,255,0.08)', padding: '2px 6px', borderRadius: 4 }}>withLiquidGlass</code>
+            {' '}把任意组件包一层液态玻璃：
+          </p>
+          <CustomGlassComponent />
+        </div>
+      </Section>
+
       {/* 卡片 */}
       <Section title="卡片 GlassCard">
         <div className="row">
@@ -364,6 +413,21 @@ export function Components() {
     </div>
   )
 }
+
+/** 自定义组件，通过 withLiquidGlass 一键变成液态玻璃 */
+const CustomGlassComponent = withLiquidGlass(
+  ({ label }: { label?: string }) => (
+    <div style={{
+      padding: '16px 24px',
+      background: 'rgba(255,255,255,0.04)',
+      borderRadius: 8,
+      textAlign: 'center',
+    }}>
+      <span style={{ fontSize: 15, fontWeight: 500 }}>{label || '任何 React 组件'}</span>
+    </div>
+  ),
+  { preset: 'card', tint: 'rgba(10,132,255,0.08)', radius: 16 },
+)
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (

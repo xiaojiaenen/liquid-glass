@@ -110,3 +110,13 @@ export type { GlassContextMenuProps, ContextMenuItem } from '../components/Glass
 
 export { GlassTabBar } from '../components/GlassTabBar'
 export type { GlassTabBarProps, GlassTabBarItem } from '../components/GlassTabBar'
+
+// ── 新增工具 ──
+export { withLiquidGlass } from './withLiquidGlass'
+export type { WithLiquidGlassOptions } from './withLiquidGlass'
+
+export { GlassSidebar } from '../components/GlassSidebar'
+export type { GlassSidebarProps, SidebarItem } from '../components/GlassSidebar'
+
+export { GlassPagination } from '../components/GlassPagination'
+export type { GlassPaginationProps } from '../components/GlassPagination'
