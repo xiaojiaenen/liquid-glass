@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { LiquidGlass } from '../lib/LiquidGlass'
-import { fontStack, spring } from '../lib/tokens'
+import { fontStack, spring, radii } from '../lib/tokens'
 
 export interface GlassSelectOption {
   label: string
@@ -47,11 +47,11 @@ export function GlassSelect({
     <div ref={ref} style={{ position: 'relative', width }}>
       <div onClick={() => setOpen(!open)} style={{ cursor: 'pointer' }}>
         <LiquidGlass
-          radius={12}
-          bezelWidth={22}
-          glassThickness={80}
-          refractionScale={0.9}
-          blur={0.5}
+          radius={radii.control}
+          bezelWidth={16}
+          glassThickness={62}
+          refractionScale={0.618}
+          blur={0.35}
           tint="rgba(255,255,255,0.06)"
           style={{ width: '100%', padding: '0 16px', height: 44 }}
         >
@@ -94,11 +94,11 @@ export function GlassSelect({
           }}
         >
           <LiquidGlass
-            radius={16}
-            bezelWidth={18}
-            glassThickness={80}
-            refractionScale={0.9}
-            blur={0.3}
+            radius={radii.control}
+            bezelWidth={16}
+            glassThickness={62}
+            refractionScale={0.618}
+            blur={0.35}
             tint="rgba(255,255,255,0.08)"
             style={{ padding: 6, flexDirection: 'column' }}
           >

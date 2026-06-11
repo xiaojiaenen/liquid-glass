@@ -16,10 +16,10 @@ export function GlassSegmented({
   return (
     <LiquidGlass
       radius={H / 2}
-      bezelWidth={20}
-      glassThickness={70}
-      refractionScale={0.85}
-      blur={0.5}
+      bezelWidth={16}
+      glassThickness={62}
+      refractionScale={0.618}
+      blur={0.35}
       tint="rgba(255,255,255,0.06)"
       style={{ padding: pad, height: H }}
     >

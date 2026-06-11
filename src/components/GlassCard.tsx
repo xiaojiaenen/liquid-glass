@@ -1,5 +1,5 @@
 import { LiquidGlass } from '../lib/LiquidGlass'
-import { fontStack } from '../lib/tokens'
+import { fontStack, radii } from '../lib/tokens'
 
 export interface GlassCardProps {
   title: string
@@ -26,10 +26,10 @@ export function GlassCard({
       }}
     >
     <LiquidGlass
-      radius={28}
-      bezelWidth={28}
-      glassThickness={120}
-      refractionScale={1}
+      radius={radii.card}
+      bezelWidth={26}
+      glassThickness={100}
+      refractionScale={0.618}
       blur={0.5}
       saturate={1.3}
       tint="rgba(255,255,255,0.03)"

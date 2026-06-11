@@ -12,10 +12,10 @@ export function GlassTag({ children, color = 'rgba(255,255,255,0.12)', closable,
   return (
     <LiquidGlass
       radius={8}
-      bezelWidth={14}
-      glassThickness={50}
-      refractionScale={0.75}
-      blur={0.3}
+      bezelWidth={10}
+      glassThickness={38}
+      refractionScale={0.618}
+      blur={0.2}
       tint={color}
       style={{ padding: '4px 10px' }}
     >

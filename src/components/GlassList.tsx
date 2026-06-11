@@ -1,5 +1,5 @@
 import { LiquidGlass } from '../lib/LiquidGlass'
-import { fontStack, spring } from '../lib/tokens'
+import { fontStack, spring, radii } from '../lib/tokens'
 
 export interface GlassListItem {
   icon?: string
@@ -17,10 +17,10 @@ export interface GlassListProps {
 export function GlassList({ items, width = 320 }: GlassListProps) {
   return (
     <LiquidGlass
-      radius={16}
-      bezelWidth={24}
-      glassThickness={90}
-      refractionScale={0.9}
+      radius={radii.card}
+      bezelWidth={26}
+      glassThickness={100}
+      refractionScale={0.618}
       blur={0.5}
       tint="rgba(255,255,255,0.05)"
       style={{ width, padding: 4, flexDirection: 'column' }}

@@ -23,10 +23,10 @@ export function GlassEmptyState({
   return (
     <LiquidGlass
       radius={radii.card}
-      bezelWidth={22}
+      bezelWidth={26}
       glassThickness={100}
-      refractionScale={0.8}
-      blur={0.4}
+      refractionScale={0.618}
+      blur={0.5}
       tint="rgba(255,255,255,0.03)"
       style={{
         width: 320,

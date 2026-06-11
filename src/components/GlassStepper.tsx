@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { LiquidGlass } from '../lib/LiquidGlass'
-import { fontStack, spring } from '../lib/tokens'
+import { fontStack, spring, radii } from '../lib/tokens'
 
 export interface GlassStepperProps {
   /** 最小值,默认 0 */
@@ -64,11 +64,11 @@ export function GlassStepper({
 
   return (
     <LiquidGlass
-      radius={12}
+      radius={radii.control}
       bezelWidth={16}
-      glassThickness={70}
-      refractionScale={0.8}
-      blur={0.3}
+      glassThickness={62}
+      refractionScale={0.618}
+      blur={0.35}
       tint="rgba(255,255,255,0.04)"
       style={{
         display: 'inline-flex',

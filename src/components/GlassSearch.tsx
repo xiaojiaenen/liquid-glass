@@ -1,16 +1,16 @@
 import { useState } from 'react'
 import { LiquidGlass } from '../lib/LiquidGlass'
-import { fontStack } from '../lib/tokens'
+import { fontStack, radii } from '../lib/tokens'
 
 export function GlassSearch() {
   const [value, setValue] = useState('')
   return (
     <LiquidGlass
-      radius={12}
-      bezelWidth={22}
-      glassThickness={80}
-      refractionScale={0.9}
-      blur={0.5}
+      radius={radii.control}
+      bezelWidth={16}
+      glassThickness={62}
+      refractionScale={0.618}
+      blur={0.35}
       tint="rgba(255,255,255,0.06)"
       style={{ width: 300, padding: '0 14px', height: 36 }}
     >

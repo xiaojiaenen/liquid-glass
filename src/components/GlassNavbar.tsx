@@ -1,5 +1,5 @@
 import { LiquidGlass } from '../lib/LiquidGlass'
-import { fontStack, spring } from '../lib/tokens'
+import { fontStack, spring, radii } from '../lib/tokens'
 
 export interface GlassNavbarProps {
   title: string
@@ -11,10 +11,10 @@ export interface GlassNavbarProps {
 export function GlassNavbar({ title, left, right, onBack }: GlassNavbarProps) {
   return (
     <LiquidGlass
-      radius={16}
-      bezelWidth={22}
-      glassThickness={80}
-      refractionScale={0.9}
+      radius={radii.card}
+      bezelWidth={26}
+      glassThickness={100}
+      refractionScale={0.618}
       blur={0.5}
       tint="rgba(255,255,255,0.05)"
       style={{ width: '100%', padding: '0 16px', height: 44 }}

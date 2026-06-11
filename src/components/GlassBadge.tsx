@@ -26,8 +26,8 @@ export function GlassBadge({ count, dot, children, color = 'rgba(255,59,48,0.95)
           <LiquidGlass
             radius={dot ? 5 : count! > 9 ? 12 : 10}
             bezelWidth={10}
-            glassThickness={40}
-            refractionScale={0.7}
+            glassThickness={38}
+            refractionScale={0.618}
             blur={0.2}
             tint={color}
             style={{

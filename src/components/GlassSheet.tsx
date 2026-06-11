@@ -150,10 +150,10 @@ export function GlassSheet({
       >
         <LiquidGlass
           radius={radii.sheet}
-          bezelWidth={28}
-          glassThickness={120}
-          refractionScale={0.9}
-          blur={0.4}
+          bezelWidth={26}
+          glassThickness={100}
+          refractionScale={0.618}
+          blur={0.5}
           tint="rgba(30,30,40,0.85)"
           style={{
             width: '100%',

@@ -42,10 +42,10 @@ export function GlassToast({ message, icon = '✓', duration = 2000, onClose }: 
       >
       <LiquidGlass
         radius={20}
-        bezelWidth={20}
-        glassThickness={70}
-        refractionScale={0.85}
-        blur={0.5}
+        bezelWidth={10}
+        glassThickness={38}
+        refractionScale={0.618}
+        blur={0.2}
         tint="rgba(255,255,255,0.08)"
         style={{ padding: '12px 20px' }}
       >

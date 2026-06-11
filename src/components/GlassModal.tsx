@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { LiquidGlass } from '../lib/LiquidGlass'
-import { fontStack, spring } from '../lib/tokens'
+import { fontStack, spring, radii } from '../lib/tokens'
 
 export interface GlassModalProps {
   open: boolean
@@ -42,10 +42,10 @@ export function GlassModal({ open, onClose, title, children, width = 320 }: Glas
         onClick={(e) => e.stopPropagation()}
       >
         <LiquidGlass
-          radius={20}
-          bezelWidth={28}
-          glassThickness={120}
-          refractionScale={0.95}
+          radius={radii.card}
+          bezelWidth={26}
+          glassThickness={100}
+          refractionScale={0.618}
           blur={0.5}
           tint="rgba(255,255,255,0.08)"
           style={{
