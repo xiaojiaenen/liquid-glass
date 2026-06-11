@@ -9,11 +9,14 @@
  *  3. calculateSpecularHighlight —— 生成镜面高光贴图(rim light)
  */
 
-export type BezelProfile = 'convex_squircle'
+export type BezelProfile = 'convex_squircle' | 'flat' | 'concave' | 'pill'
 
 /** 表面方程:x∈[0,1],返回高度 */
 const SurfaceEquations = {
   convex_squircle: (x: number) => Math.pow(1 - Math.pow(1 - x, 4), 1 / 4),
+  flat: (x: number) => x,
+  concave: (x: number) => 1 - Math.pow(1 - Math.pow(1 - x, 4), 1 / 4),
+  pill: (x: number) => Math.sin(x * Math.PI / 2),
 }
 
 export interface LiquidGlassMapOptions {
@@ -33,6 +36,8 @@ export interface LiquidGlassMapOptions {
   specularAngleDeg?: number
   /** 镜面高光带宽(px),默认 1.5 */
   specularRimWidth?: number
+  /** 表面轮廓,默认 'convex_squircle' */
+  profile?: BezelProfile
 }
 
 export interface LiquidGlassMaps {
@@ -196,15 +201,18 @@ export function generateLiquidGlassMaps(
     refractiveIndex = 1.5,
     specularAngleDeg = 60,
     specularRimWidth = 1.5,
+    profile = 'convex_squircle',
   } = opts
   const w = Math.max(1, Math.round(width))
   const h = Math.max(1, Math.round(height))
   const rad = Math.min(radius, Math.min(w, h) / 2)
 
+  const surfaceFn = SurfaceEquations[profile]
+
   const pMap = calculateDisplacementMap1D(
     glassThickness,
     bezelWidth,
-    SurfaceEquations.convex_squircle,
+    surfaceFn,
     refractiveIndex,
   )
 

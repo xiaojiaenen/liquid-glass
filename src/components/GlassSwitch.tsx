@@ -2,7 +2,11 @@ import { useState } from 'react'
 import { LiquidGlass } from '../lib/LiquidGlass'
 import { spring, systemColors } from '../lib/tokens'
 
-export function GlassSwitch({ defaultOn = false }: { defaultOn?: boolean }) {
+export interface GlassSwitchProps {
+  defaultOn?: boolean
+}
+
+export function GlassSwitch({ defaultOn = false }: GlassSwitchProps) {
   const [on, setOn] = useState(defaultOn)
   // iOS 开关比例 51:31
   const W = 51

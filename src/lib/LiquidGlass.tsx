@@ -1,6 +1,8 @@
-import { useId, type CSSProperties, type ReactNode } from 'react'
+import { useId, useState, useCallback, type CSSProperties, type ReactNode } from 'react'
 import { useLiquidGlass } from './useLiquidGlass'
+import { useGlassParallax } from './useGlassParallax'
 import { LiquidGlassFilter } from './LiquidGlassFilter'
+import type { BezelProfile } from './displacementMap'
 import './LiquidGlass.css'
 
 export interface LiquidGlassProps {
@@ -25,6 +27,10 @@ export interface LiquidGlassProps {
   style?: CSSProperties
   as?: 'div' | 'button'
   onClick?: () => void
+  /** 表面轮廓,默认 'convex_squircle' */
+  profile?: BezelProfile
+  /** 启用鼠标视差:高光跟随指针方向,默认 false */
+  parallax?: boolean
 }
 
 /**
@@ -46,15 +52,37 @@ export function LiquidGlass({
   style,
   as = 'div',
   onClick,
+  profile,
+  parallax = false,
 }: LiquidGlassProps) {
   const reactId = useId()
   const filterId = `lg-${reactId.replace(/[:]/g, '')}`
+  const [specularAngle, setSpecularAngle] = useState(60)
   const { ref, maps, supported } = useLiquidGlass({
     radius,
     bezelWidth,
     glassThickness,
     refractiveIndex,
+    profile,
+    specularAngleDeg: specularAngle,
   })
+
+  const handleAngleChange = useCallback((angle: number) => {
+    setSpecularAngle(angle)
+  }, [])
+
+  const bindParallax = useGlassParallax(parallax && supported, handleAngleChange)
+
+  // 将 parallax bind 和 ref 组合
+  const combinedRef = useCallback(
+    (el: HTMLDivElement | null) => {
+      // 给父组件的 ref（via useLiquidGlass）
+      ;(ref as React.MutableRefObject<HTMLDivElement | null>).current = el
+      // 给 parallax 的 ref
+      bindParallax(el as unknown as HTMLElement | null)
+    },
+    [ref, bindParallax],
+  )
 
   const refractionStyle: CSSProperties =
     supported && maps
@@ -68,7 +96,7 @@ export function LiquidGlass({
 
   return (
     <Tag
-      ref={ref as never}
+      ref={combinedRef as never}
       onClick={onClick}
       className={`liquid-glass ${supported ? 'is-glass' : 'is-fallback'} ${className}`}
       style={

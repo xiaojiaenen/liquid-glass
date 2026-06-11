@@ -1,19 +1,21 @@
 import { LiquidGlass } from '../lib/LiquidGlass'
 import { fontStack } from '../lib/tokens'
 
-export function GlassButton({
-  children,
-  onClick,
-  variant = 'regular',
-  size = 'default',
-}: {
+export interface GlassButtonProps {
   children: React.ReactNode
   onClick?: () => void
   /** regular = 通透玻璃,prominent = 蓝色强调 */
   variant?: 'regular' | 'prominent'
   /** default = 标准,small = 小号 */
   size?: 'default' | 'small'
-}) {
+}
+
+export function GlassButton({
+  children,
+  onClick,
+  variant = 'regular',
+  size = 'default',
+}: GlassButtonProps) {
   const prominent = variant === 'prominent'
   const isSmall = size === 'small'
   const h = isSmall ? 34 : 50

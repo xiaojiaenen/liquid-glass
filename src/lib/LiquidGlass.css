@@ -6,13 +6,13 @@
   color: #fff;
   -webkit-tap-highlight-color: transparent;
   background: var(--lg-tint, rgba(255, 255, 255, 0.02));
-  border: 0.5px solid rgba(255, 255, 255, 0.18);
+  border: var(--lg-border-color, 0.5px solid rgba(255, 255, 255, 0.18));
   /* 所有阴影:外阴影 + 内高光 */
   box-shadow:
     0 1px 2px rgba(0, 0, 0, 0.12),
     0 6px 18px rgba(0, 0, 0, 0.18),
     0 16px 40px rgba(0, 0, 0, 0.14),
-    inset 0 1px 1px rgba(255, 255, 255, 0.3),
+    inset 0 1px 1px rgba(255, 255, 255, var(--lg-highlight-opacity, 0.3)),
     inset 0 -1px 2px rgba(255, 255, 255, 0.08),
     inset 0 0 14px rgba(255, 255, 255, 0.04);
 }
@@ -23,6 +23,21 @@
 .liquid-glass.is-fallback {
   backdrop-filter: blur(4px) saturate(1.6) brightness(1.04);
   -webkit-backdrop-filter: blur(4px) saturate(1.6) brightness(1.04);
+}
+
+/* fallback 噪声纹理 — 模拟磨砂玻璃的颗粒感 */
+.liquid-glass.is-fallback::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+  mix-blend-mode: overlay;
 }
 
 /* fallback 顶部斜向高光,补偿没有 SVG rim light */

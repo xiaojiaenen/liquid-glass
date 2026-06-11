@@ -1,6 +1,15 @@
 import { LiquidGlass } from '../lib/LiquidGlass'
 import { fontStack } from '../lib/tokens'
 
+export interface GlassNotificationProps {
+  icon?: string
+  iconBg?: string
+  app?: string
+  time?: string
+  title: string
+  body: string
+}
+
 export function GlassNotification({
   icon = '💬',
   iconBg = 'linear-gradient(160deg,#30d158,#34c759)',
@@ -8,14 +17,7 @@ export function GlassNotification({
   time = '现在',
   title,
   body,
-}: {
-  icon?: string
-  iconBg?: string
-  app?: string
-  time?: string
-  title: string
-  body: string
-}) {
+}: GlassNotificationProps) {
   return (
     <LiquidGlass
       radius={22}

@@ -2,13 +2,15 @@ import { useRef, useState } from 'react'
 import { LiquidGlass } from '../lib/LiquidGlass'
 import { systemColors } from '../lib/tokens'
 
+export interface GlassSliderProps {
+  defaultValue?: number
+  accent?: string
+}
+
 export function GlassSlider({
   defaultValue = 50,
   accent = systemColors.blue,
-}: {
-  defaultValue?: number
-  accent?: string
-}) {
+}: GlassSliderProps) {
   const [value, setValue] = useState(defaultValue)
   const trackRef = useRef<HTMLDivElement>(null)
   const dragging = useRef(false)

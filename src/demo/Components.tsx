@@ -28,6 +28,13 @@ import { GlassProgress } from '../components/GlassProgress'
 import { GlassList } from '../components/GlassList'
 import { GlassAccordion } from '../components/GlassAccordion'
 import { supportsSvgBackdrop } from '../lib/capabilities'
+import { GlassSpinner } from '../components/GlassSpinner'
+import { GlassStepper } from '../components/GlassStepper'
+import { GlassPageControl } from '../components/GlassPageControl'
+import { GlassEmptyState } from '../components/GlassEmptyState'
+import { GlassSheet, type GlassSheetAction } from '../components/GlassSheet'
+import { GlassContextMenu } from '../components/GlassContextMenu'
+import { GlassTabBar } from '../components/GlassTabBar'
 
 const backgrounds = [
   {
@@ -53,6 +60,22 @@ export function Components() {
   const supported = supportsSvgBackdrop()
   const { show: showToast, ToastContainer } = useToast()
   const [modalOpen, setModalOpen] = useState(false)
+  const [sheetOpen, setSheetOpen] = useState(false)
+  const [stepperVal, setStepperVal] = useState(5)
+  const [tabBarVal, setTabBarVal] = useState('home')
+  const [pageIdx, setPageIdx] = useState(0)
+  const [menuItems] = useState([
+    { label: '复制', icon: '📋', onClick: () => alert('已复制') },
+    { label: '重命名', icon: '✏️', onClick: () => alert('重命名') },
+    { label: '分享', icon: '🔗', onClick: () => alert('分享') },
+    { label: '删除', icon: '🗑️', onClick: () => alert('已删除'), destructive: true },
+  ])
+  const sheetActions: GlassSheetAction[] = [
+    { label: '拍照', onClick: () => {} },
+    { label: '从相册选择', onClick: () => {} },
+    { label: '从文件选择', onClick: () => {} },
+    { label: '取消', onClick: () => {}, cancel: true },
+  ]
 
   return (
     <div className="stage">
@@ -159,6 +182,11 @@ export function Components() {
             <GlassDatePicker />
           </Labeled>
         </div>
+        <div className="control-grid" style={{ marginTop: 16 }}>
+          <Labeled label="步进器 GlassStepper">
+            <GlassStepper value={stepperVal} onChange={setStepperVal} min={0} max={20} />
+          </Labeled>
+        </div>
       </Section>
 
       {/* 展示 */}
@@ -213,6 +241,15 @@ export function Components() {
             </Labeled>
           </div>
         </div>
+        <div className="row" style={{ marginTop: 16 }}>
+          <Labeled label="活动指示器 GlassSpinner">
+            <div className="row">
+              <GlassSpinner size="small" />
+              <GlassSpinner size="medium" />
+              <GlassSpinner size="large" />
+            </div>
+          </Labeled>
+        </div>
       </Section>
 
       {/* 反馈 */}
@@ -223,6 +260,10 @@ export function Components() {
           <GlassTooltip content="这是一个提示">
             <GlassButton>Hover 提示</GlassButton>
           </GlassTooltip>
+          <GlassButton onClick={() => setSheetOpen(true)}>底部面板</GlassButton>
+          <GlassContextMenu items={menuItems}>
+            <GlassButton>右键/长按菜单</GlassButton>
+          </GlassContextMenu>
         </div>
       </Section>
 
@@ -233,6 +274,40 @@ export function Components() {
             { title: '什么是液态玻璃？', content: '液态玻璃是 Apple 在 WWDC25 推出的全新设计语言，模拟真实玻璃的折射、高光和透明效果。' },
             { title: '如何使用？', content: '引入 LiquidGlass 组件，设置圆角、棱镜宽度、玻璃厚度等参数即可。' },
             { title: '兼容性？', content: 'Chromium 浏览器使用 SVG 折射滤镜，Safari/Firefox 自动降级为毛玻璃效果。' },
+          ]}
+        />
+      </Section>
+
+      {/* 页面指示器 */}
+      <Section title="页面指示器 GlassPageControl">
+        <div className="row">
+          <GlassPageControl count={5} current={pageIdx} onChange={setPageIdx} />
+        </div>
+      </Section>
+
+      {/* 空状态 */}
+      <Section title="空状态 GlassEmptyState">
+        <div className="row">
+          <GlassEmptyState
+            icon="📦"
+            title="暂无数据"
+            subtitle="当前列表为空，点击下方按钮开始添加内容。"
+            actionLabel="添加内容"
+            onAction={() => alert('添加内容')}
+          />
+        </div>
+      </Section>
+
+      {/* 底部标签栏 */}
+      <Section title="底部标签栏 GlassTabBar">
+        <GlassTabBar
+          value={tabBarVal}
+          onChange={setTabBarVal}
+          items={[
+            { icon: '🏠', label: '首页', value: 'home' },
+            { icon: '🔍', label: '探索', value: 'explore' },
+            { icon: '💬', label: '消息', value: 'chat' },
+            { icon: '👤', label: '我的', value: 'profile' },
           ]}
         />
       </Section>
@@ -283,6 +358,9 @@ export function Components() {
       <GlassModal open={modalOpen} onClose={() => setModalOpen(false)} title="液态玻璃弹窗">
         <p style={{ margin: 0 }}>这是一个模态对话框，按 ESC 或点击遮罩关闭。</p>
       </GlassModal>
+
+      {/* Sheet */}
+      <GlassSheet open={sheetOpen} onClose={() => setSheetOpen(false)} title="选择操作" actions={sheetActions} />
     </div>
   )
 }

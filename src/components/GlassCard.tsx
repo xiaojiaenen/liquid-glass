@@ -1,15 +1,17 @@
 import { LiquidGlass } from '../lib/LiquidGlass'
 import { fontStack } from '../lib/tokens'
 
+export interface GlassCardProps {
+  title: string
+  children: React.ReactNode
+  icon?: string
+}
+
 export function GlassCard({
   title,
   children,
   icon,
-}: {
-  title: string
-  children: React.ReactNode
-  icon?: string
-}) {
+}: GlassCardProps) {
   return (
     <LiquidGlass
       radius={28}

@@ -20,9 +20,9 @@ export function Dock() {
       bezelWidth={20}
       glassThickness={90}
       refractionScale={1.1}
-      blur={0.4}
+      blur={0.2}
       saturate={1.2}
-      tint="rgba(255,255,255,0.08)"
+      tint="rgba(255,255,255,0.04)"
       style={{ padding: '10px 14px' }}
     >
       <div style={{ display: 'flex', gap: 12, alignItems: 'flex-end' }}>
