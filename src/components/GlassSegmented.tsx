@@ -18,8 +18,8 @@ export function GlassSegmented({
       bezelWidth={14}
       glassThickness={60}
       refractionScale={0.9}
-      blur={0.4}
-      tint="rgba(120,120,128,0.24)"
+      blur={0.2}
+      tint="rgba(255,255,255,0.08)"
       style={{ padding: pad, height: H }}
     >
       <div style={{ position: 'relative', display: 'flex' }}>

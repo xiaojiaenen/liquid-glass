@@ -10,8 +10,8 @@ export function GlassSearch() {
       bezelWidth={22}
       glassThickness={80}
       refractionScale={1}
-      blur={0.5}
-      tint="rgba(120,120,128,0.2)"
+      blur={0.2}
+      tint="rgba(255,255,255,0.06)"
       style={{ width: 300, padding: '0 14px', height: 44 }}
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, width: '100%' }}>
