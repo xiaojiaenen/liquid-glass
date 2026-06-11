@@ -12,7 +12,7 @@ export function GlassCard({
       radius={40}
       bezelWidth={30}
       glassThickness={120}
-      scale={45}
+      refractionScale={1}
       blur={0.5}
       saturate={1.3}
       tint="rgba(255,255,255,0.06)"

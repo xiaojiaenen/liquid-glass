@@ -13,8 +13,8 @@ export interface LiquidGlassProps {
   glassThickness?: number
   /** 折射率,默认 1.5 */
   refractiveIndex?: number
-  /** feDisplacementMap scale,默认 40 */
-  scale?: number
+  /** 折射强度倍率,最终 scale = maxDisplacement × refractionScale,默认 1 */
+  refractionScale?: number
   /** 预模糊半径 */
   blur?: number
   /** 折射后饱和度增益 */
@@ -38,7 +38,7 @@ export function LiquidGlass({
   bezelWidth = 30,
   glassThickness = 150,
   refractiveIndex = 1.5,
-  scale = 40,
+  refractionScale = 1,
   blur = 0.5,
   saturate = 1.3,
   tint = 'rgba(255, 255, 255, 0.08)',
@@ -95,7 +95,7 @@ export function LiquidGlass({
         <LiquidGlassFilter
           id={filterId}
           maps={maps}
-          scale={scale}
+          scale={maps.maxDisplacement * refractionScale}
           blur={blur}
           saturate={saturate}
         />

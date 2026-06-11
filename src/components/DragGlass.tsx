@@ -41,7 +41,7 @@ export function DragGlass() {
     radius: 28,
     bezelWidth: 26,
     glassThickness: 150,
-    scale: 45,
+    refractionScale: 1,
     blur: 0.5,
     saturate: 1.3,
   })
@@ -71,7 +71,7 @@ export function DragGlass() {
         <Param label="圆角 radius" value={p.radius} min={0} max={70} onChange={set('radius')} />
         <Param label="棱镜 bezelWidth" value={p.bezelWidth} min={4} max={60} onChange={set('bezelWidth')} />
         <Param label="厚度 glassThickness" value={p.glassThickness} min={20} max={500} onChange={set('glassThickness')} />
-        <Param label="位移 scale" value={p.scale} min={0} max={120} onChange={set('scale')} />
+        <Param label="折射 refractionScale" value={p.refractionScale} min={0} max={3} step={0.05} onChange={set('refractionScale')} />
         <Param label="模糊 blur" value={p.blur} min={0} max={6} step={0.1} onChange={set('blur')} />
         <Param label="饱和 saturate" value={p.saturate} min={1} max={4} step={0.1} onChange={set('saturate')} />
       </div>
@@ -98,7 +98,7 @@ export function DragGlass() {
             radius={p.radius}
             bezelWidth={p.bezelWidth}
             glassThickness={p.glassThickness}
-            scale={p.scale}
+            refractionScale={p.refractionScale}
             blur={p.blur}
             saturate={p.saturate}
             tint="rgba(255,255,255,0.04)"

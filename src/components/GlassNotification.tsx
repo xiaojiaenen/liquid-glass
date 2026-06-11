@@ -18,7 +18,7 @@ export function GlassNotification({
       radius={26}
       bezelWidth={22}
       glassThickness={100}
-      scale={34}
+      refractionScale={1}
       blur={1}
       tint="rgba(255,255,255,0.07)"
       style={{ width: 340, padding: 16 }}

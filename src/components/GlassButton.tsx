@@ -14,7 +14,7 @@ export function GlassButton({
       radius={26}
       bezelWidth={20}
       glassThickness={90}
-      scale={30}
+      refractionScale={1}
       blur={0}
       saturate={1.2}
       tint="rgba(255,255,255,0.1)"

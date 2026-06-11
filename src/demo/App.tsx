@@ -41,13 +41,13 @@ export function App() {
 
       {/* 顶栏:标题 + 背景切换 */}
       <header className="topbar">
-        <LiquidGlass radius={44} bezelWidth={28} glassThickness={130} scale={45} blur={0.5} style={{ padding: '16px 32px' }}>
+        <LiquidGlass radius={44} bezelWidth={28} glassThickness={130} refractionScale={1} blur={0.5} style={{ padding: '16px 32px' }}>
           <h1 style={{ margin: 0, fontSize: 28, fontWeight: 800, letterSpacing: -0.5 }}>
             Liquid Glass
           </h1>
         </LiquidGlass>
 
-        <LiquidGlass radius={22} bezelWidth={14} glassThickness={70} scale={22} blur={0.5} style={{ padding: 6 }}>
+        <LiquidGlass radius={22} bezelWidth={14} glassThickness={70} refractionScale={1} blur={0.5} style={{ padding: 6 }}>
           <div style={{ display: 'flex', gap: 4 }}>
             {backgrounds.map((b, i) => (
               <button

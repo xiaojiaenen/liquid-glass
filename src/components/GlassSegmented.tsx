@@ -16,7 +16,7 @@ export function GlassSegmented({
       radius={H / 2}
       bezelWidth={16}
       glassThickness={70}
-      scale={22}
+      refractionScale={1}
       blur={0.5}
       tint="rgba(255,255,255,0.06)"
       style={{ padding: pad, height: H }}

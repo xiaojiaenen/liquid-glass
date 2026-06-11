@@ -10,7 +10,7 @@ export function GlassMusicPlayer() {
       radius={28}
       bezelWidth={26}
       glassThickness={110}
-      scale={40}
+      refractionScale={1}
       blur={1}
       saturate={1.3}
       tint="rgba(255,255,255,0.06)"

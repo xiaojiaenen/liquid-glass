@@ -34,6 +34,8 @@ export interface LiquidGlassMapOptions {
 export interface LiquidGlassMaps {
   displacementUrl: string
   specularUrl: string
+  /** 一维曲线的最大位移量,用作归一化除数 & feDisplacementMap 的 scale 基准 */
+  maxDisplacement: number
   width: number
   height: number
 }
@@ -196,12 +198,25 @@ export function generateLiquidGlassMaps(
     refractiveIndex,
   )
 
-  const dispImg = calculateDisplacementMap2D(w, h, w, h, rad, bezelWidth, 1, pMap)
+  // 归一化除数:一维曲线的最大绝对位移(参考实现的 md)
+  const maxDisplacement = Math.max(...pMap.map(Math.abs)) || 1
+
+  const dispImg = calculateDisplacementMap2D(
+    w,
+    h,
+    w,
+    h,
+    rad,
+    bezelWidth,
+    maxDisplacement,
+    pMap,
+  )
   const specImg = calculateSpecularHighlight(w, h, rad, bezelWidth)
 
   return {
     displacementUrl: imageDataToDataURL(dispImg),
     specularUrl: imageDataToDataURL(specImg),
+    maxDisplacement,
     width: w,
     height: h,
   }

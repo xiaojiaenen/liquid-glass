@@ -8,7 +8,7 @@ export function GlassSearch() {
       radius={26}
       bezelWidth={20}
       glassThickness={90}
-      scale={28}
+      refractionScale={1}
       blur={1}
       tint="rgba(255,255,255,0.08)"
       style={{ width: 300, padding: '0 18px', height: 52 }}

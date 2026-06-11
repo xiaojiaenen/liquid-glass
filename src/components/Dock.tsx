@@ -8,7 +8,7 @@ export function Dock() {
       radius={32}
       bezelWidth={24}
       glassThickness={100}
-      scale={35}
+      refractionScale={1}
       blur={0}
       saturate={1.2}
       tint="rgba(255,255,255,0.1)"
