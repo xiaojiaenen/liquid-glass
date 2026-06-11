@@ -7,6 +7,10 @@ export interface GlassSliderProps {
   accent?: string
 }
 
+/**
+ * GlassSlider — 液态玻璃滑块。
+ * 轨道和已填充条都是薄液态玻璃层，旋钮是高光玻璃圆。
+ */
 export function GlassSlider({
   defaultValue = 50,
   accent = systemColors.blue,
@@ -16,6 +20,7 @@ export function GlassSlider({
   const dragging = useRef(false)
   const W = 260
   const knob = 28
+  const trackH = 4
 
   const setFromClientX = (clientX: number) => {
     const el = trackRef.current
@@ -45,34 +50,45 @@ export function GlassSlider({
         touchAction: 'none',
       }}
     >
-      {/* 轨道 */}
-      <div
+      {/* 轨道 — 薄液态玻璃 */}
+      <LiquidGlass
+        radius={trackH / 2}
+        bezelWidth={6}
+        glassThickness={25}
+        refractionScale={0.5}
+        blur={0.15}
+        tint="rgba(120,120,128,0.25)"
         style={{
           position: 'absolute',
           left: 0,
           right: 0,
-          height: 4,
-          borderRadius: 2,
-          background: 'rgba(120,120,128,0.32)',
+          height: trackH,
         }}
       />
-      {/* 已填充 */}
-      <div
+
+      {/* 已填充 — 液态玻璃条 */}
+      <LiquidGlass
+        radius={trackH / 2}
+        bezelWidth={6}
+        glassThickness={25}
+        refractionScale={0.5}
+        blur={0.15}
+        tint={`${accent}80`} // accent with 50% alpha
         style={{
           position: 'absolute',
           left: 0,
           width: `${value}%`,
-          height: 4,
-          borderRadius: 2,
-          background: accent,
+          height: trackH,
         }}
       />
-      {/* 滑块 */}
+
+      {/* 滑块旋钮 — 玻璃圆点 */}
       <span
         style={{
           position: 'absolute',
           left: `calc(${value}% - ${knob / 2}px)`,
-          filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.3))',
+          zIndex: 1,
+          filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.25))',
         }}
       >
         <LiquidGlass
@@ -80,9 +96,13 @@ export function GlassSlider({
           bezelWidth={knob / 2}
           glassThickness={55}
           refractionScale={0.85}
-          blur={0}
-          tint="rgba(255,255,255,0.6)"
-          style={{ width: knob, height: knob }}
+          blur={0.15}
+          tint="rgba(255,255,255,0.65)"
+          style={{
+            width: knob,
+            height: knob,
+            transition: `transform 0.2s, filter 0.2s`,
+          }}
         />
       </span>
     </div>

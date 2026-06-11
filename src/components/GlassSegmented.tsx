@@ -11,6 +11,7 @@ export function GlassSegmented({
   const segW = 60
   const H = 32
   const pad = 3
+  const indicatorH = H - pad * 2
 
   return (
     <LiquidGlass
@@ -23,16 +24,20 @@ export function GlassSegmented({
       style={{ padding: pad, height: H }}
     >
       <div style={{ position: 'relative', display: 'flex' }}>
-        {/* 选中指示器 */}
-        <span
+        {/* 选中指示器 — 液态玻璃滑块 */}
+        <LiquidGlass
+          radius={indicatorH / 2}
+          bezelWidth={10}
+          glassThickness={50}
+          refractionScale={0.7}
+          blur={0.2}
+          tint="rgba(255,255,255,0.22)"
           style={{
             position: 'absolute',
             top: 0,
             left: active * segW,
             width: segW,
-            height: H - pad * 2,
-            borderRadius: (H - pad * 2) / 2,
-            background: 'rgba(255,255,255,0.18)',
+            height: indicatorH,
             transition: `left 0.32s ${spring.default}`,
           }}
         />
@@ -43,7 +48,7 @@ export function GlassSegmented({
             style={{
               position: 'relative',
               width: segW,
-              height: H - pad * 2,
+              height: indicatorH,
               border: 'none',
               background: 'transparent',
               color: '#fff',
