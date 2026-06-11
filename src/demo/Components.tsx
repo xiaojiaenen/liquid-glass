@@ -9,6 +9,7 @@ import { GlassSegmented } from '../components/GlassSegmented'
 import { GlassMusicPlayer } from '../components/GlassMusicPlayer'
 import { GlassNotification } from '../components/GlassNotification'
 import { Dock } from '../components/Dock'
+import { DragGlass } from '../components/DragGlass'
 import { supportsSvgBackdrop } from '../lib/capabilities'
 
 const backgrounds = [
@@ -73,6 +74,11 @@ export function Components() {
       <p className="mode-hint">
         渲染模式:{supported ? 'SVG 折射(Chromium)' : '毛玻璃降级(Safari/Firefox)'}
       </p>
+
+      {/* 拖动折射 */}
+      <Section title="拖动折射 DragGlass">
+        <DragGlass />
+      </Section>
 
       {/* 按钮 */}
       <Section title="按钮 GlassButton">
