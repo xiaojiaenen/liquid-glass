@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { LiquidGlass } from '../lib/LiquidGlass'
-import { fontStack } from '../lib/tokens'
+import { fontStack, spring } from '../lib/tokens'
 
 export function GlassMusicPlayer() {
   const [playing, setPlaying] = useState(false)
@@ -38,8 +38,7 @@ export function GlassMusicPlayer() {
               display: 'grid',
               placeItems: 'center',
               fontSize: 28,
-              boxShadow:
-                'inset 0 1px 1px rgba(255,255,255,0.4), 0 8px 20px rgba(0,0,0,0.4)',
+              boxShadow: '0 8px 20px rgba(0,0,0,0.4)',
             }}
           >
             🎧
@@ -96,17 +95,19 @@ export function GlassMusicPlayer() {
             gap: 36,
           }}
         >
-          <button style={ctrlBtn} aria-label="上一首">
+          <button style={ctrlBtn} aria-label="上一首" onMouseDown={(e) => (e.currentTarget.style.transform = 'scale(0.85)')} onMouseUp={(e) => (e.currentTarget.style.transform = 'scale(1)')}>
             <Backward />
           </button>
           <button
             onClick={() => setPlaying((v) => !v)}
             style={ctrlBtn}
             aria-label={playing ? '暂停' : '播放'}
+            onMouseDown={(e) => (e.currentTarget.style.transform = 'scale(0.85)')}
+            onMouseUp={(e) => (e.currentTarget.style.transform = 'scale(1)')}
           >
             {playing ? <Pause /> : <Play />}
           </button>
-          <button style={ctrlBtn} aria-label="下一首">
+          <button style={ctrlBtn} aria-label="下一首" onMouseDown={(e) => (e.currentTarget.style.transform = 'scale(0.85)')} onMouseUp={(e) => (e.currentTarget.style.transform = 'scale(1)')}>
             <Forward />
           </button>
         </div>
@@ -123,6 +124,7 @@ const ctrlBtn: React.CSSProperties = {
   display: 'grid',
   placeItems: 'center',
   padding: 0,
+  transition: `transform 0.2s ${spring.default}, opacity 0.2s ease`,
 }
 
 const Play = () => (

@@ -42,7 +42,7 @@ export function GlassAccordion({ items, width = 340 }: GlassAccordionProps) {
                 padding: '12px 12px',
                 borderRadius: 12,
                 cursor: 'pointer',
-                transition: 'background 0.15s ease',
+                transition: `background 0.2s ${spring.default}`,
               }}
               onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(255,255,255,0.06)')}
               onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}

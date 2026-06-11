@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { LiquidGlass } from '../lib/LiquidGlass'
-import { fontStack, radii } from '../lib/tokens'
+import { fontStack, radii, spring } from '../lib/tokens'
 
 export interface ContextMenuItem {
   label: string
@@ -112,7 +112,7 @@ export function GlassContextMenu({ items, children }: GlassContextMenuProps) {
             zIndex: 10000,
             opacity: open ? 1 : 0,
             transform: `scale(${open ? 1 : 0.95})`,
-            transition: 'opacity 0.12s ease, transform 0.18s ease',
+            transition: `opacity 0.18s ${spring.default}, transform 0.25s ${spring.default}`,
           }}
         >
           <LiquidGlass
@@ -159,7 +159,7 @@ export function GlassContextMenu({ items, children }: GlassContextMenuProps) {
                   gap: 10,
                   fontFamily: fontStack,
                   letterSpacing: -0.1,
-                  transition: 'background 0.1s ease',
+                  transition: `background 0.2s ${spring.default}, transform 0.15s ${spring.snappy}`,
                   width: '100%',
                 }}
                 onMouseEnter={(e) => {

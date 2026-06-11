@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { LiquidGlass } from '../lib/LiquidGlass'
-import { fontStack } from '../lib/tokens'
+import { fontStack, spring } from '../lib/tokens'
 
 export interface GlassStepperProps {
   /** 最小值,默认 0 */
@@ -85,10 +85,14 @@ export function GlassStepper({
         style={{
           ...btnStyle,
           opacity: current <= min ? 0.3 : 0.85,
-          transition: `opacity 0.2s ease`,
+          transition: `all 0.2s ${spring.default}`,
           borderRadius: 10,
         }}
         aria-label="减少"
+        onMouseEnter={(e) => { if (current > min) e.currentTarget.style.background = 'rgba(255,255,255,0.08)' }}
+        onMouseLeave={(e) => { e.currentTarget.style.background = 'none' }}
+        onMouseDown={(e) => { if (current > min) e.currentTarget.style.transform = 'scale(0.9)' }}
+        onMouseUp={(e) => { e.currentTarget.style.transform = 'scale(1)' }}
       >
         −
       </button>
@@ -114,10 +118,14 @@ export function GlassStepper({
         style={{
           ...btnStyle,
           opacity: current >= max ? 0.3 : 0.85,
-          transition: `opacity 0.2s ease`,
+          transition: `all 0.2s ${spring.default}`,
           borderRadius: 10,
         }}
         aria-label="增加"
+        onMouseEnter={(e) => { if (current < max) e.currentTarget.style.background = 'rgba(255,255,255,0.08)' }}
+        onMouseLeave={(e) => { e.currentTarget.style.background = 'none' }}
+        onMouseDown={(e) => { if (current < max) e.currentTarget.style.transform = 'scale(0.9)' }}
+        onMouseUp={(e) => { e.currentTarget.style.transform = 'scale(1)' }}
       >
         +
       </button>

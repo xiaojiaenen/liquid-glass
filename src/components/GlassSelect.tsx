@@ -115,7 +115,7 @@ export function GlassSelect({
                   color: '#fff',
                   cursor: 'pointer',
                   background: selected === opt.value ? 'rgba(10,132,255,0.35)' : 'transparent',
-                  transition: 'background 0.15s ease',
+                  transition: `background 0.2s ${spring.default}`,
                   letterSpacing: -0.4,
                 }}
                 onMouseEnter={(e) => {

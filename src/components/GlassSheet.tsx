@@ -137,7 +137,7 @@ export function GlassSheet({
           background: open ? 'rgba(0,0,0,0.4)' : 'transparent',
           backdropFilter: open ? 'blur(10px)' : 'none',
           opacity: open ? 1 : 0,
-          transition: `all 0.3s ease`,
+          transition: `all 0.35s ${spring.gentle}`,
           WebkitBackdropFilter: open ? 'blur(10px)' : 'none',
         }}
       />
@@ -251,10 +251,12 @@ export function GlassSheet({
                       cursor: 'pointer',
                       fontFamily: fontStack,
                       letterSpacing: -0.2,
-                      transition: 'background 0.15s ease',
+                      transition: `background 0.2s ${spring.default}, transform 0.15s ${spring.snappy}`,
                     }}
                     onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)' }}
                     onMouseLeave={(e) => { e.currentTarget.style.background = 'none' }}
+                    onMouseDown={(e) => { e.currentTarget.style.transform = 'scale(0.98)' }}
+                    onMouseUp={(e) => { e.currentTarget.style.transform = 'scale(1)' }}
                   >
                     {action.label}
                   </button>

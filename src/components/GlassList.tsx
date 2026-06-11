@@ -1,5 +1,5 @@
 import { LiquidGlass } from '../lib/LiquidGlass'
-import { fontStack } from '../lib/tokens'
+import { fontStack, spring } from '../lib/tokens'
 
 export interface GlassListItem {
   icon?: string
@@ -36,7 +36,7 @@ export function GlassList({ items, width = 320 }: GlassListProps) {
             padding: '10px 12px',
             borderRadius: 12,
             cursor: item.onClick ? 'pointer' : 'default',
-            transition: 'background 0.15s ease',
+            transition: `background 0.2s ${spring.default}`,
             borderBottom: i < items.length - 1 ? '1px solid rgba(255,255,255,0.06)' : 'none',
           }}
           onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(255,255,255,0.06)')}

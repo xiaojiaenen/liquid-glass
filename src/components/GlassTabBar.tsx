@@ -59,7 +59,7 @@ export function GlassTabBar({
             onClick={() => onChange?.(item.value)}
             style={{
               border: 'none',
-              background: active ? 'rgba(255,255,255,0.12)' : 'none',
+              background: active ? 'rgba(255,255,255,0.08)' : 'none',
               borderRadius: radii.control,
               padding: '8px 16px',
               cursor: 'pointer',
@@ -79,7 +79,7 @@ export function GlassTabBar({
                 fontSize: 20,
                 lineHeight: 1.2,
                 filter: active ? 'none' : 'saturate(0.5) brightness(0.7)',
-                transition: 'filter 0.25s ease',
+                transition: `filter 0.3s ${spring.gentle}`,
               }}
             >
               {item.icon}
@@ -90,7 +90,7 @@ export function GlassTabBar({
                 fontWeight: active ? 700 : 500,
                 letterSpacing: 0.05,
                 color: active ? '#fff' : 'rgba(255,255,255,0.5)',
-                transition: 'color 0.25s ease',
+                transition: `color 0.3s ${spring.gentle}`,
               }}
             >
               {item.label}

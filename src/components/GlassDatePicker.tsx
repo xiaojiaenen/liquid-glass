@@ -102,10 +102,10 @@ export function GlassDatePicker({ value, onChange, width = 280 }: GlassDatePicke
                 cursor: 'pointer',
                 fontSize: 15,
                 fontFamily: fontStack,
-                fontWeight: active ? 600 : 400,
+                fontWeight: isToday ? 700 : active ? 600 : 400,
                 background: active ? 'rgba(10,132,255,0.5)' : 'transparent',
-                border: isToday && !active ? '1px solid rgba(255,255,255,0.25)' : '1px solid transparent',
-                transition: `background 0.15s ${spring.default}`,
+                border: '1px solid transparent',
+                transition: `all 0.18s ${spring.default}`,
                 letterSpacing: -0.3,
               }}
               onMouseEnter={(e) => {

@@ -50,7 +50,7 @@ export function GlassModal({ open, onClose, title, children, width = 320 }: Glas
           refractionScale={0.95}
           blur={0.5}
           tint="rgba(255,255,255,0.08)"
-          style={{ width, padding: '24px 24px 20px', flexDirection: 'column' }}
+          style={{ width, padding: '20px 20px 14px', flexDirection: 'column' }}
         >
           {title && (
             <h3
@@ -90,7 +90,13 @@ export function GlassModal({ open, onClose, title, children, width = 320 }: Glas
                 fontFamily: fontStack,
                 padding: '4px 0',
                 letterSpacing: -0.4,
+                borderRadius: 8,
+                transition: `background 0.2s ease, transform 0.15s ${spring.default}`,
               }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(10,132,255,0.1)' }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = 'none' }}
+              onMouseDown={(e) => { e.currentTarget.style.transform = 'scale(0.95)' }}
+              onMouseUp={(e) => { e.currentTarget.style.transform = 'scale(1)' }}
             >
               好的
             </button>

@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react'
 import { LiquidGlass } from '../lib/LiquidGlass'
-import { fontStack } from '../lib/tokens'
+import { fontStack, spring } from '../lib/tokens'
 
 export interface GlassTooltipProps {
   content: string
@@ -38,7 +38,8 @@ export function GlassTooltip({ content, children, position = 'top' }: GlassToolt
             zIndex: 9999,
             ...posMap[position],
             opacity: show ? 1 : 0,
-            transition: 'opacity 0.15s ease',
+            transform: `scale(${show ? 1 : 0.92}) ${posMap[position].transform || ''}`,
+            transition: `opacity 0.18s ${spring.default}, transform 0.25s ${spring.default}`,
             pointerEvents: 'none',
           }}
         >

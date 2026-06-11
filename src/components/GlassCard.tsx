@@ -1,5 +1,5 @@
 import { LiquidGlass } from '../lib/LiquidGlass'
-import { fontStack } from '../lib/tokens'
+import { fontStack, spring } from '../lib/tokens'
 
 export interface GlassCardProps {
   title: string
@@ -13,6 +13,20 @@ export function GlassCard({
   icon,
 }: GlassCardProps) {
   return (
+    <div
+      style={{
+        transition: `transform 0.3s ${spring.default}, filter 0.25s ease`,
+        cursor: 'default',
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.transform = 'scale(1.02)'
+        e.currentTarget.style.filter = 'brightness(1.05)'
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.transform = 'scale(1)'
+        e.currentTarget.style.filter = 'brightness(1)'
+      }}
+    >
     <LiquidGlass
       radius={28}
       bezelWidth={28}
@@ -21,7 +35,7 @@ export function GlassCard({
       blur={0.5}
       saturate={1.3}
       tint="rgba(255,255,255,0.03)"
-      style={{ width: 300, padding: 26, flexDirection: 'column' }}
+      style={{ width: 300, padding: 20, flexDirection: 'column' }}
     >
       <div
         style={{
@@ -62,5 +76,6 @@ export function GlassCard({
         </p>
       </div>
     </LiquidGlass>
+    </div>
   )
 }

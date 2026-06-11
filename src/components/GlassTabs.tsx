@@ -42,7 +42,7 @@ export function GlassTabs({ tabs, value: controlled, onChange }: GlassTabsProps)
               style={{
                 position: 'relative',
                 border: 'none',
-                background: isActive ? 'rgba(255,255,255,0.2)' : 'transparent',
+                background: isActive ? 'rgba(255,255,255,0.12)' : 'transparent',
                 color: '#fff',
                 fontFamily: fontStack,
                 fontSize: 13,

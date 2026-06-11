@@ -1,5 +1,5 @@
 import { LiquidGlass } from '../lib/LiquidGlass'
-import { fontStack } from '../lib/tokens'
+import { fontStack, spring } from '../lib/tokens'
 
 export interface GlassNavbarProps {
   title: string
@@ -35,7 +35,12 @@ export function GlassNavbar({ title, left, right, onBack }: GlassNavbarProps) {
                   fontFamily: fontStack,
                   fontWeight: 400,
                   letterSpacing: -0.4,
+                  transition: `opacity 0.2s ease, transform 0.15s ${spring.default}`,
                 }}
+                onMouseEnter={(e) => { e.currentTarget.style.opacity = '0.7' }}
+                onMouseLeave={(e) => { e.currentTarget.style.opacity = '1' }}
+                onMouseDown={(e) => { e.currentTarget.style.transform = 'scale(0.95)' }}
+                onMouseUp={(e) => { e.currentTarget.style.transform = 'scale(1)' }}
               >
                 ‹ 返回
               </button>

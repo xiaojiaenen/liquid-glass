@@ -32,9 +32,8 @@ export function GlassSegmented({
             width: segW,
             height: H - pad * 2,
             borderRadius: (H - pad * 2) / 2,
-            background: 'rgba(255,255,255,0.22)',
-            boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.3), 0 1px 2px rgba(0,0,0,0.15)',
-            transition: `left 0.25s ${spring.default}`,
+            background: 'rgba(255,255,255,0.18)',
+            transition: `left 0.32s ${spring.default}`,
           }}
         />
         {options.map((opt, i) => (

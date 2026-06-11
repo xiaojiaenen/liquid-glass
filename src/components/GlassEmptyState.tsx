@@ -1,5 +1,5 @@
 import { LiquidGlass } from '../lib/LiquidGlass'
-import { fontStack, radii } from '../lib/tokens'
+import { fontStack, radii, spring } from '../lib/tokens'
 
 export interface GlassEmptyStateProps {
   /** 图标（emoji 或 SVG） */
@@ -81,7 +81,7 @@ export function GlassEmptyState({
           onClick={onAction}
           style={{
             marginTop: 24,
-            border: '0.5px solid rgba(255,255,255,0.18)',
+            border: 'none',
             borderRadius: radii.pill,
             padding: '10px 24px',
             background: 'rgba(10,132,255,0.3)',
@@ -91,10 +91,18 @@ export function GlassEmptyState({
             cursor: 'pointer',
             fontFamily: fontStack,
             letterSpacing: -0.2,
-            transition: 'background 0.2s ease, transform 0.15s ease',
+            transition: `background 0.25s ${spring.default}, transform 0.2s ${spring.default}`,
           }}
-          onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(10,132,255,0.45)')}
-          onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(10,132,255,0.3)')}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = 'rgba(10,132,255,0.45)'
+            e.currentTarget.style.transform = 'scale(1.03)'
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = 'rgba(10,132,255,0.3)'
+            e.currentTarget.style.transform = 'scale(1)'
+          }}
+          onMouseDown={(e) => { e.currentTarget.style.transform = 'scale(0.97)' }}
+          onMouseUp={(e) => { e.currentTarget.style.transform = 'scale(1.03)' }}
         >
           {actionLabel}
         </button>
