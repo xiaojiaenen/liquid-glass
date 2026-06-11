@@ -3,24 +3,28 @@ import type { LiquidGlassMaps } from './displacementMap'
 interface LiquidGlassFilterProps {
   id: string
   maps: LiquidGlassMaps
-  scale: number
-  /** 高斯模糊半径,模拟磨砂厚度 */
+  /** feDisplacementMap 的 scale,参考实现用 30~50 */
+  scale?: number
+  /** 预模糊 */
   blur?: number
+  /** 饱和度增益 */
+  saturate?: number
 }
 
 /**
- * 按文章描述的滤镜管线:
- *  feImage(位移贴图) → feDisplacementMap 折射背景
- *  feImage(高光贴图) → feBlend(screen) 叠加 rim light
- *  feGaussianBlur 增加磨砂厚度感(默认接近 0,保持玻璃清晰)
- *
- * backdrop-filter 不会自动贴合尺寸,feImage 必须用元素实际宽高。
+ * 滤镜链(移植自参考实现):
+ *  feGaussianBlur 预模糊
+ *  → feImage(位移贴图) → feDisplacementMap 折射背景
+ *  → feColorMatrix 提升饱和度
+ *  → feImage(高光贴图) → feComponentTransfer 控制高光强度
+ *  → feBlend(screen) 叠加 rim light
  */
 export function LiquidGlassFilter({
   id,
   maps,
-  scale,
-  blur = 0,
+  scale = 40,
+  blur = 0.5,
+  saturate = 1.3,
 }: LiquidGlassFilterProps) {
   return (
     <svg
@@ -38,39 +42,43 @@ export function LiquidGlassFilter({
           height="100%"
           colorInterpolationFilters="sRGB"
         >
-          {/* 位移贴图 */}
+          <feGaussianBlur in="SourceGraphic" stdDeviation={blur} result="blurred" />
           <feImage
             href={maps.displacementUrl}
             x="0"
             y="0"
             width={maps.width}
             height={maps.height}
-            result="dispMap"
+            result="displacement_map"
             preserveAspectRatio="none"
           />
-          {/* 折射背景 */}
           <feDisplacementMap
-            in="SourceGraphic"
-            in2="dispMap"
+            in="blurred"
+            in2="displacement_map"
             scale={scale}
             xChannelSelector="R"
             yChannelSelector="G"
-            result="refracted"
+            result="displaced"
           />
-          {/* 磨砂模糊 */}
-          <feGaussianBlur in="refracted" stdDeviation={blur} result="blurred" />
-          {/* 高光贴图 */}
+          <feColorMatrix
+            in="displaced"
+            type="saturate"
+            values={String(saturate)}
+            result="displaced_saturated"
+          />
           <feImage
             href={maps.specularUrl}
             x="0"
             y="0"
             width={maps.width}
             height={maps.height}
-            result="specMap"
+            result="specular_layer"
             preserveAspectRatio="none"
           />
-          {/* 叠加 rim light */}
-          <feBlend in="blurred" in2="specMap" mode="screen" />
+          <feComponentTransfer in="specular_layer" result="specular_faded">
+            <feFuncA type="linear" slope="1" />
+          </feComponentTransfer>
+          <feBlend in="specular_faded" in2="displaced_saturated" mode="screen" />
         </filter>
       </defs>
     </svg>

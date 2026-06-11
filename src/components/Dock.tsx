@@ -5,13 +5,13 @@ const apps = ['🧭', '📷', '🎵', '✉️', '🗓️', '⚙️']
 export function Dock() {
   return (
     <LiquidGlass
-      radius={28}
-      bezel={18}
-      thickness={32}
-      strength={1}
+      radius={32}
+      bezelWidth={24}
+      glassThickness={100}
+      scale={35}
       blur={0}
-      specularOpacity={0.5}
-      tint="rgba(255,255,255,0.16)"
+      saturate={1.2}
+      tint="rgba(255,255,255,0.1)"
       style={{ padding: '12px 16px', gap: 14 }}
     >
       <div style={{ display: 'flex', gap: 14 }}>

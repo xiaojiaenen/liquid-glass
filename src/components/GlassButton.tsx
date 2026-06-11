@@ -11,14 +11,14 @@ export function GlassButton({
     <LiquidGlass
       as="button"
       onClick={onClick}
-      radius={22}
-      bezel={14}
-      thickness={26}
-      strength={1}
+      radius={26}
+      bezelWidth={20}
+      glassThickness={90}
+      scale={30}
       blur={0}
-      specularOpacity={0.5}
-      tint="rgba(255,255,255,0.14)"
-      style={{ padding: '12px 26px', fontSize: 16, fontWeight: 600 }}
+      saturate={1.2}
+      tint="rgba(255,255,255,0.1)"
+      style={{ padding: '14px 30px', fontSize: 16, fontWeight: 600 }}
     >
       {children}
     </LiquidGlass>

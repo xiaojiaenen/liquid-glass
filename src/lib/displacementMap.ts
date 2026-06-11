@@ -1,127 +1,177 @@
 /**
- * 液态玻璃贴图生成器 —— 按 kube.io 文章描述的物理实现
+ * 液态玻璃贴图生成器
+ * 移植自 github.com/Bhavya-Goswami/liquid-glass(已验证可跑的实现)
  *
- * 文章只给了概念,折射的 JS 没公开,这里按其物理补全:
- *  1. 截面高度函数 f(t):描述棱镜从外边缘(t=0)到内沿(t=1)的隆起形状
- *  2. 由 f 的导数得表面法线
- *  3. 垂直入射光线经 Snell 定律折射(空气 n=1 → 玻璃 n=1.5)
- *  4. 折射光穿过"玻璃厚度"后的水平落点偏移 = 该处位移量
- *  5. 位移沿半径预计算一次,绕中心旋转铺满整圈,归一化后编码进 RGBA
- *
- * 同时生成镜面高光贴图(rim light),供 feImage + feBlend 叠加。
+ * 思路:
+ *  1. calculateDisplacementMap1D —— 沿半径预计算一维折射位移曲线
+ *     (Snell 折射:垂直光线穿过 squircle 表面,经玻璃厚度后的水平偏移)
+ *  2. calculateDisplacementMap2D —— 把一维曲线按圆角距离场铺成二维 RGBA 贴图
+ *  3. calculateSpecularHighlight —— 生成镜面高光贴图(rim light)
  */
 
-export type BezelProfile = 'convex' | 'squircle' | 'lip'
+export type BezelProfile = 'convex_squircle'
+
+/** 表面方程:x∈[0,1],返回高度 */
+const SurfaceEquations = {
+  convex_squircle: (x: number) => Math.pow(1 - Math.pow(1 - x, 4), 1 / 4),
+}
 
 export interface LiquidGlassMapOptions {
+  /** 元素宽 */
   width: number
+  /** 元素高 */
   height: number
+  /** 圆角 */
   radius: number
-  /** 棱镜宽度(px):折射区厚度 */
-  bezel: number
-  /** 玻璃厚度(px):折射光穿过的深度,越大折射越强 */
-  thickness?: number
-  /** 玻璃折射率,文章用 1.5 */
+  /** 棱镜宽度,默认 30 */
+  bezelWidth?: number
+  /** 玻璃厚度,默认 150(越大折射越强) */
+  glassThickness?: number
+  /** 折射率,默认 1.5 */
   refractiveIndex?: number
-  profile?: BezelProfile
-  /** 镜面高光强度 0..1 */
-  specularOpacity?: number
-  /** 光源方向角(度),0 = 右,逆时针;文章示例 -60 */
-  specularAngle?: number
 }
 
 export interface LiquidGlassMaps {
-  /** 位移贴图 data URL */
   displacementUrl: string
-  /** 镜面高光贴图 data URL */
   specularUrl: string
-  /** feDisplacementMap 的 scale = 最大像素位移 */
-  maxDisplacement: number
   width: number
   height: number
 }
 
-/** 截面高度函数:t∈[0,1],0=外缘,1=内沿;返回高度 0..1 */
-function heightFn(t: number, profile: BezelProfile): number {
-  const x = Math.min(Math.max(t, 0), 1)
-  switch (profile) {
-    case 'convex':
-      return Math.sqrt(1 - (1 - x) * (1 - x)) // 圆弧
-    case 'lip':
-      return x * x * (3 - 2 * x) // 平滑 S(带唇边)
-    case 'squircle':
-    default:
-      return Math.pow(1 - Math.pow(1 - x, 4), 0.5) // 超椭圆,Apple 偏好
-  }
-}
-
-/** 圆角矩形有符号距离:内部为正,外部为负 */
-function signedDistance(
-  px: number,
-  py: number,
-  w: number,
-  h: number,
-  r: number,
-): number {
-  const qx = Math.abs(px - w / 2) - (w / 2 - r)
-  const qy = Math.abs(py - h / 2) - (h / 2 - r)
-  const ax = Math.max(qx, 0)
-  const ay = Math.max(qy, 0)
-  return -(Math.sqrt(ax * ax + ay * ay) + Math.min(Math.max(qx, qy), 0))
-}
-
-/** 边缘外法线方向(单位向量,指向形状外):对 SDF 求数值梯度 */
-function gradientDir(
-  px: number,
-  py: number,
-  w: number,
-  h: number,
-  r: number,
-): { x: number; y: number } {
-  const e = 1
-  const gx =
-    signedDistance(px + e, py, w, h, r) - signedDistance(px - e, py, w, h, r)
-  const gy =
-    signedDistance(px, py + e, w, h, r) - signedDistance(px, py - e, w, h, r)
-  const len = Math.hypot(gx, gy) || 1
-  // SDF 内部为正,梯度指向内部;取反得到指向外部的法线
-  return { x: -gx / len, y: -gy / len }
-}
-
 /**
- * 折射位移大小:给定棱镜内归一化位置 t,返回水平像素偏移。
- * 物理:垂直光线 I=(0,-1) 打在斜率为 slope 的表面,经 Snell 折射,
- * 穿过 thickness 深度后水平移动多少。
+ * 一维折射位移曲线:gt=玻璃厚度, bw=棱镜宽, sf=表面方程, ri=折射率
+ * 返回沿半径 s 个采样点的位移量(像素)
  */
-function refractionShift(
-  t: number,
-  profile: BezelProfile,
-  bezel: number,
-  thickness: number,
-  eta: number, // n_air / n_glass
-): number {
-  const delta = 0.001
-  const h1 = heightFn(t - delta, profile)
-  const h2 = heightFn(t + delta, profile)
-  // 真实斜率 = dz/dx,高度按 bezel 量级缩放,水平按 bezel 像素
-  const slope = ((h2 - h1) / (2 * delta)) * (thickness / bezel)
+function calculateDisplacementMap1D(
+  gt: number,
+  bw: number,
+  sf: (x: number) => number,
+  ri: number,
+  s = 128,
+): number[] {
+  const e = 1 / ri
+  const r: number[] = []
+  for (let i = 0; i < s; i++) {
+    const x = i / s
+    const y = sf(x)
+    const dx = x < 1 ? 0.0001 : -0.0001
+    const d = (sf(Math.max(0, Math.min(1, x + dx))) - y) / dx
+    const m = Math.sqrt(d * d + 1)
+    const n = [-d / m, -1 / m] // 表面法线
+    const dt = n[1]
+    const k = 1 - e * e * (1 - dt * dt)
+    if (k < 0) {
+      r.push(0) // 全反射
+    } else {
+      // 折射光向量
+      const rf = [
+        -(e * dt + Math.sqrt(k)) * n[0],
+        e - (e * dt + Math.sqrt(k)) * n[1],
+      ]
+      // 穿过深度 (y*bw + gt) 后的水平偏移
+      r.push(rf[0] * ((y * bw + gt) / rf[1]))
+    }
+  }
+  return r
+}
 
-  // 表面法线(指向空气,y 向上):(-slope, 1) 归一化
-  const nlen = Math.hypot(slope, 1)
-  const nx = -slope / nlen
-  const ny = 1 / nlen
+/** 把一维位移曲线铺成二维 RGBA 位移贴图 */
+function calculateDisplacementMap2D(
+  cw: number,
+  ch: number,
+  ow: number,
+  oh: number,
+  rad: number,
+  bw: number,
+  md: number,
+  pMap: number[],
+): ImageData {
+  const img = new ImageData(cw, ch)
+  for (let i = 0; i < img.data.length; i += 4) {
+    img.data[i] = 128
+    img.data[i + 1] = 128
+    img.data[i + 3] = 255
+  }
+  const rSq = rad * rad
+  const rp1Sq = (rad + 1) ** 2
+  const rmBwSq = Math.max(0, rad - bw) ** 2
+  const wB = ow - rad * 2
+  const hB = oh - rad * 2
+  const oX = (cw - ow) / 2
+  const oY = (ch - oh) / 2
 
-  // 入射光垂直向下 I=(0,-1);Snell 矢量形式
-  const cosI = ny // = -dot(N, I) = -(0*nx + (-1)*ny) = ny
-  const k = 1 - eta * eta * (1 - cosI * cosI)
-  if (k < 0) return 0 // 全反射(此处不会发生)
-  const f = eta * cosI - Math.sqrt(k)
-  // 折射光 T = eta*I + f*N
-  const tx = eta * 0 + f * nx
-  const ty = eta * -1 + f * ny // 向下,ty<0
+  for (let y1 = 0; y1 < oh; y1++) {
+    for (let x1 = 0; x1 < ow; x1++) {
+      const idx = ((oY + y1) * cw + oX + x1) * 4
+      // 折算到最近圆角中心的坐标(圆角矩形距离场)
+      const x = x1 < rad ? x1 - rad : x1 >= ow - rad ? x1 - rad - wB : 0
+      const y = y1 < rad ? y1 - rad : y1 >= oh - rad ? y1 - rad - hB : 0
+      const dSq = x * x + y * y
 
-  // 穿过 thickness 深度的水平偏移
-  return (tx / -ty) * thickness
+      if (dSq <= rp1Sq && dSq >= rmBwSq) {
+        const dist = Math.sqrt(dSq)
+        // 边缘抗锯齿透明度
+        const op = dSq < rSq ? 1 : 1 - (dist - rad) / (Math.sqrt(rp1Sq) - rad)
+        const bIdx = Math.floor(
+          Math.max(0, Math.min(1, (rad - dist) / bw)) * pMap.length,
+        )
+        const dVal = pMap[Math.max(0, Math.min(bIdx, pMap.length - 1))] || 0
+        const dX = md > 0 ? (-(dist > 0 ? x / dist : 0) * dVal) / md : 0
+        const dY = md > 0 ? (-(dist > 0 ? y / dist : 0) * dVal) / md : 0
+
+        img.data[idx] = Math.max(0, Math.min(255, 128 + dX * 127 * op))
+        img.data[idx + 1] = Math.max(0, Math.min(255, 128 + dY * 127 * op))
+      }
+    }
+  }
+  return img
+}
+
+/** 镜面高光贴图(rim light) */
+function calculateSpecularHighlight(
+  ow: number,
+  oh: number,
+  rad: number,
+  _bw: number,
+): ImageData {
+  const img = new ImageData(ow, oh)
+  const sVec = [Math.cos(Math.PI / 3), Math.sin(Math.PI / 3)] // 光源方向 60°
+  const rSq = rad * rad
+  const rp1Sq = (rad + 1) ** 2
+  const rmSSq = Math.max(0, (rad - 1.5) ** 2)
+
+  for (let y1 = 0; y1 < oh; y1++) {
+    for (let x1 = 0; x1 < ow; x1++) {
+      const x = x1 < rad ? x1 - rad : x1 >= ow - rad ? x1 - rad - (ow - rad * 2) : 0
+      const y = y1 < rad ? y1 - rad : y1 >= oh - rad ? y1 - rad - (oh - rad * 2) : 0
+      const dSq = x * x + y * y
+
+      if (dSq <= rp1Sq && dSq >= rmSSq) {
+        const dist = Math.sqrt(dSq)
+        const op = dSq < rSq ? 1 : 1 - (dist - rad) / (Math.sqrt(rp1Sq) - rad)
+        const dp = Math.abs(
+          (dist > 0 ? x / dist : 0) * sVec[0] +
+            (dist > 0 ? -y / dist : 0) * sVec[1],
+        )
+        const cf =
+          dp * Math.sqrt(1 - (1 - Math.max(0, Math.min(1, (rad - dist) / 1.5))) ** 2)
+        const c = Math.min(255, 255 * cf)
+        const idx = (y1 * ow + x1) * 4
+
+        img.data[idx] = img.data[idx + 1] = img.data[idx + 2] = c
+        img.data[idx + 3] = Math.min(255, c * cf * op)
+      }
+    }
+  }
+  return img
+}
+
+function imageDataToDataURL(img: ImageData): string {
+  const c = document.createElement('canvas')
+  c.width = img.width
+  c.height = img.height
+  c.getContext('2d')!.putImageData(img, 0, 0)
+  return c.toDataURL()
 }
 
 export function generateLiquidGlassMaps(
@@ -131,98 +181,28 @@ export function generateLiquidGlassMaps(
     width,
     height,
     radius,
-    bezel,
-    thickness = bezel * 1.2,
+    bezelWidth = 30,
+    glassThickness = 150,
     refractiveIndex = 1.5,
-    profile = 'squircle',
-    specularOpacity = 0.5,
-    specularAngle = -60,
   } = opts
-
   const w = Math.max(1, Math.round(width))
   const h = Math.max(1, Math.round(height))
-  const r = Math.min(radius, Math.min(w, h) / 2)
-  const eta = 1 / refractiveIndex
+  const rad = Math.min(radius, Math.min(w, h) / 2)
 
-  // 光源方向(单位向量)
-  const la = (specularAngle * Math.PI) / 180
-  const lx = Math.cos(la)
-  const ly = Math.sin(la)
+  const pMap = calculateDisplacementMap1D(
+    glassThickness,
+    bezelWidth,
+    SurfaceEquations.convex_squircle,
+    refractiveIndex,
+  )
 
-  // ---- 位移贴图 ----
-  const dispCanvas = document.createElement('canvas')
-  dispCanvas.width = w
-  dispCanvas.height = h
-  const dctx = dispCanvas.getContext('2d')!
-  const dimg = dctx.createImageData(w, h)
-  const dd = dimg.data
-
-  // ---- 高光贴图 ----
-  const specCanvas = document.createElement('canvas')
-  specCanvas.width = w
-  specCanvas.height = h
-  const sctx = specCanvas.getContext('2d')!
-  const simg = sctx.createImageData(w, h)
-  const sd = simg.data
-
-  const vx = new Float32Array(w * h)
-  const vy = new Float32Array(w * h)
-  let maxMag = 0
-
-  for (let y = 0; y < h; y++) {
-    for (let x = 0; x < w; x++) {
-      const idx = y * w + x
-      const dist = signedDistance(x + 0.5, y + 0.5, w, h, r)
-      const o = idx * 4
-
-      // 高光默认透明
-      sd[o] = 255
-      sd[o + 1] = 255
-      sd[o + 2] = 255
-      sd[o + 3] = 0
-
-      if (dist <= 0 || dist >= bezel) continue
-
-      const t = dist / bezel
-      const grad = gradientDir(x + 0.5, y + 0.5, w, h, r) // 指向外
-      const shift = refractionShift(t, profile, bezel, thickness, eta)
-
-      // 位移指向形状内部(把外侧背景吸入,产生放大折射)
-      vx[idx] = -grad.x * shift
-      vy[idx] = -grad.y * shift
-      const m = Math.hypot(vx[idx], vy[idx])
-      if (m > maxMag) maxMag = m
-
-      // 镜面高光:法线朝向光源时最亮,集中在棱镜外缘
-      const facing = Math.max(0, grad.x * lx + grad.y * ly)
-      const edge = Math.pow(1 - t, 1.5) // 越靠外缘越亮
-      const intensity = Math.pow(facing, 2) * edge * specularOpacity
-      sd[o + 3] = clamp8(intensity * 255)
-    }
-  }
-
-  if (maxMag === 0) maxMag = 1
-
-  for (let i = 0; i < w * h; i++) {
-    const o = i * 4
-    dd[o] = clamp8(128 + (vx[i] / maxMag) * 127) // R = X
-    dd[o + 1] = clamp8(128 + (vy[i] / maxMag) * 127) // G = Y
-    dd[o + 2] = 128
-    dd[o + 3] = 255
-  }
-
-  dctx.putImageData(dimg, 0, 0)
-  sctx.putImageData(simg, 0, 0)
+  const dispImg = calculateDisplacementMap2D(w, h, w, h, rad, bezelWidth, 1, pMap)
+  const specImg = calculateSpecularHighlight(w, h, rad, bezelWidth)
 
   return {
-    displacementUrl: dispCanvas.toDataURL(),
-    specularUrl: specCanvas.toDataURL(),
-    maxDisplacement: maxMag,
+    displacementUrl: imageDataToDataURL(dispImg),
+    specularUrl: imageDataToDataURL(specImg),
     width: w,
     height: h,
   }
-}
-
-function clamp8(v: number): number {
-  return Math.max(0, Math.min(255, Math.round(v)))
 }

@@ -3,7 +3,6 @@ export type { LiquidGlassProps } from './LiquidGlass'
 export { useLiquidGlass } from './useLiquidGlass'
 export { generateLiquidGlassMaps } from './displacementMap'
 export type {
-  BezelProfile,
   LiquidGlassMapOptions,
   LiquidGlassMaps,
 } from './displacementMap'

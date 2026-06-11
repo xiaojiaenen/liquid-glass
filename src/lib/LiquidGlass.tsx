@@ -1,29 +1,24 @@
 import { useId, type CSSProperties, type ReactNode } from 'react'
 import { useLiquidGlass } from './useLiquidGlass'
 import { LiquidGlassFilter } from './LiquidGlassFilter'
-import type { BezelProfile } from './displacementMap'
 import './LiquidGlass.css'
 
 export interface LiquidGlassProps {
   children?: ReactNode
   /** 圆角(px) */
   radius?: number
-  /** 棱镜宽度(px):边缘折射区厚度 */
-  bezel?: number
-  /** 玻璃厚度(px):折射光穿过深度,越大折射越强 */
-  thickness?: number
-  /** 折射率,文章用 1.5 */
+  /** 棱镜宽度(px),默认 30 */
+  bezelWidth?: number
+  /** 玻璃厚度(px),默认 150,越大折射越强 */
+  glassThickness?: number
+  /** 折射率,默认 1.5 */
   refractiveIndex?: number
-  /** 截面轮廓 */
-  profile?: BezelProfile
-  /** 折射强度倍率 */
-  strength?: number
-  /** 磨砂模糊半径 */
+  /** feDisplacementMap scale,默认 40 */
+  scale?: number
+  /** 预模糊半径 */
   blur?: number
-  /** 镜面高光强度 0..1 */
-  specularOpacity?: number
-  /** 光源方向角(度) */
-  specularAngle?: number
+  /** 折射后饱和度增益 */
+  saturate?: number
   /** 着色:半透明背景 */
   tint?: string
   className?: string
@@ -40,15 +35,13 @@ export interface LiquidGlassProps {
 export function LiquidGlass({
   children,
   radius = 28,
-  bezel = 16,
-  thickness,
+  bezelWidth = 30,
+  glassThickness = 150,
   refractiveIndex = 1.5,
-  profile = 'squircle',
-  strength = 1,
-  blur = 0,
-  specularOpacity = 0.5,
-  specularAngle = -60,
-  tint = 'rgba(255, 255, 255, 0.1)',
+  scale = 40,
+  blur = 0.5,
+  saturate = 1.3,
+  tint = 'rgba(255, 255, 255, 0.08)',
   className = '',
   style,
   as = 'div',
@@ -56,15 +49,11 @@ export function LiquidGlass({
 }: LiquidGlassProps) {
   const reactId = useId()
   const filterId = `lg-${reactId.replace(/[:]/g, '')}`
-  const { ref, maps, scale, supported } = useLiquidGlass({
+  const { ref, maps, supported } = useLiquidGlass({
     radius,
-    bezel,
-    thickness,
+    bezelWidth,
+    glassThickness,
     refractiveIndex,
-    profile,
-    strength,
-    specularOpacity,
-    specularAngle,
   })
 
   const refractionStyle: CSSProperties =
@@ -103,7 +92,13 @@ export function LiquidGlass({
       <span className="liquid-glass__content">{children}</span>
 
       {supported && maps && (
-        <LiquidGlassFilter id={filterId} maps={maps} scale={scale} blur={blur} />
+        <LiquidGlassFilter
+          id={filterId}
+          maps={maps}
+          scale={scale}
+          blur={blur}
+          saturate={saturate}
+        />
       )}
     </Tag>
   )

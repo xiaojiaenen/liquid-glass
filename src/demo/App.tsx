@@ -14,7 +14,7 @@ export function App() {
       <div className="stage__bg" />
 
       <header className="hero">
-        <LiquidGlass radius={40} bezel={24} strength={1} blur={2} style={{ padding: '20px 40px' }}>
+        <LiquidGlass radius={44} bezelWidth={30} glassThickness={130} scale={45} blur={0.5} style={{ padding: '20px 40px' }}>
           <h1 style={{ margin: 0, fontSize: 34, fontWeight: 800, letterSpacing: -0.5 }}>
             Liquid Glass
           </h1>
