@@ -23,7 +23,7 @@ export function GlassTooltip({ content, children, position = 'top' }: GlassToolt
     <div
       style={{ position: 'relative', display: 'inline-flex' }}
       onMouseEnter={() => {
-        timerRef.current = window.setTimeout(() => setShow(true), 400)
+        timerRef.current = window.setTimeout(() => setShow(true), 300)
       }}
       onMouseLeave={() => {
         clearTimeout(timerRef.current)
@@ -43,15 +43,15 @@ export function GlassTooltip({ content, children, position = 'top' }: GlassToolt
           }}
         >
           <LiquidGlass
-            radius={12}
-            bezelWidth={10}
-            glassThickness={50}
-            refractionScale={0.8}
+            radius={10}
+            bezelWidth={8}
+            glassThickness={45}
+            refractionScale={0.75}
             blur={0.2}
-            tint="rgba(255,255,255,0.1)"
+            tint="rgba(50,50,50,0.85)"
             style={{ padding: '6px 12px' }}
           >
-            <span style={{ fontSize: 12, fontWeight: 500, whiteSpace: 'nowrap', fontFamily: fontStack }}>
+            <span style={{ fontSize: 13, fontWeight: 500, whiteSpace: 'nowrap', fontFamily: fontStack, color: '#fff' }}>
               {content}
             </span>
           </LiquidGlass>

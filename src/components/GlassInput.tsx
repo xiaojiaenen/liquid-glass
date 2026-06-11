@@ -9,7 +9,7 @@ export interface GlassInputProps {
   type?: string
   prefix?: React.ReactNode
   suffix?: React.ReactNode
-  width?: number
+  width?: number | string
 }
 
 export function GlassInput({
@@ -31,16 +31,16 @@ export function GlassInput({
 
   return (
     <LiquidGlass
-      radius={14}
-      bezelWidth={18}
-      glassThickness={70}
+      radius={12}
+      bezelWidth={16}
+      glassThickness={65}
       refractionScale={0.9}
       blur={0.2}
       tint="rgba(255,255,255,0.06)"
-      style={{ width: width || 260, padding: '0 14px', height: 40 }}
+      style={{ width: width || 260, padding: '0 16px', height: 44 }}
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, width: '100%' }}>
-        {prefix && <span style={{ opacity: 0.6, flexShrink: 0, display: 'flex' }}>{prefix}</span>}
+        {prefix && <span style={{ opacity: 0.5, flexShrink: 0, display: 'flex', fontSize: 16 }}>{prefix}</span>}
         <input
           type={type}
           value={value}
@@ -53,11 +53,12 @@ export function GlassInput({
             outline: 'none',
             color: '#fff',
             fontFamily: fontStack,
-            fontSize: 14,
-            letterSpacing: -0.1,
+            fontSize: 17,
+            letterSpacing: -0.4,
+            lineHeight: 1,
           }}
         />
-        {suffix && <span style={{ opacity: 0.6, flexShrink: 0, display: 'flex' }}>{suffix}</span>}
+        {suffix && <span style={{ opacity: 0.5, flexShrink: 0, display: 'flex', fontSize: 16 }}>{suffix}</span>}
       </div>
     </LiquidGlass>
   )

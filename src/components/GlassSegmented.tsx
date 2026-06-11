@@ -8,22 +8,22 @@ export function GlassSegmented({
   options?: string[]
 }) {
   const [active, setActive] = useState(0)
-  const segW = 64
-  const H = 36
+  const segW = 60
+  const H = 32
   const pad = 3
 
   return (
     <LiquidGlass
       radius={H / 2}
-      bezelWidth={14}
-      glassThickness={60}
-      refractionScale={0.9}
+      bezelWidth={12}
+      glassThickness={50}
+      refractionScale={0.8}
       blur={0.2}
-      tint="rgba(255,255,255,0.08)"
+      tint="rgba(255,255,255,0.06)"
       style={{ padding: pad, height: H }}
     >
       <div style={{ position: 'relative', display: 'flex' }}>
-        {/* 选中指示器:玻璃质感小块 */}
+        {/* 选中指示器 */}
         <span
           style={{
             position: 'absolute',
@@ -32,10 +32,9 @@ export function GlassSegmented({
             width: segW,
             height: H - pad * 2,
             borderRadius: (H - pad * 2) / 2,
-            background: 'rgba(255,255,255,0.28)',
-            boxShadow:
-              'inset 0 1px 1px rgba(255,255,255,0.5), 0 1px 3px rgba(0,0,0,0.2)',
-            transition: `left 0.32s ${spring.default}`,
+            background: 'rgba(255,255,255,0.22)',
+            boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.3), 0 1px 2px rgba(0,0,0,0.15)',
+            transition: `left 0.25s ${spring.default}`,
           }}
         />
         {options.map((opt, i) => (
@@ -50,11 +49,11 @@ export function GlassSegmented({
               background: 'transparent',
               color: '#fff',
               fontFamily: fontStack,
-              fontSize: 14,
+              fontSize: 13,
               fontWeight: active === i ? 600 : 500,
-              letterSpacing: -0.1,
+              letterSpacing: -0.2,
               cursor: 'pointer',
-              opacity: active === i ? 1 : 0.65,
+              opacity: active === i ? 1 : 0.5,
               transition: 'opacity 0.2s ease',
             }}
           >

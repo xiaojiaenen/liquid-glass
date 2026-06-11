@@ -6,16 +6,16 @@ export function GlassSearch() {
   const [value, setValue] = useState('')
   return (
     <LiquidGlass
-      radius={16}
-      bezelWidth={22}
-      glassThickness={80}
-      refractionScale={1}
+      radius={12}
+      bezelWidth={16}
+      glassThickness={65}
+      refractionScale={0.9}
       blur={0.2}
       tint="rgba(255,255,255,0.06)"
-      style={{ width: 300, padding: '0 14px', height: 44 }}
+      style={{ width: 300, padding: '0 14px', height: 36 }}
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, width: '100%' }}>
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style={{ opacity: 0.6, flexShrink: 0 }}>
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" style={{ opacity: 0.4, flexShrink: 0 }}>
           <circle cx="7" cy="7" r="5" stroke="#fff" strokeWidth="1.6" />
           <path d="M11 11L14 14" stroke="#fff" strokeWidth="1.6" strokeLinecap="round" />
         </svg>
@@ -31,7 +31,7 @@ export function GlassSearch() {
             color: '#fff',
             fontFamily: fontStack,
             fontSize: 15,
-            letterSpacing: -0.2,
+            letterSpacing: -0.3,
           }}
         />
         {value && (
@@ -40,13 +40,13 @@ export function GlassSearch() {
             aria-label="清除"
             style={{
               border: 'none',
-              background: 'rgba(255,255,255,0.25)',
+              background: 'rgba(255,255,255,0.2)',
               color: '#fff',
               borderRadius: '50%',
-              width: 18,
-              height: 18,
+              width: 16,
+              height: 16,
               cursor: 'pointer',
-              fontSize: 11,
+              fontSize: 10,
               lineHeight: 1,
               display: 'grid',
               placeItems: 'center',

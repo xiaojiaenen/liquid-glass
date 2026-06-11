@@ -9,7 +9,7 @@ export interface GlassAccordionItem {
 
 export interface GlassAccordionProps {
   items: GlassAccordionItem[]
-  width?: number
+  width?: number | string
 }
 
 export function GlassAccordion({ items, width = 340 }: GlassAccordionProps) {
@@ -21,41 +21,41 @@ export function GlassAccordion({ items, width = 340 }: GlassAccordionProps) {
 
   return (
     <LiquidGlass
-      radius={22}
-      bezelWidth={24}
-      glassThickness={100}
-      refractionScale={0.95}
+      radius={16}
+      bezelWidth={18}
+      glassThickness={85}
+      refractionScale={0.9}
       blur={0.3}
       tint="rgba(255,255,255,0.05)"
-      style={{ width, padding: 6, flexDirection: 'column' }}
+      style={{ width, padding: 4, flexDirection: 'column' }}
     >
       {items.map((item, i) => {
         const isOpen = openIndex === i
         return (
-          <div key={i}>
+          <div key={i} style={{ borderBottom: i < items.length - 1 ? '1px solid rgba(255,255,255,0.06)' : 'none' }}>
             <div
               onClick={() => toggle(i)}
               style={{
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                padding: '14px 14px',
-                borderRadius: 14,
+                padding: '12px 12px',
+                borderRadius: 12,
                 cursor: 'pointer',
                 transition: 'background 0.15s ease',
               }}
               onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(255,255,255,0.06)')}
               onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
             >
-              <span style={{ fontSize: 15, fontWeight: 600, fontFamily: fontStack, letterSpacing: -0.2 }}>
+              <span style={{ fontSize: 17, fontWeight: 400, fontFamily: fontStack, letterSpacing: -0.4 }}>
                 {item.title}
               </span>
               <span
                 style={{
                   fontSize: 12,
-                  opacity: 0.4,
+                  opacity: 0.3,
                   transform: `rotate(${isOpen ? 90 : 0}deg)`,
-                  transition: `transform 0.25s ${spring.default}`,
+                  transition: `transform 0.2s ${spring.default}`,
                 }}
               >
                 ›
@@ -66,11 +66,11 @@ export function GlassAccordion({ items, width = 340 }: GlassAccordionProps) {
                 maxHeight: isOpen ? 200 : 0,
                 overflow: 'hidden',
                 opacity: isOpen ? 1 : 0,
-                transition: `all 0.3s ${spring.default}`,
-                padding: isOpen ? '0 14px 14px' : '0 14px',
+                transition: `all 0.25s ${spring.default}`,
+                padding: isOpen ? '0 12px 12px' : '0 12px',
               }}
             >
-              <div style={{ fontSize: 13, lineHeight: 1.6, fontFamily: fontStack, opacity: 0.75 }}>
+              <div style={{ fontSize: 15, lineHeight: 1.5, fontFamily: fontStack, opacity: 0.6 }}>
                 {item.content}
               </div>
             </div>

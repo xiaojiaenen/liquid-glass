@@ -12,7 +12,7 @@ export interface GlassSelectProps {
   value?: string
   onChange?: (value: string) => void
   placeholder?: string
-  width?: number
+  width?: number | string
 }
 
 export function GlassSelect({
@@ -47,21 +47,21 @@ export function GlassSelect({
     <div ref={ref} style={{ position: 'relative', width }}>
       <div onClick={() => setOpen(!open)} style={{ cursor: 'pointer' }}>
         <LiquidGlass
-          radius={14}
+          radius={12}
           bezelWidth={16}
           glassThickness={65}
-          refractionScale={0.85}
+          refractionScale={0.9}
           blur={0.2}
           tint="rgba(255,255,255,0.06)"
-          style={{ width: '100%', padding: '0 14px', height: 40 }}
+          style={{ width: '100%', padding: '0 16px', height: 44 }}
         >
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
             <span
               style={{
-                fontSize: 14,
+                fontSize: 17,
                 fontFamily: fontStack,
-                color: selectedLabel ? '#fff' : 'rgba(255,255,255,0.4)',
-                letterSpacing: -0.1,
+                color: selectedLabel ? '#fff' : 'rgba(255,255,255,0.35)',
+                letterSpacing: -0.4,
               }}
             >
               {selectedLabel || placeholder}
@@ -69,7 +69,7 @@ export function GlassSelect({
             <span
               style={{
                 fontSize: 10,
-                opacity: 0.5,
+                opacity: 0.4,
                 transform: `rotate(${open ? 180 : 0}deg)`,
                 transition: `transform 0.2s ${spring.default}`,
               }}
@@ -108,14 +108,15 @@ export function GlassSelect({
                 key={opt.value}
                 onClick={() => select(opt.value)}
                 style={{
-                  padding: '8px 12px',
+                  padding: '10px 12px',
                   borderRadius: 10,
-                  fontSize: 14,
+                  fontSize: 17,
                   fontFamily: fontStack,
                   color: '#fff',
                   cursor: 'pointer',
-                  background: selected === opt.value ? 'rgba(255,255,255,0.15)' : 'transparent',
+                  background: selected === opt.value ? 'rgba(10,132,255,0.35)' : 'transparent',
                   transition: 'background 0.15s ease',
+                  letterSpacing: -0.4,
                 }}
                 onMouseEnter={(e) => {
                   if (selected !== opt.value) (e.target as HTMLElement).style.background = 'rgba(255,255,255,0.08)'

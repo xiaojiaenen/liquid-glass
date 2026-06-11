@@ -8,7 +8,7 @@ export interface GlassBadgeProps {
   color?: string
 }
 
-export function GlassBadge({ count, dot, children, color = 'rgba(255,59,48,0.9)' }: GlassBadgeProps) {
+export function GlassBadge({ count, dot, children, color = 'rgba(255,59,48,0.95)' }: GlassBadgeProps) {
   const showBadge = dot || (count !== undefined && count > 0)
 
   return (
@@ -25,22 +25,22 @@ export function GlassBadge({ count, dot, children, color = 'rgba(255,59,48,0.9)'
         >
           <LiquidGlass
             radius={dot ? 5 : count! > 9 ? 12 : 10}
-            bezelWidth={4}
-            glassThickness={20}
-            refractionScale={0.6}
+            bezelWidth={3}
+            glassThickness={18}
+            refractionScale={0.5}
             blur={0}
             tint={color}
             style={{
               minWidth: dot ? 10 : 20,
               height: dot ? 10 : 20,
-              padding: dot ? 0 : '0 5px',
+              padding: dot ? 0 : '0 6px',
             }}
           >
             {!dot && (
               <span
                 style={{
-                  fontSize: 11,
-                  fontWeight: 700,
+                  fontSize: 12,
+                  fontWeight: 600,
                   fontFamily: fontStack,
                   color: '#fff',
                   lineHeight: 1,

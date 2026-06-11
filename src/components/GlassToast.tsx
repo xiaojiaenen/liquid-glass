@@ -34,17 +34,17 @@ export function GlassToast({ message, icon = '✓', duration = 2000, onClose }: 
       }}
     >
       <LiquidGlass
-        radius={22}
-        bezelWidth={16}
-        glassThickness={80}
-        refractionScale={0.9}
+        radius={20}
+        bezelWidth={14}
+        glassThickness={65}
+        refractionScale={0.85}
         blur={0.3}
         tint="rgba(255,255,255,0.08)"
         style={{ padding: '12px 20px' }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontFamily: fontStack }}>
-          {icon && <span style={{ fontSize: 16 }}>{icon}</span>}
-          <span style={{ fontSize: 14, fontWeight: 500, letterSpacing: -0.1 }}>{message}</span>
+          {icon && <span style={{ fontSize: 18 }}>{icon}</span>}
+          <span style={{ fontSize: 15, fontWeight: 500, letterSpacing: -0.3 }}>{message}</span>
         </div>
       </LiquidGlass>
     </div>

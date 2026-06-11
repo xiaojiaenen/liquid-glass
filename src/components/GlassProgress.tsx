@@ -12,7 +12,7 @@ export interface GlassProgressProps {
 export function GlassProgress({
   percent,
   color = systemColors.blue,
-  height = 8,
+  height = 6,
   width = '100%',
   showText = false,
 }: GlassProgressProps) {
@@ -22,11 +22,11 @@ export function GlassProgress({
     <div style={{ width, display: 'flex', alignItems: 'center', gap: 10 }}>
       <LiquidGlass
         radius={height / 2}
-        bezelWidth={4}
-        glassThickness={25}
-        refractionScale={0.6}
-        blur={0.1}
-        tint="rgba(255,255,255,0.06)"
+        bezelWidth={3}
+        glassThickness={20}
+        refractionScale={0.5}
+        blur={0.05}
+        tint="rgba(255,255,255,0.08)"
         style={{ flex: 1, height, overflow: 'hidden' }}
       >
         <div
@@ -35,12 +35,12 @@ export function GlassProgress({
             height: '100%',
             borderRadius: height / 2,
             background: color,
-            transition: 'width 0.4s ease',
+            transition: 'width 0.3s ease',
           }}
         />
       </LiquidGlass>
       {showText && (
-        <span style={{ fontSize: 12, color: '#fff', opacity: 0.7, minWidth: 32, textAlign: 'right' }}>
+        <span style={{ fontSize: 13, color: '#fff', opacity: 0.6, minWidth: 32, textAlign: 'right' }}>
           {Math.round(clamped)}%
         </span>
       )}

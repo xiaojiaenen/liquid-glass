@@ -17,7 +17,8 @@ export function GlassCheckbox({ checked: controlled, onChange, label }: GlassChe
     onChange?.(!checked)
   }
 
-  const size = 22
+  // 苹果风格:圆形勾选框
+  const size = 24
 
   return (
     <label
@@ -25,34 +26,40 @@ export function GlassCheckbox({ checked: controlled, onChange, label }: GlassChe
       onClick={toggle}
     >
       <LiquidGlass
-        radius={7}
+        radius={size / 2}
         bezelWidth={8}
-        glassThickness={40}
-        refractionScale={0.8}
+        glassThickness={35}
+        refractionScale={0.7}
         blur={0.1}
-        tint={checked ? 'rgba(10,132,255,0.5)' : 'rgba(255,255,255,0.06)'}
+        tint={checked ? 'rgba(10,132,255,0.6)' : 'rgba(255,255,255,0.06)'}
         style={{
           width: size,
           height: size,
-          transition: `all 0.25s ${spring.default}`,
+          transition: `all 0.2s ${spring.default}`,
         }}
       >
-        <span
+        <svg
+          width="14"
+          height="14"
+          viewBox="0 0 14 14"
+          fill="none"
           style={{
-            fontSize: 14,
-            fontWeight: 700,
-            color: '#fff',
             opacity: checked ? 1 : 0,
             transform: `scale(${checked ? 1 : 0.5})`,
-            transition: `all 0.2s ${spring.default}`,
-            lineHeight: 1,
+            transition: `all 0.15s ${spring.default}`,
           }}
         >
-          ✓
-        </span>
+          <path
+            d="M3 7L6 10L11 4"
+            stroke="#fff"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
       </LiquidGlass>
       {label && (
-        <span style={{ fontSize: 14, fontFamily: fontStack, color: '#fff' }}>{label}</span>
+        <span style={{ fontSize: 17, fontFamily: fontStack, color: '#fff', letterSpacing: -0.4 }}>{label}</span>
       )}
     </label>
   )

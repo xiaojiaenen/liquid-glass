@@ -13,26 +13,26 @@ export interface GlassBreadcrumbProps {
 export function GlassBreadcrumb({ items }: GlassBreadcrumbProps) {
   return (
     <LiquidGlass
-      radius={14}
-      bezelWidth={12}
-      glassThickness={55}
-      refractionScale={0.8}
-      blur={0.2}
+      radius={10}
+      bezelWidth={10}
+      glassThickness={45}
+      refractionScale={0.7}
+      blur={0.15}
       tint="rgba(255,255,255,0.05)"
-      style={{ padding: '8px 16px' }}
+      style={{ padding: '6px 14px' }}
     >
-      <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontFamily: fontStack, fontSize: 13 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 4, fontFamily: fontStack, fontSize: 13 }}>
         {items.map((item, i) => (
-          <span key={i} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-            {i > 0 && <span style={{ opacity: 0.3, fontSize: 11 }}>/</span>}
+          <span key={i} style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+            {i > 0 && <span style={{ opacity: 0.25, fontSize: 10 }}>›</span>}
             <span
               onClick={item.onClick}
               style={{
                 color: '#fff',
-                opacity: i === items.length - 1 ? 1 : 0.6,
+                opacity: i === items.length - 1 ? 0.9 : 0.45,
                 fontWeight: i === items.length - 1 ? 600 : 400,
                 cursor: item.onClick ? 'pointer' : 'default',
-                letterSpacing: -0.1,
+                letterSpacing: -0.2,
               }}
             >
               {item.label}

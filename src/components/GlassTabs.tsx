@@ -24,13 +24,13 @@ export function GlassTabs({ tabs, value: controlled, onChange }: GlassTabsProps)
 
   return (
     <LiquidGlass
-      radius={16}
-      bezelWidth={14}
-      glassThickness={60}
-      refractionScale={0.85}
+      radius={12}
+      bezelWidth={12}
+      glassThickness={50}
+      refractionScale={0.8}
       blur={0.2}
       tint="rgba(255,255,255,0.06)"
-      style={{ padding: 4 }}
+      style={{ padding: 3 }}
     >
       <div style={{ display: 'flex', position: 'relative' }}>
         {tabs.map((tab) => {
@@ -42,17 +42,17 @@ export function GlassTabs({ tabs, value: controlled, onChange }: GlassTabsProps)
               style={{
                 position: 'relative',
                 border: 'none',
-                background: isActive ? 'rgba(255,255,255,0.18)' : 'transparent',
+                background: isActive ? 'rgba(255,255,255,0.2)' : 'transparent',
                 color: '#fff',
                 fontFamily: fontStack,
                 fontSize: 13,
                 fontWeight: isActive ? 600 : 500,
                 letterSpacing: -0.1,
-                padding: '8px 18px',
-                borderRadius: 12,
+                padding: '7px 16px',
+                borderRadius: 9,
                 cursor: 'pointer',
-                opacity: isActive ? 1 : 0.6,
-                transition: `all 0.25s ${spring.default}`,
+                opacity: isActive ? 1 : 0.5,
+                transition: `all 0.2s ${spring.default}`,
                 zIndex: 1,
               }}
             >

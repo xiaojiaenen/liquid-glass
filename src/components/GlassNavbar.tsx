@@ -11,13 +11,13 @@ export interface GlassNavbarProps {
 export function GlassNavbar({ title, left, right, onBack }: GlassNavbarProps) {
   return (
     <LiquidGlass
-      radius={20}
-      bezelWidth={18}
-      glassThickness={80}
-      refractionScale={0.9}
+      radius={16}
+      bezelWidth={16}
+      glassThickness={70}
+      refractionScale={0.85}
       blur={0.3}
       tint="rgba(255,255,255,0.05)"
-      style={{ width: '100%', padding: '0 16px', height: 52 }}
+      style={{ width: '100%', padding: '0 16px', height: 44 }}
     >
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
         <div style={{ minWidth: 60, display: 'flex', alignItems: 'center' }}>
@@ -28,11 +28,13 @@ export function GlassNavbar({ title, left, right, onBack }: GlassNavbarProps) {
                 style={{
                   border: 'none',
                   background: 'none',
-                  color: '#fff',
-                  fontSize: 18,
+                  color: '#0a84ff',
+                  fontSize: 17,
                   cursor: 'pointer',
-                  padding: '4px 8px',
-                  opacity: 0.8,
+                  padding: 0,
+                  fontFamily: fontStack,
+                  fontWeight: 400,
+                  letterSpacing: -0.4,
                 }}
               >
                 ‹ 返回
@@ -46,8 +48,11 @@ export function GlassNavbar({ title, left, right, onBack }: GlassNavbarProps) {
             fontSize: 17,
             fontWeight: 600,
             fontFamily: fontStack,
-            letterSpacing: -0.3,
+            letterSpacing: -0.4,
             textAlign: 'center',
+            position: 'absolute',
+            left: '50%',
+            transform: 'translateX(-50%)',
           }}
         >
           {title}

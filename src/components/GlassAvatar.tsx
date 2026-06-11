@@ -8,15 +8,15 @@ export interface GlassAvatarProps {
   fallback?: string
 }
 
-export function GlassAvatar({ src, alt, size = 44, fallback }: GlassAvatarProps) {
+export function GlassAvatar({ src, alt, size = 40, fallback }: GlassAvatarProps) {
   const initials = fallback || alt?.charAt(0) || '?'
 
   return (
     <LiquidGlass
       radius={size / 2}
       bezelWidth={size / 2}
-      glassThickness={50}
-      refractionScale={0.8}
+      glassThickness={45}
+      refractionScale={0.75}
       blur={0.1}
       tint="rgba(255,255,255,0.1)"
       style={{ width: size, height: size }}

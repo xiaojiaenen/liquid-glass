@@ -10,7 +10,7 @@ export interface GlassModalProps {
   width?: number
 }
 
-export function GlassModal({ open, onClose, title, children, width = 360 }: GlassModalProps) {
+export function GlassModal({ open, onClose, title, children, width = 320 }: GlassModalProps) {
   useEffect(() => {
     if (!open) return
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose()
@@ -27,61 +27,72 @@ export function GlassModal({ open, onClose, title, children, width = 360 }: Glas
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: open ? 'rgba(0,0,0,0.4)' : 'transparent',
-        backdropFilter: open ? 'blur(8px)' : 'none',
+        background: open ? 'rgba(0,0,0,0.5)' : 'transparent',
+        backdropFilter: open ? 'blur(20px)' : 'none',
         opacity: open ? 1 : 0,
         pointerEvents: open ? 'auto' : 'none',
-        transition: `all 0.3s ${spring.default}`,
+        transition: `all 0.25s ease`,
       }}
       onClick={onClose}
     >
       <div
         style={{
-          transform: `scale(${open ? 1 : 0.9}) translateY(${open ? 0 : 20}px)`,
+          transform: `scale(${open ? 1 : 0.95})`,
           opacity: open ? 1 : 0,
-          transition: `all 0.35s ${spring.default}`,
+          transition: `all 0.3s ${spring.default}`,
         }}
         onClick={(e) => e.stopPropagation()}
       >
         <LiquidGlass
-          radius={28}
-          bezelWidth={32}
-          glassThickness={140}
-          refractionScale={1}
+          radius={20}
+          bezelWidth={24}
+          glassThickness={120}
+          refractionScale={0.95}
           blur={0.4}
-          tint="rgba(255,255,255,0.06)"
-          style={{ width, padding: 28, flexDirection: 'column' }}
+          tint="rgba(255,255,255,0.08)"
+          style={{ width, padding: '24px 24px 20px', flexDirection: 'column' }}
         >
           {title && (
             <h3
               style={{
-                margin: '0 0 16px',
-                fontSize: 18,
-                fontWeight: 700,
-                letterSpacing: -0.3,
+                margin: '0 0 8px',
+                fontSize: 17,
+                fontWeight: 600,
+                letterSpacing: -0.4,
                 fontFamily: fontStack,
+                textAlign: 'center',
               }}
             >
               {title}
             </h3>
           )}
-          <div style={{ fontFamily: fontStack, fontSize: 14, lineHeight: 1.6 }}>{children}</div>
-          <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 20 }}>
+          <div style={{ fontFamily: fontStack, fontSize: 13, lineHeight: 1.5, textAlign: 'center', opacity: 0.8 }}>
+            {children}
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              borderTop: '1px solid rgba(255,255,255,0.1)',
+              marginTop: 16,
+              paddingTop: 12,
+            }}
+          >
             <button
               onClick={onClose}
               style={{
+                flex: 1,
                 border: 'none',
-                background: 'rgba(255,255,255,0.15)',
-                color: '#fff',
-                borderRadius: 14,
-                padding: '8px 20px',
-                fontSize: 14,
-                fontWeight: 600,
+                background: 'none',
+                color: '#0a84ff',
+                fontSize: 17,
+                fontWeight: 400,
                 cursor: 'pointer',
                 fontFamily: fontStack,
+                padding: '4px 0',
+                letterSpacing: -0.4,
               }}
             >
-              确定
+              好的
             </button>
           </div>
         </LiquidGlass>
