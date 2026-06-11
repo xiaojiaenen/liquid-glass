@@ -7,10 +7,10 @@ export function GlassSearch() {
   return (
     <LiquidGlass
       radius={16}
-      bezelWidth={16}
-      glassThickness={70}
-      refractionScale={0.9}
-      blur={0.6}
+      bezelWidth={22}
+      glassThickness={80}
+      refractionScale={1}
+      blur={0.5}
       tint="rgba(120,120,128,0.2)"
       style={{ width: 300, padding: '0 14px', height: 44 }}
     >

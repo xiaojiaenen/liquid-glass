@@ -95,7 +95,9 @@ export function LiquidGlass({
         <LiquidGlassFilter
           id={filterId}
           maps={maps}
-          scale={maps.maxDisplacement * refractionScale}
+          /* 边缘位移≈一个 bezel 宽:scale=2×bezel(feDisplacementMap 位移=scale×0.5)。
+             用 bezel 而非失控的 maxDisplacement,使折射带宽与位移量匹配,避免窄边被撕扯 */
+          scale={2 * bezelWidth * refractionScale}
           blur={blur}
           saturate={saturate}
         />

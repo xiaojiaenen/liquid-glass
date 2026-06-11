@@ -19,10 +19,10 @@ export function GlassNotification({
   return (
     <LiquidGlass
       radius={22}
-      bezelWidth={20}
-      glassThickness={90}
-      refractionScale={1}
-      blur={0.6}
+      bezelWidth={40}
+      glassThickness={110}
+      refractionScale={1.1}
+      blur={0.5}
       tint="rgba(255,255,255,0.06)"
       style={{ width: 340, padding: 14 }}
     >

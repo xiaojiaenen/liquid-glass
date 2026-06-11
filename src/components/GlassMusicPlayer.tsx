@@ -9,10 +9,10 @@ export function GlassMusicPlayer() {
   return (
     <LiquidGlass
       radius={30}
-      bezelWidth={28}
-      glassThickness={110}
-      refractionScale={1}
-      blur={0.6}
+      bezelWidth={55}
+      glassThickness={130}
+      refractionScale={1.1}
+      blur={0.5}
       saturate={1.3}
       tint="rgba(255,255,255,0.05)"
       style={{ width: 320, padding: 22, flexDirection: 'column' }}
