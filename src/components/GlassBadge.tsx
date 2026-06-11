@@ -1,0 +1,57 @@
+import { LiquidGlass } from '../lib/LiquidGlass'
+import { fontStack } from '../lib/tokens'
+
+export interface GlassBadgeProps {
+  count?: number
+  dot?: boolean
+  children?: React.ReactNode
+  color?: string
+}
+
+export function GlassBadge({ count, dot, children, color = 'rgba(255,59,48,0.9)' }: GlassBadgeProps) {
+  const showBadge = dot || (count !== undefined && count > 0)
+
+  return (
+    <div style={{ position: 'relative', display: 'inline-flex' }}>
+      {children}
+      {showBadge && (
+        <div
+          style={{
+            position: 'absolute',
+            top: -4,
+            right: -4,
+            zIndex: 1,
+          }}
+        >
+          <LiquidGlass
+            radius={dot ? 5 : count! > 9 ? 12 : 10}
+            bezelWidth={4}
+            glassThickness={20}
+            refractionScale={0.6}
+            blur={0}
+            tint={color}
+            style={{
+              minWidth: dot ? 10 : 20,
+              height: dot ? 10 : 20,
+              padding: dot ? 0 : '0 5px',
+            }}
+          >
+            {!dot && (
+              <span
+                style={{
+                  fontSize: 11,
+                  fontWeight: 700,
+                  fontFamily: fontStack,
+                  color: '#fff',
+                  lineHeight: 1,
+                }}
+              >
+                {count! > 99 ? '99+' : count}
+              </span>
+            )}
+          </LiquidGlass>
+        </div>
+      )}
+    </div>
+  )
+}

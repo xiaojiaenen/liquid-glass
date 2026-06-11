@@ -10,6 +10,23 @@ import { GlassMusicPlayer } from '../components/GlassMusicPlayer'
 import { GlassNotification } from '../components/GlassNotification'
 import { Dock } from '../components/Dock'
 import { DragGlass } from '../components/DragGlass'
+import { useToast } from '../components/GlassToast'
+import { GlassModal } from '../components/GlassModal'
+import { GlassTooltip } from '../components/GlassTooltip'
+import { GlassInput } from '../components/GlassInput'
+import { GlassCheckbox } from '../components/GlassCheckbox'
+import { GlassRadio } from '../components/GlassRadio'
+import { GlassSelect } from '../components/GlassSelect'
+import { GlassDatePicker } from '../components/GlassDatePicker'
+import { GlassTabs } from '../components/GlassTabs'
+import { GlassNavbar } from '../components/GlassNavbar'
+import { GlassBreadcrumb } from '../components/GlassBreadcrumb'
+import { GlassBadge } from '../components/GlassBadge'
+import { GlassAvatar } from '../components/GlassAvatar'
+import { GlassTag } from '../components/GlassTag'
+import { GlassProgress } from '../components/GlassProgress'
+import { GlassList } from '../components/GlassList'
+import { GlassAccordion } from '../components/GlassAccordion'
 import { supportsSvgBackdrop } from '../lib/capabilities'
 
 const backgrounds = [
@@ -34,10 +51,13 @@ const backgrounds = [
 export function Components() {
   const [bg, setBg] = useState(0)
   const supported = supportsSvgBackdrop()
+  const { show: showToast, ToastContainer } = useToast()
+  const [modalOpen, setModalOpen] = useState(false)
 
   return (
     <div className="stage">
       <div className="stage__bg" style={{ background: backgrounds[bg].css }} />
+      <ToastContainer />
 
       {/* 顶栏 */}
       <header className="topbar">
@@ -75,6 +95,19 @@ export function Components() {
         渲染模式:{supported ? 'SVG 折射(Chromium)' : '毛玻璃降级(Safari/Firefox)'}
       </p>
 
+      {/* 导航 */}
+      <Section title="导航栏 GlassNavbar">
+        <GlassNavbar title="液态玻璃" onBack={() => {}} right={<span style={{ fontSize: 13, opacity: 0.6 }}>编辑</span>} />
+      </Section>
+
+      <Section title="面包屑 GlassBreadcrumb">
+        <GlassBreadcrumb items={[{ label: '首页' }, { label: '组件' }, { label: '面包屑' }]} />
+      </Section>
+
+      <Section title="标签页 GlassTabs">
+        <GlassTabs tabs={[{ label: '选项一', value: '1' }, { label: '选项二', value: '2' }, { label: '选项三', value: '3' }]} />
+      </Section>
+
       {/* 拖动折射 */}
       <Section title="拖动折射 DragGlass">
         <DragGlass />
@@ -88,26 +121,20 @@ export function Components() {
         </div>
       </Section>
 
-      {/* 卡片 */}
-      <Section title="卡片 GlassCard">
-        <div className="row">
-          <GlassCard title="真实折射" icon="🔮">
-            边缘像棱镜一样弯曲背后的内容,中心保持通透。位移贴图按元素尺寸实时生成。
-          </GlassCard>
-          <GlassCard title="自适应" icon="📐">
-            ResizeObserver 跟踪尺寸,改圆角、棱镜宽度、玻璃厚度都会重建贴图。
-          </GlassCard>
-        </div>
-      </Section>
-
-      {/* 搜索框 */}
-      <Section title="搜索框 GlassSearch">
-        <GlassSearch />
-      </Section>
-
-      {/* 控件 */}
-      <Section title="控件">
+      {/* 表单 */}
+      <Section title="表单">
         <div className="control-grid">
+          <Labeled label="输入框 GlassInput">
+            <GlassInput placeholder="请输入内容" />
+          </Labeled>
+          <Labeled label="搜索框 GlassSearch">
+            <GlassSearch />
+          </Labeled>
+          <Labeled label="下拉选择 GlassSelect">
+            <GlassSelect options={[{ label: '选项 A', value: 'a' }, { label: '选项 B', value: 'b' }, { label: '选项 C', value: 'c' }]} />
+          </Labeled>
+        </div>
+        <div className="control-grid" style={{ marginTop: 16 }}>
           <Labeled label="开关 GlassSwitch">
             <GlassSwitch defaultOn />
           </Labeled>
@@ -117,6 +144,108 @@ export function Components() {
           <Labeled label="分段控制 GlassSegmented">
             <GlassSegmented />
           </Labeled>
+        </div>
+        <div className="control-grid" style={{ marginTop: 16 }}>
+          <Labeled label="复选框 GlassCheckbox">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              <GlassCheckbox label="选项 A" checked />
+              <GlassCheckbox label="选项 B" />
+            </div>
+          </Labeled>
+          <Labeled label="单选框 GlassRadio">
+            <GlassRadio options={[{ label: '方案一', value: '1' }, { label: '方案二', value: '2' }, { label: '方案三', value: '3' }]} />
+          </Labeled>
+          <Labeled label="日期选择 GlassDatePicker">
+            <GlassDatePicker />
+          </Labeled>
+        </div>
+      </Section>
+
+      {/* 展示 */}
+      <Section title="展示组件">
+        <div className="row">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <Labeled label="徽标 GlassBadge">
+              <div style={{ display: 'flex', gap: 20 }}>
+                <GlassBadge count={5}>
+                  <span style={{ fontSize: 22 }}>🔔</span>
+                </GlassBadge>
+                <GlassBadge count={128}>
+                  <span style={{ fontSize: 22 }}>💬</span>
+                </GlassBadge>
+                <GlassBadge dot>
+                  <span style={{ fontSize: 22 }}>📧</span>
+                </GlassBadge>
+              </div>
+            </Labeled>
+            <Labeled label="头像 GlassAvatar">
+              <div style={{ display: 'flex', gap: 12 }}>
+                <GlassAvatar size={36} alt="A" />
+                <GlassAvatar size={44} alt="B" />
+                <GlassAvatar size={52} alt="C" />
+              </div>
+            </Labeled>
+            <Labeled label="标签 GlassTag">
+              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                <GlassTag>默认</GlassTag>
+                <GlassTag color="rgba(10,132,255,0.35)">蓝色</GlassTag>
+                <GlassTag color="rgba(48,209,88,0.35)">绿色</GlassTag>
+                <GlassTag closable onClose={() => {}}>可关闭</GlassTag>
+              </div>
+            </Labeled>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16, flex: 1 }}>
+            <Labeled label="进度条 GlassProgress">
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 12, width: '100%' }}>
+                <GlassProgress percent={25} />
+                <GlassProgress percent={60} color="rgba(48,209,88,0.85)" />
+                <GlassProgress percent={90} color="rgba(255,69,58,0.85)" showText />
+              </div>
+            </Labeled>
+            <Labeled label="列表 GlassList">
+              <GlassList
+                items={[
+                  { icon: '📱', title: 'iPhone', subtitle: 'iOS 18' },
+                  { icon: '💻', title: 'MacBook', subtitle: 'macOS Sequoia' },
+                  { icon: '⌚', title: 'Apple Watch', subtitle: 'watchOS 11' },
+                ]}
+              />
+            </Labeled>
+          </div>
+        </div>
+      </Section>
+
+      {/* 反馈 */}
+      <Section title="反馈">
+        <div className="row">
+          <GlassButton onClick={() => showToast('操作成功', '✓')}>显示 Toast</GlassButton>
+          <GlassButton onClick={() => setModalOpen(true)}>打开弹窗</GlassButton>
+          <GlassTooltip content="这是一个提示">
+            <GlassButton>Hover 提示</GlassButton>
+          </GlassTooltip>
+        </div>
+      </Section>
+
+      {/* 折叠面板 */}
+      <Section title="折叠面板 GlassAccordion">
+        <GlassAccordion
+          items={[
+            { title: '什么是液态玻璃？', content: '液态玻璃是 Apple 在 WWDC25 推出的全新设计语言，模拟真实玻璃的折射、高光和透明效果。' },
+            { title: '如何使用？', content: '引入 LiquidGlass 组件，设置圆角、棱镜宽度、玻璃厚度等参数即可。' },
+            { title: '兼容性？', content: 'Chromium 浏览器使用 SVG 折射滤镜，Safari/Firefox 自动降级为毛玻璃效果。' },
+          ]}
+        />
+      </Section>
+
+      {/* 卡片 */}
+      <Section title="卡片 GlassCard">
+        <div className="row">
+          <GlassCard title="真实折射" icon="🔮">
+            边缘像棱镜一样弯曲背后的内容,中心保持通透。位移贴图按元素尺寸实时生成。
+          </GlassCard>
+          <GlassCard title="自适应" icon="📐">
+            ResizeObserver 跟踪尺寸,改圆角、棱镜宽度、玻璃厚度都会重建贴图。
+          </GlassCard>
         </div>
       </Section>
 
@@ -149,6 +278,11 @@ export function Components() {
       <footer className="dock-wrap">
         <Dock />
       </footer>
+
+      {/* Modal */}
+      <GlassModal open={modalOpen} onClose={() => setModalOpen(false)} title="液态玻璃弹窗">
+        <p style={{ margin: 0 }}>这是一个模态对话框，按 ESC 或点击遮罩关闭。</p>
+      </GlassModal>
     </div>
   )
 }

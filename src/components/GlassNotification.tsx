@@ -22,8 +22,8 @@ export function GlassNotification({
       bezelWidth={40}
       glassThickness={110}
       refractionScale={1.1}
-      blur={0.5}
-      tint="rgba(255,255,255,0.06)"
+      blur={0.2}
+      tint="rgba(255,255,255,0.03)"
       style={{ width: 340, padding: 14 }}
     >
       <div

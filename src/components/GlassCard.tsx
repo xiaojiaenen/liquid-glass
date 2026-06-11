@@ -16,9 +16,9 @@ export function GlassCard({
       bezelWidth={55}
       glassThickness={130}
       refractionScale={1.1}
-      blur={0.4}
+      blur={0.2}
       saturate={1.3}
-      tint="rgba(255,255,255,0.05)"
+      tint="rgba(255,255,255,0.03)"
       style={{ width: 300, padding: 26, flexDirection: 'column' }}
     >
       <div

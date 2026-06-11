@@ -20,9 +20,9 @@ export function GlassButton({
       bezelWidth={22}
       glassThickness={prominent ? 70 : 110}
       refractionScale={1.1}
-      blur={0.3}
+      blur={0.2}
       saturate={1.2}
-      tint={prominent ? 'rgba(10,132,255,0.55)' : 'rgba(255,255,255,0.06)'}
+      tint={prominent ? 'rgba(10,132,255,0.45)' : 'rgba(255,255,255,0.04)'}
       style={{
         padding: '13px 28px',
         fontFamily: fontStack,
