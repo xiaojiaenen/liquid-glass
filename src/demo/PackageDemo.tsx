@@ -1,6 +1,6 @@
 import { LiquidGlass, LiquidGlassButton } from 'liquid-glass-backdrop-react'
 import 'liquid-glass-backdrop-react/style.css'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import './pkg.css'
 
 const backgrounds = [
@@ -32,6 +32,9 @@ export function PackageDemo() {
 
       <h1 className="pkg-title">liquid-glass-backdrop-react</h1>
       <p className="pkg-sub">npm 包实测 · 在 Chrome 里查看完整折射</p>
+
+      {/* 拖动折射测试:玻璃浮在文字上 */}
+      <PkgDragGlass />
 
       {/* 卡片 */}
       <LiquidGlass
@@ -74,6 +77,57 @@ export function PackageDemo() {
             </LiquidGlass>
           ),
         )}
+      </div>
+    </div>
+  )
+}
+
+/** 可拖动玻璃块,浮在文字上 */
+function PkgDragGlass() {
+  const [pos, setPos] = useState({ x: 40, y: 40 })
+  const drag = useRef<{ dx: number; dy: number } | null>(null)
+  const areaRef = useRef<HTMLDivElement>(null)
+
+  const onDown = (e: React.PointerEvent) => {
+    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect()
+    drag.current = { dx: e.clientX - rect.left, dy: e.clientY - rect.top }
+    ;(e.target as HTMLElement).setPointerCapture?.(e.pointerId)
+  }
+  const onMove = (e: React.PointerEvent) => {
+    if (!drag.current || !areaRef.current) return
+    const a = areaRef.current.getBoundingClientRect()
+    setPos({
+      x: e.clientX - a.left - drag.current.dx,
+      y: e.clientY - a.top - drag.current.dy,
+    })
+  }
+  const onUp = () => (drag.current = null)
+
+  return (
+    <div ref={areaRef} className="pkg-drag-area">
+      <div className="pkg-drag-text">
+        {Array.from({ length: 14 }).map((_, i) => (
+          <p key={i}>
+            液态玻璃 LIQUID GLASS 折射测试 — 拖动玻璃块,看文字边缘是否被弯曲放大。
+            Refraction bends text at the edges. 1234567890
+          </p>
+        ))}
+      </div>
+      <div
+        className="pkg-drag-handle"
+        style={{ left: pos.x, top: pos.y }}
+        onPointerDown={onDown}
+        onPointerMove={onMove}
+        onPointerUp={onUp}
+      >
+        <LiquidGlass
+          variant="surface"
+          className="pkg-drag-glass"
+          glassThickness={300}
+          refractionScale={0.9}
+        >
+          <span style={{ fontSize: 13, opacity: 0.85 }}>拖我 →</span>
+        </LiquidGlass>
       </div>
     </div>
   )

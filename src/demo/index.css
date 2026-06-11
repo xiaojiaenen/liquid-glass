@@ -104,3 +104,39 @@ body,
   transform: translateX(-50%);
   z-index: 50;
 }
+
+/* 拖动折射测试区 */
+.drag-area {
+  position: relative;
+  width: 100%;
+  max-width: 1000px;
+  height: 420px;
+  border-radius: 24px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.drag-text {
+  position: absolute;
+  inset: 0;
+  padding: 20px 28px;
+  overflow: hidden;
+}
+.drag-text p {
+  margin: 0 0 10px;
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.5;
+  color: #fff;
+  white-space: nowrap;
+}
+.drag-handle {
+  position: absolute;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  z-index: 5;
+}
+.drag-handle:active {
+  cursor: grabbing;
+}

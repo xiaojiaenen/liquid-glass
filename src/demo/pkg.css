@@ -77,3 +77,44 @@
   font-size: 14px;
   font-weight: 600;
 }
+
+/* 拖动折射测试区 */
+.pkg-drag-area {
+  position: relative;
+  width: min(100%, 1000px);
+  height: 420px;
+  border-radius: 24px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.pkg-drag-text {
+  position: absolute;
+  inset: 0;
+  padding: 20px 28px;
+  overflow: hidden;
+}
+.pkg-drag-text p {
+  margin: 0 0 10px;
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+.pkg-drag-handle {
+  position: absolute;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  z-index: 5;
+}
+.pkg-drag-handle:active {
+  cursor: grabbing;
+}
+.pkg-drag-glass {
+  width: 220px;
+  height: 140px;
+  border-radius: 28px;
+  display: grid;
+  place-items: center;
+}

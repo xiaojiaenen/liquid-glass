@@ -8,6 +8,7 @@ import { GlassSearch } from '../components/GlassSearch'
 import { GlassSegmented } from '../components/GlassSegmented'
 import { GlassMusicPlayer } from '../components/GlassMusicPlayer'
 import { GlassNotification } from '../components/GlassNotification'
+import { DragGlass } from '../components/DragGlass'
 import { LiquidGlass } from '../lib/LiquidGlass'
 import { supportsSvgBackdrop } from '../lib/capabilities'
 
@@ -73,6 +74,11 @@ export function App() {
       <p className="mode-hint">
         渲染模式:{supported ? 'SVG 折射(Chromium)' : '毛玻璃降级(Safari/Firefox)'}
       </p>
+
+      {/* 控件区 */}
+      <Section title="拖动折射测试">
+        <DragGlass />
+      </Section>
 
       {/* 控件区 */}
       <Section title="控件">
