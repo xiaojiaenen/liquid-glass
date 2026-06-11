@@ -7,7 +7,7 @@
   "keywords": ["react", "glassmorphism", "liquid-glass", "apple", "ui-components", "backdrop-filter"],
   "repository": {
     "type": "git",
-    "url": "https://github.com/user/liquid-glass"
+    "url": "https://github.com/xiaojiaenen/liquid-glass"
   },
   "files": [
     "dist"
