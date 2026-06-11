@@ -15,6 +15,32 @@
     inset 0 1px 1px rgba(255, 255, 255, var(--lg-highlight-opacity, 0.3)),
     inset 0 -1px 2px rgba(255, 255, 255, 0.08),
     inset 0 0 14px rgba(255, 255, 255, 0.04);
+  /* 基础过渡:悬停浮起、点击按入 */
+  transition:
+    filter 0.25s ease,
+    box-shadow 0.3s ease;
+}
+
+/* 可交互的悬停浮起 */
+.liquid-glass:hover {
+  filter: brightness(1.04);
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.16),
+    0 10px 28px rgba(0, 0, 0, 0.22),
+    0 20px 48px rgba(0, 0, 0, 0.18),
+    inset 0 1px 1px rgba(255, 255, 255, var(--lg-highlight-opacity, 0.35)),
+    inset 0 -1px 2px rgba(255, 255, 255, 0.08),
+    inset 0 0 14px rgba(255, 255, 255, 0.04);
+}
+
+/* 可交互的点击按入 */
+.liquid-glass:active {
+  filter: brightness(0.93);
+  box-shadow:
+    0 1px 1px rgba(0, 0, 0, 0.1),
+    0 3px 8px rgba(0, 0, 0, 0.12),
+    inset 0 1px 1px rgba(255, 255, 255, 0.2),
+    inset 0 -1px 2px rgba(255, 255, 255, 0.06);
 }
 
 /* glass 模式:backdrop-filter 由内联 style 注入 url(#id) */
@@ -67,6 +93,9 @@
   justify-content: center;
   width: 100%;
   flex-wrap: wrap;
+  /* 对比度兜底:任何背景下文字都至少有基础可读性 */
+  text-shadow: 0 0 10px rgba(0, 0, 0, 0.35),
+               0 1px 3px rgba(0, 0, 0, 0.25);
 }
 
 /* 按钮形态 */
@@ -74,13 +103,9 @@ button.liquid-glass {
   border: none;
   cursor: pointer;
   font: inherit;
-  transition:
-    transform 0.32s cubic-bezier(0.34, 1.56, 0.64, 1),
-    filter 0.2s ease,
-    box-shadow 0.25s ease;
 }
 button.liquid-glass:hover {
-  filter: brightness(1.05);
+  filter: brightness(1.06);
   box-shadow:
     0 2px 4px rgba(0, 0, 0, 0.2),
     0 12px 32px rgba(0, 0, 0, 0.32),

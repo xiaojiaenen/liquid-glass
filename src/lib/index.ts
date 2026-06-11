@@ -3,6 +3,7 @@ export { LiquidGlass } from './LiquidGlass'
 export type { LiquidGlassProps } from './LiquidGlass'
 export { useLiquidGlass } from './useLiquidGlass'
 export { useGlassParallax } from './useGlassParallax'
+export { useBackgroundLuminance } from './useBackgroundLuminance'
 export { generateLiquidGlassMaps } from './displacementMap'
 export type {
   LiquidGlassMapOptions,

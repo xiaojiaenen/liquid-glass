@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import { LiquidGlass } from '../lib/LiquidGlass'
 import { fontStack, spring } from '../lib/tokens'
 
@@ -15,18 +15,44 @@ export interface GlassTabsProps {
 
 /**
  * GlassTabs — 顶部标签页。
- * 选中项用液态玻璃滑块指示。
+ * 选中指示器为液态玻璃滑块，位置/宽度跟随实际 tab 尺寸。
  */
 export function GlassTabs({ tabs, value: controlled, onChange }: GlassTabsProps) {
   const [internal, setInternal] = useState(tabs[0]?.value ?? '')
   const active = controlled ?? internal
+  const [tabBBoxes, setTabBBoxes] = useState<{ left: number; width: number }[]>([])
+  const containerRef = useRef<HTMLDivElement>(null)
+  const btnRefs = useRef<(HTMLButtonElement | null)[]>([])
 
   const select = (v: string) => {
     if (controlled === undefined) setInternal(v)
     onChange?.(v)
   }
 
+  const measure = useCallback(() => {
+    const parent = containerRef.current
+    if (!parent) return
+    const boxes = tabs.map((_, i) => {
+      const btn = btnRefs.current[i]
+      if (!btn) return { left: 0, width: 60 }
+      const parentRect = parent.getBoundingClientRect()
+      const btnRect = btn.getBoundingClientRect()
+      return {
+        left: btnRect.left - parentRect.left,
+        width: btnRect.width,
+      }
+    })
+    setTabBBoxes(boxes)
+  }, [tabs])
+
+  useEffect(() => {
+    measure()
+    window.addEventListener('resize', measure)
+    return () => window.removeEventListener('resize', measure)
+  }, [measure])
+
   const activeIdx = tabs.findIndex((t) => t.value === active)
+  const indicatorBox = tabBBoxes[activeIdx]
 
   return (
     <LiquidGlass
@@ -38,12 +64,13 @@ export function GlassTabs({ tabs, value: controlled, onChange }: GlassTabsProps)
       tint="rgba(255,255,255,0.06)"
       style={{ padding: 3 }}
     >
-      <div style={{ display: 'flex', position: 'relative' }}>
-        {tabs.map((tab) => {
+      <div ref={containerRef} style={{ display: 'flex', position: 'relative' }}>
+        {tabs.map((tab, i) => {
           const isActive = active === tab.value
           return (
             <button
               key={tab.value}
+              ref={(el) => { btnRefs.current[i] = el }}
               onClick={() => select(tab.value)}
               style={{
                 position: 'relative',
@@ -60,32 +87,34 @@ export function GlassTabs({ tabs, value: controlled, onChange }: GlassTabsProps)
                 opacity: isActive ? 1 : 0.5,
                 transition: `all 0.2s ${spring.default}`,
                 zIndex: 2,
-                minWidth: 60,
+                whiteSpace: 'nowrap',
               }}
             >
               {tab.label}
             </button>
           )
         })}
-        {/* 选中指示器 — 液态玻璃滑块 */}
-        <LiquidGlass
-          radius={9}
-          bezelWidth={8}
-          glassThickness={30}
-          refractionScale={0.618}
-          blur={0.15}
-          tint="rgba(255,255,255,0.15)"
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: `calc(${activeIdx} * 92px + 0px)`,
-            width: 92,
-            height: '100%',
-            transition: `left 0.3s ${spring.default}`,
-            pointerEvents: 'none',
-            zIndex: 1,
-          }}
-        />
+        {/* 选中指示器 — 液态玻璃滑块，跟随实际 tab 宽度/位置 */}
+        {indicatorBox && (
+          <LiquidGlass
+            radius={9}
+            bezelWidth={8}
+            glassThickness={30}
+            refractionScale={0.618}
+            blur={0.15}
+            tint="rgba(255,255,255,0.15)"
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: indicatorBox.left,
+              width: indicatorBox.width,
+              height: '100%',
+              transition: `left 0.35s ${spring.default}, width 0.35s ${spring.default}`,
+              pointerEvents: 'none',
+              zIndex: 1,
+            }}
+          />
+        )}
       </div>
     </LiquidGlass>
   )

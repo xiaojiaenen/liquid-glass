@@ -55,7 +55,7 @@ export function LiquidGlass({
   as = 'div',
   onClick,
   profile,
-  parallax = false,
+  parallax = true,
   backdropBlur = 0,
 }: LiquidGlassProps) {
   const reactId = useId()
