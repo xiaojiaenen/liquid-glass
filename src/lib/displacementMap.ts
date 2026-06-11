@@ -29,6 +29,10 @@ export interface LiquidGlassMapOptions {
   glassThickness?: number
   /** 折射率,默认 1.5 */
   refractiveIndex?: number
+  /** 镜面高光光源角度(度),默认 60 */
+  specularAngleDeg?: number
+  /** 镜面高光带宽(px),默认 1.5 */
+  specularRimWidth?: number
 }
 
 export interface LiquidGlassMaps {
@@ -135,12 +139,15 @@ function calculateSpecularHighlight(
   oh: number,
   rad: number,
   _bw: number,
+  angleDeg: number,
+  rimWidth: number,
 ): ImageData {
   const img = new ImageData(ow, oh)
-  const sVec = [Math.cos(Math.PI / 3), Math.sin(Math.PI / 3)] // 光源方向 60°
+  const a = (angleDeg * Math.PI) / 180
+  const sVec = [Math.cos(a), Math.sin(a)] // 光源方向
   const rSq = rad * rad
   const rp1Sq = (rad + 1) ** 2
-  const rmSSq = Math.max(0, (rad - 1.5) ** 2)
+  const rmSSq = Math.max(0, (rad - rimWidth) ** 2)
 
   for (let y1 = 0; y1 < oh; y1++) {
     for (let x1 = 0; x1 < ow; x1++) {
@@ -156,7 +163,8 @@ function calculateSpecularHighlight(
             (dist > 0 ? -y / dist : 0) * sVec[1],
         )
         const cf =
-          dp * Math.sqrt(1 - (1 - Math.max(0, Math.min(1, (rad - dist) / 1.5))) ** 2)
+          dp *
+          Math.sqrt(1 - (1 - Math.max(0, Math.min(1, (rad - dist) / rimWidth))) ** 2)
         const c = Math.min(255, 255 * cf)
         const idx = (y1 * ow + x1) * 4
 
@@ -186,6 +194,8 @@ export function generateLiquidGlassMaps(
     bezelWidth = 30,
     glassThickness = 150,
     refractiveIndex = 1.5,
+    specularAngleDeg = 60,
+    specularRimWidth = 1.5,
   } = opts
   const w = Math.max(1, Math.round(width))
   const h = Math.max(1, Math.round(height))
@@ -211,7 +221,14 @@ export function generateLiquidGlassMaps(
     maxDisplacement,
     pMap,
   )
-  const specImg = calculateSpecularHighlight(w, h, rad, bezelWidth)
+  const specImg = calculateSpecularHighlight(
+    w,
+    h,
+    rad,
+    bezelWidth,
+    specularAngleDeg,
+    specularRimWidth,
+  )
 
   return {
     displacementUrl: imageDataToDataURL(dispImg),
