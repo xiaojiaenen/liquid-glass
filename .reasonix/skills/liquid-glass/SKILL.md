@@ -3,11 +3,6 @@ name: liquid-glass
 description: Guide for installing and using @xiaojiaenen/liquid-glass — Apple-style glassmorphism React component library with 52 components, SVG-based Snell refraction, golden ratio presets, and GlassProvider theming. Use when working with liquid-glass UI, glassmorphism design, Apple-style interfaces, or any project needing frosted glass React components.
 ---
 
----
-name: liquid-glass
-description: Guide for installing and using @xiaojiaenen/liquid-glass — Apple-style glassmorphism React component library with 52 components, SVG-based Snell refraction, golden ratio presets, and GlassProvider theming. Use when working with liquid-glass UI, glassmorphism design, Apple-style interfaces, or any project needing frosted glass React components.
----
-
 # Liquid Glass — Apple 液态玻璃 React 组件库
 
 ## 快速安装
@@ -77,4 +72,4 @@ const GlassCard = withLiquidGlass(MyCard, { preset: 'card' })
 
 ## 完整组件列表和 API
 
-详见 [REFERENCE.md](REFERENCE.md) — 所有 52 个组件的分类、Props 表格和代码示例。
+详见 [REFERENCE.md](references/REFERENCE.md) — 所有 52 个组件的分类、Props 表格和代码示例。

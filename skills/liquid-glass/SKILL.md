@@ -72,4 +72,4 @@ const GlassCard = withLiquidGlass(MyCard, { preset: 'card' })
 
 ## 完整组件列表和 API
 
-详见 [REFERENCE.md](REFERENCE.md) — 所有 52 个组件的分类、Props 表格和代码示例。
+详见 [REFERENCE.md](references/REFERENCE.md) — 所有 52 个组件的分类、Props 表格和代码示例。
