@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
+import { LiquidGlass } from '../lib/LiquidGlass'
 import { fontStack, spring } from '../lib/tokens'
 import { useGlassTheme } from '../lib/GlassProvider'
 
@@ -8,10 +9,6 @@ export interface GlassSegmentedProps {
   onChange?: (index: number) => void
 }
 
-/**
- * GlassSegmented — 分段控制。
- * 指示器用 transform: translateX 滑动 + CSS width 过渡。
- */
 export function GlassSegmented({
   options = ['日', '周', '月'],
   value: controlledValue,
@@ -58,18 +55,14 @@ export function GlassSegmented({
   }
 
   return (
-    <div
-      style={{
-        position: 'relative',
-        display: 'inline-flex',
-        borderRadius: 16,
-        padding: 3,
-        background: tints.control,
-        backdropFilter: 'blur(20px) saturate(1.8)',
-        WebkitBackdropFilter: 'blur(20px) saturate(1.8)',
-        border: '0.5px solid rgba(255,255,255,0.18)',
-        boxShadow: '0 1px 2px rgba(0,0,0,0.12), 0 6px 18px rgba(0,0,0,0.18), inset 0 1px 1px rgba(255,255,255,0.3)',
-      }}
+    <LiquidGlass
+      radius={16}
+      bezelWidth={20}
+      glassThickness={70}
+      refractionScale={0.618}
+      blur={0.35}
+      tint={tints.control}
+      style={{ padding: 3 }}
     >
       <style>{`
         .lg-seg-btn {
@@ -84,7 +77,6 @@ export function GlassSegmented({
         onKeyDown={handleKeyDown}
         style={{ position: 'relative', display: 'flex' }}
       >
-        {/* 指示器 — transform 滑动 */}
         {box && (
           <div
             style={{
@@ -105,27 +97,17 @@ export function GlassSegmented({
             aria-selected={active === i}
             onClick={() => select(i)}
             style={{
-              position: 'relative',
-              flex: 1,
-              height: 28,
-              border: 'none',
-              background: 'transparent',
-              color: textColors.primary,
-              fontFamily: fontStack,
-              fontSize: 13,
-              fontWeight: active === i ? 600 : 500,
-              letterSpacing: -0.2,
-              cursor: 'pointer',
-              opacity: active === i ? 1 : 0.5,
-              transition: `opacity 0.25s ${spring.default}`,
-              zIndex: 2,
-              whiteSpace: 'nowrap',
+              position: 'relative', flex: 1, height: 28, border: 'none',
+              background: 'transparent', color: textColors.primary,
+              fontFamily: fontStack, fontSize: 13, fontWeight: active === i ? 600 : 500,
+              letterSpacing: -0.2, cursor: 'pointer', opacity: active === i ? 1 : 0.5,
+              transition: `opacity 0.25s ${spring.default}`, zIndex: 2, whiteSpace: 'nowrap',
             }}
           >
             {opt}
           </button>
         ))}
       </div>
-    </div>
+    </LiquidGlass>
   )
 }
