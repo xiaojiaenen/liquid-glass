@@ -1,18 +1,25 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useId, type ReactNode } from 'react'
 import { LiquidGlass } from '../lib/LiquidGlass'
 import { fontStack, spring } from '../lib/tokens'
+import { useGlassTheme } from '../lib/GlassProvider'
 
 export interface GlassTooltipProps {
   content: string
-  children: React.ReactNode
+  children: ReactNode
   position?: 'top' | 'bottom' | 'left' | 'right'
 }
 
+/**
+ * GlassTooltip — 液态玻璃工具提示。
+ * 对标 macOS tooltip / SwiftUI .help()。
+ * 液态玻璃容器 + 弹簧动画 + ARIA tooltip 语义。
+ */
 export function GlassTooltip({ content, children, position = 'top' }: GlassTooltipProps) {
+  const { tints, textColors } = useGlassTheme()
   const [show, setShow] = useState(false)
   const timerRef = useRef<number>(0)
+  const tooltipId = useId()
 
-  // 用 margin 做定位偏移,避免 transform(会创建合成层破坏 backdrop-filter)
   const posMap: Record<string, React.CSSProperties> = {
     top:    { bottom: '100%', left: 0, right: 0, display: 'flex', justifyContent: 'center', marginBottom: 8 },
     bottom: { top: '100%',    left: 0, right: 0, display: 'flex', justifyContent: 'center', marginTop: 8 },
@@ -20,26 +27,37 @@ export function GlassTooltip({ content, children, position = 'top' }: GlassToolt
     right:  { left: '100%',   top: '50%', display: 'flex', alignItems: 'center', marginLeft: 8, marginTop: '-0.6em' },
   }
 
+  const handleShow = () => {
+    timerRef.current = window.setTimeout(() => setShow(true), 300)
+  }
+
+  const handleHide = () => {
+    clearTimeout(timerRef.current)
+    setShow(false)
+  }
+
   return (
     <div
       style={{ position: 'relative', display: 'inline-flex' }}
-      onMouseEnter={() => {
-        timerRef.current = window.setTimeout(() => setShow(true), 300)
-      }}
-      onMouseLeave={() => {
-        clearTimeout(timerRef.current)
-        setShow(false)
-      }}
+      onMouseEnter={handleShow}
+      onMouseLeave={handleHide}
+      onFocus={handleShow}
+      onBlur={handleHide}
     >
-      {children}
+      <div aria-describedby={show ? tooltipId : undefined}>
+        {children}
+      </div>
       {show && (
         <div
+          id={tooltipId}
+          role="tooltip"
           style={{
             position: 'absolute',
             zIndex: 9999,
             ...posMap[position],
             opacity: show ? 1 : 0,
-            transition: `opacity 0.18s ${spring.default}`,
+            transform: show ? 'scale(1)' : 'scale(0.95)',
+            transition: `all 0.2s ${spring.default}`,
             pointerEvents: 'none',
           }}
         >
@@ -49,10 +67,10 @@ export function GlassTooltip({ content, children, position = 'top' }: GlassToolt
             glassThickness={38}
             refractionScale={0.618}
             blur={0.2}
-            tint="rgba(50,50,50,0.85)"
+            tint={tints.modal}
             style={{ padding: '6px 12px' }}
           >
-            <span style={{ fontSize: 13, fontWeight: 500, whiteSpace: 'nowrap', fontFamily: fontStack, color: '#fff' }}>
+            <span style={{ fontSize: 13, fontWeight: 500, whiteSpace: 'nowrap', fontFamily: fontStack, color: textColors.primary }}>
               {content}
             </span>
           </LiquidGlass>

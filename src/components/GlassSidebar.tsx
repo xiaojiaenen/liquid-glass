@@ -1,6 +1,8 @@
 import { useState, type ReactNode } from 'react'
 import { LiquidGlass } from '../lib/LiquidGlass'
 import { fontStack, spring } from '../lib/tokens'
+import { useGlassTheme } from '../lib/GlassProvider'
+import { GlassIcon } from './GlassIcon'
 
 export interface SidebarItem {
   icon: string
@@ -10,29 +12,20 @@ export interface SidebarItem {
 }
 
 export interface GlassSidebarProps {
-  /** 菜单项 */
   items: SidebarItem[]
-  /** 当前选中 */
   value?: string
-  /** 默认选中 */
   defaultValue?: string
-  /** 切换回调 */
   onChange?: (value: string) => void
-  /** 侧边栏位置 */
   side?: 'left' | 'right'
-  /** 默认展开 */
   defaultCollapsed?: boolean
-  /** 展开宽度(px) */
   expandedWidth?: number
-  /** 折叠宽度(px) */
   collapsedWidth?: number
-  /** 底部区域（用户头像、设置等） */
   footer?: ReactNode
 }
 
 /**
  * GlassSidebar — 液态玻璃侧边栏。
- * 支持展开/折叠、图标+文字菜单、底部插槽。
+ * 主题感知 + 展开/折叠动画。
  */
 export function GlassSidebar({
   items,
@@ -45,6 +38,7 @@ export function GlassSidebar({
   collapsedWidth = 64,
   footer,
 }: GlassSidebarProps) {
+  const { tints, textColors, borderColors } = useGlassTheme()
   const [internal, setInternal] = useState(defaultValue)
   const current = controlledValue ?? internal ?? items[0]?.value
   const [collapsed, setCollapsed] = useState(defaultCollapsed)
@@ -63,7 +57,7 @@ export function GlassSidebar({
       glassThickness={80}
       refractionScale={0.618}
       blur={0.4}
-      tint="rgba(30,30,40,0.75)"
+      tint={tints.card}
       style={{
         width: w,
         height: '100%',
@@ -76,26 +70,33 @@ export function GlassSidebar({
         overflow: 'hidden',
       }}
     >
-      {/* 折叠切换按钮 */}
+      {/* 折叠切换 */}
       <button
         onClick={() => setCollapsed((v) => !v)}
         style={{
           border: 'none',
           background: 'none',
-          color: '#fff',
+          color: textColors.primary,
           cursor: 'pointer',
           padding: '10px 0',
-          fontSize: 16,
           opacity: 0.4,
-          transition: 'opacity 0.2s ease',
+          transition: `opacity 0.2s ${spring.default}`,
           fontFamily: fontStack,
           width: '100%',
+          display: 'flex',
+          justifyContent: 'center',
         }}
         aria-label={collapsed ? '展开侧边栏' : '折叠侧边栏'}
-        onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.8')}
-        onMouseLeave={(e) => (e.currentTarget.style.opacity = '0.4')}
+        onMouseEnter={(e) => { e.currentTarget.style.opacity = '0.8' }}
+        onMouseLeave={(e) => { e.currentTarget.style.opacity = '0.4' }}
       >
-        {side === 'left' ? (collapsed ? '▶' : '◀') : (collapsed ? '◀' : '▶')}
+        <span style={{
+          display: 'inline-flex',
+          transform: collapsed ? (side === 'left' ? 'rotate(0deg)' : 'rotate(180deg)') : (side === 'left' ? 'rotate(180deg)' : 'rotate(0deg)'),
+          transition: `transform 0.25s ${spring.default}`,
+        }}>
+          <GlassIcon name="chevron_right" size="small" color={textColors.secondary} />
+        </span>
       </button>
 
       {/* 菜单项 */}
@@ -108,16 +109,16 @@ export function GlassSidebar({
               onClick={() => select(item.value)}
               style={{
                 border: 'none',
-                background: active ? 'rgba(255,255,255,0.08)' : 'none',
+                background: active ? tints.selected : 'none',
                 borderRadius: 10,
                 padding: collapsed ? '10px 0' : '10px 12px',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 gap: 12,
-                color: active ? '#fff' : 'rgba(255,255,255,0.6)',
+                color: active ? textColors.primary : textColors.secondary,
                 fontFamily: fontStack,
-                fontSize: 14,
+                fontSize: 13,
                 fontWeight: active ? 600 : 400,
                 letterSpacing: -0.2,
                 transition: `all 0.2s ${spring.default}`,
@@ -161,7 +162,7 @@ export function GlassSidebar({
           padding: collapsed ? '8px 0' : '8px 12px',
           display: 'flex',
           justifyContent: collapsed ? 'center' : 'flex-start',
-          borderTop: '0.5px solid rgba(255,255,255,0.06)',
+          borderTop: `0.5px solid ${borderColors.separator}`,
         }}>
           {footer}
         </div>

@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { LiquidGlass } from '../lib/LiquidGlass'
 import { fontStack, spring } from '../lib/tokens'
+import { useGlassTheme } from '../lib/GlassProvider'
 
 export interface GlassTab {
   label: string
@@ -15,14 +16,17 @@ export interface GlassTabsProps {
 
 /**
  * GlassTabs — 顶部标签页。
- * 选中指示器为液态玻璃滑块，位置/宽度跟随实际 tab 尺寸。
+ * 指示器用 transform: translateX 滑动 + CSS width 过渡,
+ * 浏览器对 transform 有独立合成层,过渡丝滑。
  */
 export function GlassTabs({ tabs, value: controlled, onChange }: GlassTabsProps) {
+  const { tints, textColors } = useGlassTheme()
   const [internal, setInternal] = useState(tabs[0]?.value ?? '')
   const active = controlled ?? internal
-  const [tabBBoxes, setTabBBoxes] = useState<{ left: number; width: number }[]>([])
   const containerRef = useRef<HTMLDivElement>(null)
   const btnRefs = useRef<(HTMLButtonElement | null)[]>([])
+  const [boxes, setBoxes] = useState<{ left: number; width: number }[]>([])
+  const [ready, setReady] = useState(false)
 
   const select = (v: string) => {
     if (controlled === undefined) setInternal(v)
@@ -32,27 +36,30 @@ export function GlassTabs({ tabs, value: controlled, onChange }: GlassTabsProps)
   const measure = useCallback(() => {
     const parent = containerRef.current
     if (!parent) return
-    const boxes = tabs.map((_, i) => {
+    const parentRect = parent.getBoundingClientRect()
+    const result = tabs.map((_, i) => {
       const btn = btnRefs.current[i]
       if (!btn) return { left: 0, width: 60 }
-      const parentRect = parent.getBoundingClientRect()
       const btnRect = btn.getBoundingClientRect()
-      return {
-        left: btnRect.left - parentRect.left,
-        width: btnRect.width,
-      }
+      return { left: btnRect.left - parentRect.left, width: btnRect.width }
     })
-    setTabBBoxes(boxes)
+    setBoxes(result)
   }, [tabs])
 
   useEffect(() => {
     measure()
+    requestAnimationFrame(() => setReady(true))
     window.addEventListener('resize', measure)
     return () => window.removeEventListener('resize', measure)
   }, [measure])
 
   const activeIdx = tabs.findIndex((t) => t.value === active)
-  const indicatorBox = tabBBoxes[activeIdx]
+  const box = boxes[activeIdx]
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'ArrowRight') { e.preventDefault(); const next = tabs[(activeIdx + 1) % tabs.length]; if (next) select(next.value) }
+    else if (e.key === 'ArrowLeft') { e.preventDefault(); const prev = tabs[(activeIdx - 1 + tabs.length) % tabs.length]; if (prev) select(prev.value) }
+  }
 
   return (
     <LiquidGlass
@@ -61,22 +68,37 @@ export function GlassTabs({ tabs, value: controlled, onChange }: GlassTabsProps)
       glassThickness={70}
       refractionScale={0.85}
       blur={0.5}
-      tint="rgba(255,255,255,0.06)"
+      tint={tints.control}
       style={{ padding: 3 }}
     >
-      <div ref={containerRef} style={{ display: 'flex', position: 'relative' }}>
+      <style>{`
+        .lg-tab-btn {
+          -webkit-tap-highlight-color: transparent;
+          outline: none;
+        }
+        .lg-tab-btn::-moz-focus-inner { border: 0; }
+      `}</style>
+      <div
+        ref={containerRef}
+        role="tablist"
+        onKeyDown={handleKeyDown}
+        style={{ display: 'flex', position: 'relative' }}
+      >
         {tabs.map((tab, i) => {
           const isActive = active === tab.value
           return (
             <button
               key={tab.value}
               ref={(el) => { btnRefs.current[i] = el }}
+              className="lg-tab-btn"
+              role="tab"
+              aria-selected={isActive}
               onClick={() => select(tab.value)}
               style={{
                 position: 'relative',
                 border: 'none',
                 background: 'none',
-                color: '#fff',
+                color: textColors.primary,
                 fontFamily: fontStack,
                 fontSize: 13,
                 fontWeight: isActive ? 600 : 500,
@@ -85,7 +107,7 @@ export function GlassTabs({ tabs, value: controlled, onChange }: GlassTabsProps)
                 borderRadius: 9,
                 cursor: 'pointer',
                 opacity: isActive ? 1 : 0.5,
-                transition: `all 0.2s ${spring.default}`,
+                transition: `opacity 0.25s ${spring.default}`,
                 zIndex: 2,
                 whiteSpace: 'nowrap',
               }}
@@ -94,24 +116,28 @@ export function GlassTabs({ tabs, value: controlled, onChange }: GlassTabsProps)
             </button>
           )
         })}
-        {/* 选中指示器 — 液态玻璃滑块，跟随实际 tab 宽度/位置 */}
-        {indicatorBox && (
-          <LiquidGlass
-            radius={9}
-            bezelWidth={8}
-            glassThickness={30}
-            refractionScale={0.618}
-            blur={0.15}
-            tint="rgba(255,255,255,0.15)"
+        {/* 指示器 — transform 滑动 */}
+        {box && (
+          <div
             style={{
               position: 'absolute',
               top: 0,
-              left: indicatorBox.left,
-              width: indicatorBox.width,
+              left: 0,
               height: '100%',
-              transition: `left 0.35s ${spring.default}, width 0.35s ${spring.default}`,
+              borderRadius: 9,
+              background: tints.selected,
+              backdropFilter: 'blur(12px) saturate(1.6)',
+              WebkitBackdropFilter: 'blur(12px) saturate(1.6)',
+              border: '0.5px solid rgba(255,255,255,0.15)',
+              boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.2)',
+              transform: `translateX(${box.left}px)`,
+              width: box.width,
+              transition: ready
+                ? `transform 0.35s ${spring.default}, width 0.35s ${spring.default}`
+                : 'none',
               pointerEvents: 'none',
               zIndex: 1,
+              willChange: 'transform',
             }}
           />
         )}

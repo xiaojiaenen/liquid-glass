@@ -1,35 +1,28 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { LiquidGlass } from '../lib/LiquidGlass'
 import { fontStack, spring, radii } from '../lib/tokens'
+import { useGlassTheme } from '../lib/GlassProvider'
 
 export interface GlassSheetAction {
   label: string
   onClick: () => void
-  /** 销毁性操作（红色文字） */
   destructive?: boolean
-  /** 取消按钮（加粗） */
   cancel?: boolean
 }
 
 export interface GlassSheetProps {
-  /** 是否显示 */
   open: boolean
-  /** 关闭回调 */
   onClose: () => void
-  /** 标题 */
   title?: string
-  /** 自定义内容（当有 children 时 action 列表隐藏） */
   children?: ReactNode
-  /** 操作按钮列表（iOS Action Sheet 风格） */
   actions?: GlassSheetAction[]
-  /** 弹起高度：'auto'(默认半屏) | 'half'(刚好半屏) | 'full'(几乎全屏) */
   detent?: 'auto' | 'half' | 'full'
 }
 
 /**
  * GlassSheet — 底部弹出面板 / Action Sheet。
  * 对标 UISheetPresentationController / .confirmationDialog。
- * 支持 detent 切换、touch drag 拖拽关闭、action 按钮列表。
+ * iOS 风格: 从底部滑入 + 弹簧曲线 + 拖拽关闭。
  */
 export function GlassSheet({
   open,
@@ -39,6 +32,7 @@ export function GlassSheet({
   actions,
   detent = 'auto',
 }: GlassSheetProps) {
+  const { tints, textColors, borderColors } = useGlassTheme()
   const sheetRef = useRef<HTMLDivElement>(null)
   const startYRef = useRef(0)
   const translateRef = useRef(0)
@@ -46,11 +40,11 @@ export function GlassSheet({
   const [translateY, setTranslateY] = useState(0)
   const [dragging, setDragging] = useState(false)
 
-  // 打开/关闭动画
   useEffect(() => {
     if (open) {
       setVisible(true)
       setTranslateY(0)
+      translateRef.current = 0
     } else {
       setTranslateY(0)
       const timer = setTimeout(() => setVisible(false), 400)
@@ -59,19 +53,12 @@ export function GlassSheet({
   }, [open])
 
   useEffect(() => {
-    setTranslateY(0)
-    translateRef.current = 0
-  }, [open])
-
-  // Escape 关闭
-  useEffect(() => {
     if (!open) return
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose()
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
   }, [open, onClose])
 
-  // 禁止背景滚动
   useEffect(() => {
     if (open) {
       document.body.style.overflow = 'hidden'
@@ -110,6 +97,9 @@ export function GlassSheet({
 
   return (
     <div
+      role="dialog"
+      aria-modal="true"
+      aria-label={title}
       style={{
         position: 'fixed',
         inset: 0,
@@ -126,7 +116,7 @@ export function GlassSheet({
         style={{
           position: 'absolute',
           inset: 0,
-          background: open ? 'rgba(0,0,0,0.4)' : 'transparent',
+          background: open ? tints.overlay : 'transparent',
           opacity: open ? 1 : 0,
           transition: `all 0.35s ${spring.gentle}`,
         }}
@@ -143,7 +133,8 @@ export function GlassSheet({
           position: 'relative',
           zIndex: 2,
           opacity: open ? 1 : 0,
-          transition: `opacity 0.4s ${spring.gentle}`,
+          transform: open ? `translateY(${translateY}px)` : 'translateY(100%)',
+          transition: dragging ? 'none' : `transform 0.4s ${spring.gentle}, opacity 0.3s ${spring.gentle}`,
           maxHeight: detent === 'full' ? '92vh' : detent === 'half' ? '55vh' : '75vh',
           pointerEvents: open ? 'auto' : 'none',
         }}
@@ -154,7 +145,7 @@ export function GlassSheet({
           glassThickness={100}
           refractionScale={0.618}
           blur={0.5}
-          tint="rgba(30,30,40,0.85)"
+          tint={tints.modal}
           style={{
             width: '100%',
             minWidth: 340,
@@ -163,11 +154,9 @@ export function GlassSheet({
             padding: '8px 0 28px',
             flexDirection: 'column',
             fontFamily: fontStack,
-            color: '#fff',
+            color: textColors.primary,
             borderBottomLeftRadius: 0,
             borderBottomRightRadius: 0,
-            transform: dragging || translateY !== 0 ? `translateY(${translateY}px)` : undefined,
-            transition: dragging ? 'none' : `transform 0.4s ${spring.gentle}`,
             touchAction: 'none',
             userSelect: 'none',
           }}
@@ -186,7 +175,7 @@ export function GlassSheet({
                 width: 36,
                 height: 5,
                 borderRadius: 2.5,
-                background: 'rgba(255,255,255,0.3)',
+                background: textColors.tertiary,
               }}
             />
           </div>
@@ -200,41 +189,30 @@ export function GlassSheet({
                 fontWeight: 600,
                 letterSpacing: -0.3,
                 textAlign: 'center',
-                color: '#fff',
+                color: textColors.primary,
               }}
             >
               {title}
             </h3>
           )}
 
-          {/* 自定义内容 */}
           {children && (
             <div style={{ padding: '12px 20px 0' }}>{children}</div>
           )}
 
-          {/* Action 列表（iOS Action Sheet 风格） */}
           {showActions && (
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                marginTop: title ? 12 : 4,
-              }}
-            >
+            <div style={{ display: 'flex', flexDirection: 'column', marginTop: title ? 12 : 4 }}>
               {actions.map((action, i) => {
                 const isCancel = action.cancel
                 return (
                   <button
                     key={i}
-                    onClick={() => {
-                      action.onClick()
-                      onClose()
-                    }}
+                    onClick={() => { action.onClick(); onClose() }}
                     style={{
                       border: 'none',
-                      borderTop: i > 0 ? '0.5px solid rgba(255,255,255,0.08)' : 'none',
+                      borderTop: i > 0 ? `0.5px solid ${borderColors.separator}` : 'none',
                       background: 'none',
-                      color: action.destructive ? '#ff453a' : '#fff',
+                      color: action.destructive ? textColors.destructive : textColors.primary,
                       fontSize: isCancel ? 17 : 15,
                       fontWeight: isCancel ? 700 : 400,
                       padding: '14px 20px',

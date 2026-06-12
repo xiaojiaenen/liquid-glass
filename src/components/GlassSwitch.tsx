@@ -1,29 +1,46 @@
 import { useState } from 'react'
 import { LiquidGlass } from '../lib/LiquidGlass'
 import { spring } from '../lib/tokens'
+import { useGlassTheme } from '../lib/GlassProvider'
 
 export interface GlassSwitchProps {
   defaultOn?: boolean
+  value?: boolean
+  onChange?: (on: boolean) => void
+  'aria-label'?: string
 }
 
 /**
  * GlassSwitch — 液态玻璃开关。
- * Track 是一整块液态玻璃 pill，on 时绿玻璃 tint，off 时灰玻璃 tint。
- * Knob 是高光玻璃浮块，在 track 内部滑动。
+ * 对标 UISwitch / SwiftUI Toggle。
+ * Track 是液态玻璃 pill,Knob 是高光玻璃浮块。
  */
-export function GlassSwitch({ defaultOn = false }: GlassSwitchProps) {
-  const [on, setOn] = useState(defaultOn)
-  // iOS 开关比例 51:31
+export function GlassSwitch({
+  defaultOn = false,
+  value: controlledValue,
+  onChange,
+  'aria-label': ariaLabel,
+}: GlassSwitchProps) {
+  const [internal, setInternal] = useState(defaultOn)
+  const on = controlledValue ?? internal
+  const { tints } = useGlassTheme()
+
   const W = 51
   const H = 31
   const pad = 2
   const knob = H - pad * 2
 
+  const toggle = () => {
+    if (controlledValue === undefined) setInternal(!on)
+    onChange?.(!on)
+  }
+
   return (
     <button
-      onClick={() => setOn((v) => !v)}
+      onClick={toggle}
       role="switch"
       aria-checked={on}
+      aria-label={ariaLabel}
       style={{
         width: W,
         height: H,
@@ -34,14 +51,14 @@ export function GlassSwitch({ defaultOn = false }: GlassSwitchProps) {
         background: 'transparent',
       }}
     >
-      {/* Track — 液态玻璃容器 */}
+      {/* Track — 液态玻璃 */}
       <LiquidGlass
         radius={H / 2}
         bezelWidth={18}
         glassThickness={80}
         refractionScale={0.9}
         blur={0.3}
-        tint={on ? 'rgba(48,209,88,0.3)' : 'rgba(120,120,128,0.2)'}
+        tint={on ? 'rgba(48,209,88,0.3)' : tints.muted}
         style={{
           width: W,
           height: H,
@@ -50,7 +67,6 @@ export function GlassSwitch({ defaultOn = false }: GlassSwitchProps) {
           transition: `all 0.3s ${spring.gentle}`,
         }}
       />
-
       {/* Knob — 玻璃浮块 */}
       <span
         style={{

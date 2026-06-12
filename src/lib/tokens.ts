@@ -25,6 +25,19 @@ export const systemColors = {
   yellow: '#ffd60a',
 }
 
+/** 浅色模式系统色 */
+export const lightSystemColors = {
+  blue: '#007aff',
+  green: '#34c759',
+  indigo: '#5856d6',
+  orange: '#ff9500',
+  pink: '#ff2d55',
+  purple: '#af52de',
+  red: '#ff3b30',
+  teal: '#5ac8fa',
+  yellow: '#ffcc00',
+}
+
 /** SF Pro 字体栈 */
 export const fontStack =
   "-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', 'PingFang SC', 'Microsoft YaHei', sans-serif"
@@ -37,31 +50,102 @@ export const radii = {
   pill: 999,
 }
 
-/** 黄金分割(φ≈1.618)液态玻璃参数预设。
- *  refractionScale 固定为 1/φ ≈ 0.618,
- *  glassThickness ≈ bezelWidth × φ²
- *  圆角遵循 radii 令牌
- */
+/** 黄金分割(φ≈1.618)液态玻璃参数预设 */
 export const glassPresets = {
-  /** 小胶囊/指示器: 分段控制选中块、标签、开关 knob */
   pill: {
     bezelWidth: 10,
     glassThickness: 38,
     refractionScale: 0.618,
     blur: 0.2,
   } as const,
-  /** 控件: 按钮、输入框、复选框、分段控制容器 */
   control: {
     bezelWidth: 16,
     glassThickness: 62,
     refractionScale: 0.618,
     blur: 0.35,
   } as const,
-  /** 卡片/面板: 模态框、卡片、列表 */
   card: {
     bezelWidth: 26,
     glassThickness: 100,
     refractionScale: 0.618,
     blur: 0.5,
   } as const,
+}
+
+/**
+ * 根据模式返回玻璃 tint 预设。
+ * 所有组件应使用此函数获取 tint,而非硬编码。
+ */
+export function getGlassTints(mode: 'light' | 'dark') {
+  if (mode === 'light') {
+    return {
+      default: 'rgba(255,255,255,0.25)',
+      control: 'rgba(255,255,255,0.35)',
+      card: 'rgba(255,255,255,0.45)',
+      /** 弪窗:半透明,靠 blur 分离层次 */
+      modal: 'rgba(255,255,255,0.35)',
+      accent: 'rgba(0,122,255,0.3)',
+      overlay: 'rgba(0,0,0,0.25)',
+      muted: 'rgba(0,0,0,0.04)',
+      selected: 'rgba(0,122,255,0.2)',
+    }
+  }
+  return {
+    default: 'rgba(255,255,255,0.03)',
+    control: 'rgba(255,255,255,0.06)',
+    card: 'rgba(255,255,255,0.05)',
+    /** 弹窗:半透明,靠 blur 分离层次 */
+    modal: 'rgba(30,30,40,0.55)',
+    accent: 'rgba(10,132,255,0.45)',
+    overlay: 'rgba(0,0,0,0.45)',
+    muted: 'rgba(255,255,255,0.04)',
+    selected: 'rgba(10,132,255,0.2)',
+  }
+}
+
+/**
+ * 根据模式返回文字颜色。
+ */
+export function getTextColors(mode: 'light' | 'dark') {
+  if (mode === 'light') {
+    return {
+      primary: '#000',
+      secondary: 'rgba(0,0,0,0.55)',
+      tertiary: 'rgba(0,0,0,0.3)',
+      inverse: '#fff',
+      link: '#007aff',
+      destructive: '#ff3b30',
+    }
+  }
+  return {
+    primary: '#fff',
+    secondary: 'rgba(255,255,255,0.55)',
+    tertiary: 'rgba(255,255,255,0.3)',
+    inverse: '#000',
+    link: '#0a84ff',
+    destructive: '#ff453a',
+  }
+}
+
+/**
+ * 根据模式返回边框颜色。
+ */
+export function getBorderColors(mode: 'light' | 'dark') {
+  if (mode === 'light') {
+    return {
+      default: 'rgba(0,0,0,0.1)',
+      separator: 'rgba(0,0,0,0.08)',
+    }
+  }
+  return {
+    default: 'rgba(255,255,255,0.18)',
+    separator: 'rgba(255,255,255,0.06)',
+  }
+}
+
+/**
+ * 根据模式返回系统色。
+ */
+export function getSystemColors(mode: 'light' | 'dark') {
+  return mode === 'light' ? lightSystemColors : systemColors
 }

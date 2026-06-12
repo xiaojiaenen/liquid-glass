@@ -1,4 +1,4 @@
-/* 容器:背景/边框/阴影/折射全部在这一层,不再有中间 __refraction 层 */
+/* ──── 容器:背景/边框/阴影/折射 ──── */
 .liquid-glass {
   position: relative;
   display: inline-flex;
@@ -7,7 +7,6 @@
   -webkit-tap-highlight-color: transparent;
   background: var(--lg-tint, rgba(255, 255, 255, 0.02));
   border: var(--lg-border-color, 0.5px solid rgba(255, 255, 255, 0.18));
-  /* 所有阴影:外阴影 + 内高光 */
   box-shadow:
     0 1px 2px rgba(0, 0, 0, 0.12),
     0 6px 18px rgba(0, 0, 0, 0.18),
@@ -15,15 +14,19 @@
     inset 0 1px 1px rgba(255, 255, 255, var(--lg-highlight-opacity, 0.3)),
     inset 0 -1px 2px rgba(255, 255, 255, 0.08),
     inset 0 0 14px rgba(255, 255, 255, 0.04);
-  /* 基础过渡:悬停浮起、点击按入 */
+  /* 苹果弹簧曲线 — 所有过渡统一使用 */
   transition:
-    filter 0.25s ease,
-    box-shadow 0.3s ease;
+    filter 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+    transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
+    opacity 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* 可交互的悬停浮起 */
-.liquid-glass:hover {
-  filter: brightness(1.04);
+/* ──── 可交互元素悬停 — 仅 button / [role="button"] / a ──── */
+button.liquid-glass:hover,
+[role="button"].liquid-glass:hover,
+a.liquid-glass:hover {
+  filter: brightness(1.06);
   box-shadow:
     0 2px 4px rgba(0, 0, 0, 0.16),
     0 10px 28px rgba(0, 0, 0, 0.22),
@@ -31,22 +34,48 @@
     inset 0 1px 1px rgba(255, 255, 255, var(--lg-highlight-opacity, 0.35)),
     inset 0 -1px 2px rgba(255, 255, 255, 0.08),
     inset 0 0 14px rgba(255, 255, 255, 0.04);
+  transform: translateY(-0.5px);
 }
 
-/* 可交互的点击按入 */
-.liquid-glass:active {
+/* ──── 可交互元素点击按入 ──── */
+button.liquid-glass:active,
+[role="button"].liquid-glass:active,
+a.liquid-glass:active {
   filter: brightness(0.97);
+  transform: scale(0.98);
 }
 
-/* glass 模式:backdrop-filter 由内联 style 注入 url(#id) */
+/* ──── focus-visible 键盘焦点环 ──── */
+button.liquid-glass:focus-visible,
+[role="button"].liquid-glass:focus-visible,
+a.liquid-glass:focus-visible,
+[role="switch"].liquid-glass:focus-visible,
+[role="checkbox"].liquid-glass:focus-visible,
+[role="radio"].liquid-glass:focus-visible,
+[role="tab"].liquid-glass:focus-visible,
+[role="slider"].liquid-glass:focus-visible,
+input.liquid-glass:focus-visible {
+  outline: 2px solid rgba(10, 132, 255, 0.7);
+  outline-offset: 2px;
+}
 
-/* 降级:Safari/Firefox 用毛玻璃 */
+/* ──── disabled 状态 ──── */
+button.liquid-glass:disabled,
+[role="button"].liquid-glass[aria-disabled="true"],
+.liquid-glass.is-disabled {
+  opacity: 0.4;
+  cursor: default;
+  pointer-events: none;
+  filter: grayscale(0.3);
+}
+
+/* ──── 降级:Safari/Firefox 毛玻璃 ──── */
 .liquid-glass.is-fallback {
   backdrop-filter: blur(4px) saturate(1.6) brightness(1.04);
   -webkit-backdrop-filter: blur(4px) saturate(1.6) brightness(1.04);
 }
 
-/* fallback 噪声纹理 — 模拟磨砂玻璃的颗粒感 */
+/* fallback 噪声纹理 */
 .liquid-glass.is-fallback::after {
   content: '';
   position: absolute;
@@ -61,7 +90,7 @@
   mix-blend-mode: overlay;
 }
 
-/* fallback 顶部斜向高光,补偿没有 SVG rim light */
+/* fallback 顶部斜向高光 */
 .liquid-glass.is-fallback::before {
   content: '';
   position: absolute;
@@ -78,7 +107,7 @@
   );
 }
 
-/* ---- 内容层 ---- */
+/* ──── 内容层 ──── */
 .liquid-glass__content {
   position: relative;
   z-index: 2;
@@ -88,20 +117,38 @@
   justify-content: center;
   width: 100%;
   flex-wrap: wrap;
-  /* 对比度兜底:任何背景下文字都至少有基础可读性 */
   text-shadow: 0 0 10px rgba(0, 0, 0, 0.35),
                0 1px 3px rgba(0, 0, 0, 0.25);
 }
 
-/* 按钮形态 */
+/* ──── 按钮形态 ──── */
 button.liquid-glass {
   border: none;
   cursor: pointer;
   font: inherit;
 }
-button.liquid-glass:hover {
-  filter: brightness(1.06);
+
+/* ──── 输入框 placeholder ──── */
+.liquid-glass input::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+  opacity: 1;
 }
-button.liquid-glass:active {
-  filter: brightness(0.97);
+.liquid-glass input::-webkit-input-placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+.liquid-glass input::-moz-placeholder {
+  color: rgba(255, 255, 255, 0.35);
+  opacity: 1;
+}
+
+/* ──── 减少动效 ──── */
+@media (prefers-reduced-motion: reduce) {
+  .liquid-glass,
+  .liquid-glass *,
+  .liquid-glass::before,
+  .liquid-glass::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

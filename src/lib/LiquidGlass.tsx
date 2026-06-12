@@ -33,6 +33,20 @@ export interface LiquidGlassProps {
   parallax?: boolean
   /** 背景模糊(px):与折射合并在同一个 backdrop-filter 中,避免嵌套冲突。默认 0 = 无 */
   backdropBlur?: number
+  /** 禁用状态 */
+  disabled?: boolean
+  /** ARIA 属性透传 */
+  role?: string
+  'aria-label'?: string
+  'aria-checked'?: boolean | 'true' | 'false' | 'mixed'
+  'aria-expanded'?: boolean
+  'aria-pressed'?: boolean | 'true' | 'false' | 'mixed'
+  'aria-disabled'?: boolean | 'true' | 'false'
+  'aria-selected'?: boolean
+  'aria-current'?: 'page' | 'step' | 'location' | 'date' | 'time' | 'true' | 'false' | boolean
+  'aria-live'?: 'off' | 'polite' | 'assertive'
+  'aria-hidden'?: boolean
+  tabIndex?: number
 }
 
 /**
@@ -55,8 +69,12 @@ export function LiquidGlass({
   as = 'div',
   onClick,
   profile,
-  parallax = true,
+  parallax = false,
   backdropBlur = 0,
+  disabled = false,
+  role,
+  tabIndex,
+  ...ariaProps
 }: LiquidGlassProps) {
   const reactId = useId()
   const filterId = `lg-${reactId.replace(/[:]/g, '')}`
@@ -74,14 +92,11 @@ export function LiquidGlass({
     setSpecularAngle(angle)
   }, [])
 
-  const bindParallax = useGlassParallax(parallax && supported, handleAngleChange)
+  const bindParallax = useGlassParallax(parallax && supported && !disabled, handleAngleChange)
 
-  // 将 parallax bind 和 ref 组合
   const combinedRef = useCallback(
     (el: HTMLDivElement | null) => {
-      // 给父组件的 ref（via useLiquidGlass）
       ;(ref as React.MutableRefObject<HTMLDivElement | null>).current = el
-      // 给 parallax 的 ref
       bindParallax(el as unknown as HTMLElement | null)
     },
     [ref, bindParallax],
@@ -100,8 +115,11 @@ export function LiquidGlass({
   return (
     <Tag
       ref={combinedRef as never}
-      onClick={onClick}
-      className={`liquid-glass ${supported ? 'is-glass' : 'is-fallback'} ${className}`}
+      onClick={disabled ? undefined : onClick}
+      role={role}
+      tabIndex={tabIndex}
+      aria-disabled={disabled || ariaProps['aria-disabled']}
+      className={`liquid-glass ${supported ? 'is-glass' : 'is-fallback'} ${disabled ? 'is-disabled' : ''} ${className}`}
       style={
         {
           borderRadius: radius,
@@ -110,6 +128,8 @@ export function LiquidGlass({
           ...style,
         } as CSSProperties
       }
+      {...(as === 'button' ? { type: 'button' } : {})}
+      {...ariaProps}
     >
       <span className="liquid-glass__content">{children}</span>
 
@@ -117,8 +137,6 @@ export function LiquidGlass({
         <LiquidGlassFilter
           id={filterId}
           maps={maps}
-          /* 边缘位移≈一个 bezel 宽:scale=2×bezel(feDisplacementMap 位移=scale×0.5)。
-             用 bezel 而非失控的 maxDisplacement,使折射带宽与位移量匹配,避免窄边被撕扯 */
           scale={2 * bezelWidth * refractionScale}
           blur={blur}
           saturate={saturate}

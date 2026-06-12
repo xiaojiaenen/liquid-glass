@@ -1,94 +1,146 @@
-import { useRef, useState } from 'react'
+import { useRef, useState, useCallback, useId } from 'react'
 import { LiquidGlass } from '../lib/LiquidGlass'
-import { systemColors } from '../lib/tokens'
+import { spring } from '../lib/tokens'
+import { useGlassTheme } from '../lib/GlassProvider'
 
 export interface GlassSliderProps {
+  value?: number
+  onChange?: (value: number) => void
   defaultValue?: number
   accent?: string
+  min?: number
+  max?: number
+  disabled?: boolean
+  'aria-label'?: string
 }
 
 /**
  * GlassSlider — 液态玻璃滑块。
- * 轨道和已填充条都是薄液态玻璃层，旋钮是高光玻璃圆。
+ * 对标 UISlider / SwiftUI Slider。
+ * 拖拽时禁用 transition 实时跟随手指,松手后弹簧归位。
  */
 export function GlassSlider({
+  value: controlledValue,
+  onChange,
   defaultValue = 50,
-  accent = systemColors.blue,
+  accent,
+  min = 0,
+  max = 100,
+  disabled = false,
+  'aria-label': ariaLabel,
 }: GlassSliderProps) {
-  const [value, setValue] = useState(defaultValue)
+  const { colors } = useGlassTheme()
+  const accentColor = accent ?? colors.blue
+  const [internal, setInternal] = useState(defaultValue)
+  const value = controlledValue ?? internal
   const trackRef = useRef<HTMLDivElement>(null)
-  const dragging = useRef(false)
+  const [isDragging, setIsDragging] = useState(false)
+  const knobId = useId()
   const W = 260
   const knob = 28
   const trackH = 4
 
-  const setFromClientX = (clientX: number) => {
+  const percent = ((value - min) / (max - min)) * 100
+
+  const setValue = useCallback((v: number) => {
+    const clamped = Math.max(min, Math.min(max, Math.round(v)))
+    if (controlledValue === undefined) setInternal(clamped)
+    onChange?.(clamped)
+  }, [min, max, controlledValue, onChange])
+
+  const setFromClientX = useCallback((clientX: number) => {
     const el = trackRef.current
-    if (!el) return
+    if (!el || disabled) return
     const rect = el.getBoundingClientRect()
     const p = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width))
-    setValue(Math.round(p * 100))
-  }
+    setValue(min + p * (max - min))
+  }, [min, max, disabled, setValue])
+
+  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+    if (disabled) return
+    const step = (max - min) / 100
+    switch (e.key) {
+      case 'ArrowRight': case 'ArrowUp': e.preventDefault(); setValue(value + step); break
+      case 'ArrowLeft': case 'ArrowDown': e.preventDefault(); setValue(value - step); break
+      case 'Home': e.preventDefault(); setValue(min); break
+      case 'End': e.preventDefault(); setValue(max); break
+    }
+  }, [value, min, max, disabled, setValue])
+
+  // 拖拽时禁用 transition,松手后恢复
+  const transitionValue = isDragging ? 'none' : `left 0.15s ${spring.default}, width 0.15s ${spring.default}`
 
   return (
     <div
       ref={trackRef}
+      role="slider"
+      aria-label={ariaLabel}
+      aria-valuenow={value}
+      aria-valuemin={min}
+      aria-valuemax={max}
+      aria-disabled={disabled}
+      tabIndex={disabled ? -1 : 0}
+      onKeyDown={handleKeyDown}
       onPointerDown={(e) => {
-        dragging.current = true
+        if (disabled) return
+        setIsDragging(true)
         ;(e.target as HTMLElement).setPointerCapture?.(e.pointerId)
         setFromClientX(e.clientX)
       }}
-      onPointerMove={(e) => dragging.current && setFromClientX(e.clientX)}
-      onPointerUp={() => (dragging.current = false)}
+      onPointerMove={(e) => isDragging && setFromClientX(e.clientX)}
+      onPointerUp={() => setIsDragging(false)}
+      onPointerCancel={() => setIsDragging(false)}
       style={{
         position: 'relative',
         width: W,
         height: knob,
         display: 'flex',
         alignItems: 'center',
-        cursor: 'pointer',
+        cursor: disabled ? 'default' : isDragging ? 'grabbing' : 'pointer',
         touchAction: 'none',
+        outline: 'none',
+        opacity: disabled ? 0.4 : 1,
       }}
     >
-      {/* 轨道 — 薄液态玻璃 */}
-      <LiquidGlass
-        radius={trackH / 2}
-        bezelWidth={6}
-        glassThickness={25}
-        refractionScale={0.5}
-        blur={0.15}
-        tint="rgba(120,120,128,0.25)"
+      {/* 轨道 — 纯 CSS 背景,轻量 */}
+      <div
         style={{
           position: 'absolute',
-          left: 0,
-          right: 0,
+          left: 0, right: 0,
           height: trackH,
+          borderRadius: trackH / 2,
+          background: 'rgba(120,120,128,0.25)',
+          backdropFilter: 'blur(8px)',
+          WebkitBackdropFilter: 'blur(8px)',
         }}
       />
 
-      {/* 已填充 — 液态玻璃条 */}
-      <LiquidGlass
-        radius={trackH / 2}
-        bezelWidth={6}
-        glassThickness={25}
-        refractionScale={0.5}
-        blur={0.15}
-        tint={`${accent}80`} // accent with 50% alpha
+      {/* 已填充 — 纯 CSS,实时跟随 */}
+      <div
         style={{
           position: 'absolute',
           left: 0,
-          width: `${value}%`,
+          width: `${percent}%`,
           height: trackH,
+          borderRadius: trackH / 2,
+          background: accentColor,
+          backdropFilter: 'blur(8px)',
+          WebkitBackdropFilter: 'blur(8px)',
+          transition: transitionValue,
+          willChange: 'width',
         }}
       />
 
-      {/* 滑块旋钮 — 玻璃圆点 */}
+      {/* 滑块旋钮 */}
       <span
+        id={knobId}
         style={{
           position: 'absolute',
-          left: `calc(${value}% - ${knob / 2}px)`,
+          left: `calc(${percent}% - ${knob / 2}px)`,
           zIndex: 1,
           filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.25))',
+          transition: transitionValue,
+          willChange: 'left',
         }}
       >
         <LiquidGlass
@@ -98,10 +150,12 @@ export function GlassSlider({
           refractionScale={0.85}
           blur={0.15}
           tint="rgba(255,255,255,0.65)"
+          parallax
           style={{
             width: knob,
             height: knob,
-            transition: `transform 0.2s, filter 0.2s`,
+            transform: isDragging ? 'scale(1.1)' : 'scale(1)',
+            transition: `transform 0.2s ${spring.default}`,
           }}
         />
       </span>

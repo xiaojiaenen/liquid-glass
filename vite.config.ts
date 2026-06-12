@@ -1,14 +1,22 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import { resolve, extname, relative } from 'path'
+import dts from 'vite-plugin-dts'
+import { resolve } from 'path'
 import { fileURLToPath } from 'url'
 
 const rootDir = fileURLToPath(new URL('.', import.meta.url))
 
-// Library mode: build components + core as ES + CJS
+// Library mode: build components + core as ES + CJS + .d.ts
 function libConfig() {
   return defineConfig({
-    plugins: [react()],
+    plugins: [
+      react(),
+      dts({
+        include: ['src/lib/**', 'src/components/**'],
+        outDir: 'dist',
+        rollupTypes: false,
+      }),
+    ],
     build: {
       lib: {
         entry: resolve(rootDir, 'src/lib/index.ts'),
@@ -16,7 +24,7 @@ function libConfig() {
         formats: ['es', 'cjs'],
       },
       rollupOptions: {
-        external: ['react', 'react-dom', 'react/jsx-runtime'],
+        external: ['react', 'react-dom', 'react/jsx-runtime', 'prism-react-renderer'],
         output: [
           {
             format: 'es',

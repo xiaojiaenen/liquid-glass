@@ -13,7 +13,25 @@ export type {
 export { supportsSvgBackdrop } from './capabilities'
 
 // ── 设计令牌 ──
-export { spring, systemColors, fontStack, radii, glassPresets } from './tokens'
+export {
+  spring,
+  systemColors,
+  lightSystemColors,
+  fontStack,
+  radii,
+  glassPresets,
+  getGlassTints,
+  getTextColors,
+  getBorderColors,
+  getSystemColors,
+} from './tokens'
+
+// ── 主题系统 ──
+export { GlassProvider, useGlassTheme } from './GlassProvider'
+export type { GlassProviderProps, GlassThemeMode, GlassThemeContextValue } from './GlassProvider'
+
+// ── Hooks ──
+export { useReducedMotion } from './useReducedMotion'
 
 // ── 组件 ──
 export { GlassAccordion } from '../components/GlassAccordion'
@@ -121,3 +139,55 @@ export type { GlassSidebarProps, SidebarItem } from '../components/GlassSidebar'
 
 export { GlassPagination } from '../components/GlassPagination'
 export type { GlassPaginationProps } from '../components/GlassPagination'
+
+// ── 新增组件: Phase 1 基础设施 ──
+export { GlassIcon } from '../components/GlassIcon'
+export type { GlassIconProps } from '../components/GlassIcon'
+
+export { GlassDivider } from '../components/GlassDivider'
+export type { GlassDividerProps } from '../components/GlassDivider'
+
+// ── 新增组件: Phase 1 高优先级 ──
+export { GlassAlert } from '../components/GlassAlert'
+export type { GlassAlertProps, GlassAlertAction } from '../components/GlassAlert'
+
+export { GlassPopover } from '../components/GlassPopover'
+export type { GlassPopoverProps, PopoverPlacement } from '../components/GlassPopover'
+
+export { GlassSkeleton, GlassSkeletonGroup } from '../components/GlassSkeleton'
+export type { GlassSkeletonProps, GlassSkeletonGroupProps } from '../components/GlassSkeleton'
+
+export { GlassToolbar, GlassToolbarButton } from '../components/GlassToolbar'
+export type { GlassToolbarProps, GlassToolbarButtonProps } from '../components/GlassToolbar'
+
+// ── 新增组件: Phase 2 中优先级 ──
+export { GlassTable } from '../components/GlassTable'
+export type { GlassTableProps, GlassTableColumn } from '../components/GlassTable'
+
+export { GlassTreeView } from '../components/GlassTreeView'
+export type { GlassTreeViewProps, TreeViewItem } from '../components/GlassTreeView'
+
+export { GlassChip, GlassChipGroup } from '../components/GlassChip'
+export type { GlassChipProps, GlassChipGroupProps } from '../components/GlassChip'
+
+export { GlassSplitView } from '../components/GlassSplitView'
+export type { GlassSplitViewProps } from '../components/GlassSplitView'
+
+export { GlassCommandPalette } from '../components/GlassCommandPalette'
+export type { GlassCommandPaletteProps, CommandItem } from '../components/GlassCommandPalette'
+
+// ── 新增组件: Phase 3 低优先级 ──
+export { GlassPullToRefresh } from '../components/GlassPullToRefresh'
+export type { GlassPullToRefreshProps } from '../components/GlassPullToRefresh'
+
+export { GlassTimeline } from '../components/GlassTimeline'
+export type { GlassTimelineProps, TimelineItem } from '../components/GlassTimeline'
+
+export { GlassColorPicker } from '../components/GlassColorPicker'
+export type { GlassColorPickerProps } from '../components/GlassColorPicker'
+
+export { GlassOnboarding } from '../components/GlassOnboarding'
+export type { GlassOnboardingProps, OnboardingPage } from '../components/GlassOnboarding'
+
+export { GlassCodeBlock } from '../components/GlassCodeBlock'
+export type { GlassCodeBlockProps } from '../components/GlassCodeBlock'
