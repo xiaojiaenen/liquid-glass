@@ -77,7 +77,7 @@ export const LiquidGlass = forwardRef<HTMLElement, LiquidGlassProps>(function Li
     profile,
     parallax = false,
     backdropBlur = 0,
-    borderGlow = false,
+    borderGlow = true,
     disabled = false,
     className = '',
     style,

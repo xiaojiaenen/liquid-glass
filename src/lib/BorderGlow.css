@@ -22,7 +22,8 @@
     conic-gradient(
       from var(--border-glow-angle) at center,
       transparent 0%,
-      rgba(255, 255, 255, calc(0.8 * var(--border-glow-intensity))) 10%,
+      rgba(255, 255, 255, calc(0.5 * var(--border-glow-intensity))) 8%,
+      rgba(255, 255, 255, calc(0.8 * var(--border-glow-intensity))) 12%,
       rgba(255, 255, 255, calc(0.3 * var(--border-glow-intensity))) 20%,
       transparent 30%,
       transparent 100%
@@ -36,13 +37,14 @@
     linear-gradient(#fff 0 0);
   mask-composite: exclude;
   opacity: calc((var(--border-glow-proximity) - var(--border-glow-sensitivity)) / (100 - var(--border-glow-sensitivity)));
-  transition: opacity 0.25s ease-out;
+  transition: opacity 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+  will-change: opacity;
 }
 
 /* 非 hover 时隐藏效果 */
 .has-border-glow:not(:hover):not(.border-glow-sweep-active)::before {
   opacity: 0;
-  transition: opacity 0.75s ease-in-out;
+  transition: opacity 0.6s cubic-bezier(0.25, 0.1, 0.25, 1);
 }
 
 /* ──── 减少动效 ──── */
