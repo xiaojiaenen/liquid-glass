@@ -15,7 +15,7 @@ export function GlassAvatar({ src, alt, size = 40, fallback }: GlassAvatarProps)
 
   return (
     <LiquidGlass radius={size / 2} bezelWidth={size / 2} glassThickness={80} refractionScale={0.85} blur={0.4} tint={tints.card}
-      style={{ width: size, height: size }}>
+      style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: size, height: size }}>
       {src ? (
         <img src={src} alt={alt} style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
       ) : (

@@ -14,7 +14,7 @@ export function GlassTag({ children, color, closable, onClose }: GlassTagProps) 
   const tagColor = color ?? tints.control
 
   return (
-    <LiquidGlass radius={8} bezelWidth={10} glassThickness={38} refractionScale={0.618} blur={0.2} tint={tagColor} style={{ padding: '4px 10px' }}>
+    <LiquidGlass radius={8} bezelWidth={10} glassThickness={38} refractionScale={0.618} blur={0.2} tint={tagColor} style={{ display: 'inline-flex', alignItems: 'center', padding: '4px 10px' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
         <span style={{ fontSize: 13, fontFamily: fontStack, fontWeight: 500, letterSpacing: -0.2, color: textColors.primary }}>{children}</span>
         {closable && (

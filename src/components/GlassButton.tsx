@@ -27,7 +27,7 @@ export function GlassButton({ children, onClick, variant = 'regular', size = 'de
       refractionScale={0.618} blur={0.35} saturate={1.3}
       tint={prominent ? `${colors.blue}73` : tints.control}
       aria-label={ariaLabel}
-      style={{ height: h, padding: `0 ${px}px`, fontFamily: fontStack, fontSize: fs, fontWeight: 600, letterSpacing: -0.2, color: textColors.primary }}
+      style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', height: h, padding: `0 ${px}px`, fontFamily: fontStack, fontSize: fs, fontWeight: 600, letterSpacing: -0.2, color: textColors.primary }}
     >
       {children}
     </LiquidGlass>

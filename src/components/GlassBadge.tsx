@@ -17,7 +17,7 @@ export function GlassBadge({ count, dot, children, color = 'rgba(255,59,48,0.95)
       {showBadge && (
         <div style={{ position: 'absolute', top: -4, right: -4, zIndex: 1 }}>
           <LiquidGlass radius={dot ? 5 : count! > 9 ? 12 : 10} bezelWidth={10} glassThickness={38} refractionScale={0.618} blur={0.2} tint={color}
-            style={{ minWidth: dot ? 10 : 20, height: dot ? 10 : 20, padding: dot ? 0 : '0 6px' }}>
+            style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', minWidth: dot ? 10 : 20, height: dot ? 10 : 20, padding: dot ? 0 : '0 6px' }}>
             {!dot && <span style={{ fontSize: 12, fontWeight: 600, fontFamily: fontStack, color: '#fff', lineHeight: 1 }}>{count! > 99 ? '99+' : count}</span>}
           </LiquidGlass>
         </div>

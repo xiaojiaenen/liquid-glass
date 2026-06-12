@@ -17,7 +17,7 @@ export interface UseLiquidGlassOptions {
 }
 
 export interface LiquidGlassState {
-  ref: React.RefObject<HTMLDivElement>
+  ref: React.RefObject<HTMLElement>
   maps: LiquidGlassMaps | null
   supported: boolean
   size: { width: number; height: number }
@@ -29,7 +29,7 @@ export interface LiquidGlassState {
  */
 export function useLiquidGlass(opts: UseLiquidGlassOptions): LiquidGlassState {
   const { radius, bezelWidth, glassThickness, refractiveIndex, profile, specularAngleDeg = 60 } = opts
-  const ref = useRef<HTMLDivElement>(null)
+  const ref = useRef<HTMLElement>(null)
   const [size, setSize] = useState({ width: 0, height: 0 })
   const [maps, setMaps] = useState<LiquidGlassMaps | null>(null)
   const supported = useMemo(() => supportsSvgBackdrop(), [])

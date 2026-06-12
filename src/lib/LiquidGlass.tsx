@@ -1,9 +1,11 @@
-import { useId, useState, useCallback, type CSSProperties, type ReactNode } from 'react'
+import { useId, useState, useCallback, forwardRef, type CSSProperties, type ReactNode, type ElementType } from 'react'
 import { useLiquidGlass } from './useLiquidGlass'
 import { useGlassParallax } from './useGlassParallax'
 import { LiquidGlassFilter } from './LiquidGlassFilter'
 import type { BezelProfile } from './displacementMap'
 import './LiquidGlass.css'
+
+// ── Props 类型：继承原生 HTML 属性 ──
 
 export interface LiquidGlassProps {
   children?: ReactNode
@@ -23,10 +25,8 @@ export interface LiquidGlassProps {
   saturate?: number
   /** 着色:半透明背景 */
   tint?: string
-  className?: string
-  style?: CSSProperties
-  as?: 'div' | 'button'
-  onClick?: () => void
+  /** 渲染为指定 HTML 元素或自定义组件,默认 'div' */
+  as?: ElementType
   /** 表面轮廓,默认 'convex_squircle' */
   profile?: BezelProfile
   /** 启用鼠标视差:高光跟随指针方向,默认 false */
@@ -35,51 +35,58 @@ export interface LiquidGlassProps {
   backdropBlur?: number
   /** 禁用状态 */
   disabled?: boolean
-  /** ARIA 属性透传 */
+  /** 样式（覆盖优先级最高） */
+  style?: CSSProperties
+  /** 类名 */
+  className?: string
+  /** 点击事件 */
+  onClick?: (e: React.MouseEvent) => void
+  /** ARIA role */
   role?: string
-  'aria-label'?: string
-  'aria-checked'?: boolean | 'true' | 'false' | 'mixed'
-  'aria-expanded'?: boolean
-  'aria-pressed'?: boolean | 'true' | 'false' | 'mixed'
-  'aria-disabled'?: boolean | 'true' | 'false'
-  'aria-selected'?: boolean
-  'aria-current'?: 'page' | 'step' | 'location' | 'date' | 'time' | 'true' | 'false' | boolean
-  'aria-live'?: 'off' | 'polite' | 'assertive'
-  'aria-hidden'?: boolean
+  /** tabIndex */
   tabIndex?: number
+  /** 透传所有 data-* / aria-* / id 等原生属性 */
+  [key: string]: any
 }
 
 /**
  * 液态玻璃容器。
  * Chromium:backdrop-filter 调用内联 SVG 滤镜(折射 + 高光)。
  * 非 Chromium:自动降级为 blur 毛玻璃(.is-fallback)。
+ *
+ * 支持任意 HTML 元素：<LiquidGlass as="aside" className="...">
+ * 支持 ref 转发：<LiquidGlass ref={someRef}>
+ * 所有原生 HTML 属性自动透传：className, id, onClick, aria-*, data-*, ...
  */
-export function LiquidGlass({
-  children,
-  radius = 28,
-  bezelWidth = 30,
-  glassThickness = 150,
-  refractiveIndex = 1.5,
-  refractionScale = 1,
-  blur = 0.5,
-  saturate = 1.3,
-  tint = 'rgba(255, 255, 255, 0.03)',
-  className = '',
-  style,
-  as = 'div',
-  onClick,
-  profile,
-  parallax = false,
-  backdropBlur = 0,
-  disabled = false,
-  role,
-  tabIndex,
-  ...ariaProps
-}: LiquidGlassProps) {
+export const LiquidGlass = forwardRef<HTMLElement, LiquidGlassProps>(function LiquidGlass(
+  {
+    children,
+    radius = 28,
+    bezelWidth = 30,
+    glassThickness = 150,
+    refractiveIndex = 1.5,
+    refractionScale = 1,
+    blur = 0.5,
+    saturate = 1.3,
+    tint = 'rgba(255, 255, 255, 0.03)',
+    as,
+    profile,
+    parallax = false,
+    backdropBlur = 0,
+    disabled = false,
+    className = '',
+    style,
+    onClick,
+    role,
+    tabIndex,
+    ...restProps
+  },
+  ref,
+) {
   const reactId = useId()
   const filterId = `lg-${reactId.replace(/[:]/g, '')}`
   const [specularAngle, setSpecularAngle] = useState(60)
-  const { ref, maps, supported } = useLiquidGlass({
+  const { ref: internalRef, maps, supported } = useLiquidGlass({
     radius,
     bezelWidth,
     glassThickness,
@@ -95,11 +102,17 @@ export function LiquidGlass({
   const bindParallax = useGlassParallax(parallax && supported && !disabled, handleAngleChange)
 
   const combinedRef = useCallback(
-    (el: HTMLDivElement | null) => {
-      ;(ref as React.MutableRefObject<HTMLDivElement | null>).current = el
-      bindParallax(el as unknown as HTMLElement | null)
+    (el: HTMLElement | null) => {
+      ;(internalRef as React.MutableRefObject<HTMLElement | null>).current = el
+      bindParallax(el)
+      // 转发 ref
+      if (typeof ref === 'function') {
+        ref(el)
+      } else if (ref) {
+        ;(ref as React.MutableRefObject<HTMLElement | null>).current = el
+      }
     },
-    [ref, bindParallax],
+    [internalRef, bindParallax, ref],
   )
 
   const refractionStyle: CSSProperties =
@@ -110,15 +123,15 @@ export function LiquidGlass({
         }
       : {}
 
-  const Tag = as
+  const Tag: ElementType = as ?? 'div'
 
   return (
     <Tag
-      ref={combinedRef as never}
+      ref={combinedRef}
       onClick={disabled ? undefined : onClick}
       role={role}
       tabIndex={tabIndex}
-      aria-disabled={disabled || ariaProps['aria-disabled']}
+      aria-disabled={disabled || restProps['aria-disabled']}
       className={`liquid-glass ${supported ? 'is-glass' : 'is-fallback'} ${disabled ? 'is-disabled' : ''} ${className}`}
       style={
         {
@@ -128,8 +141,8 @@ export function LiquidGlass({
           ...style,
         } as CSSProperties
       }
-      {...(as === 'button' ? { type: 'button' } : {})}
-      {...ariaProps}
+      {...(Tag === 'button' ? { type: 'button' } : {})}
+      {...restProps}
     >
       <span className="liquid-glass__content">{children}</span>
 
@@ -144,4 +157,4 @@ export function LiquidGlass({
       )}
     </Tag>
   )
-}
+})
