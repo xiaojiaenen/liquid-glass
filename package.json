@@ -1,6 +1,6 @@
 {
   "name": "@xiaojiaenen/liquid-glass",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "type": "module",
   "description": "Liquid Glass UI components — Apple WWDC25-inspired glassmorphism for React",
   "license": "MIT",

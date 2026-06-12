@@ -1,9 +1,11 @@
 import { useId, useState, useCallback, forwardRef, type CSSProperties, type ReactNode, type ElementType } from 'react'
 import { useLiquidGlass } from './useLiquidGlass'
 import { useGlassParallax } from './useGlassParallax'
+import { useBorderGlow, type BorderGlowOptions } from './useBorderGlow'
 import { LiquidGlassFilter } from './LiquidGlassFilter'
 import type { BezelProfile } from './displacementMap'
 import './LiquidGlass.css'
+import './BorderGlow.css'
 
 // ── Props 类型：继承原生 HTML 属性 ──
 
@@ -45,6 +47,8 @@ export interface LiquidGlassProps {
   role?: string
   /** tabIndex */
   tabIndex?: number
+  /** 边框发光效果配置，true 使用默认配置 */
+  borderGlow?: boolean | BorderGlowOptions
   /** 透传所有 data-* / aria-* / id 等原生属性 */
   [key: string]: any
 }
@@ -73,6 +77,7 @@ export const LiquidGlass = forwardRef<HTMLElement, LiquidGlassProps>(function Li
     profile,
     parallax = false,
     backdropBlur = 0,
+    borderGlow = false,
     disabled = false,
     className = '',
     style,
@@ -95,6 +100,14 @@ export const LiquidGlass = forwardRef<HTMLElement, LiquidGlassProps>(function Li
     specularAngleDeg: specularAngle,
   })
 
+  // BorderGlow 配置
+  const borderGlowEnabled = borderGlow !== false
+  const borderGlowOptions = typeof borderGlow === 'object' ? borderGlow : {}
+  const { ref: borderGlowRef, borderGlowProps } = useBorderGlow({
+    enabled: borderGlowEnabled && !disabled,
+    ...borderGlowOptions,
+  })
+
   const handleAngleChange = useCallback((angle: number) => {
     setSpecularAngle(angle)
   }, [])
@@ -104,6 +117,7 @@ export const LiquidGlass = forwardRef<HTMLElement, LiquidGlassProps>(function Li
   const combinedRef = useCallback(
     (el: HTMLElement | null) => {
       ;(internalRef as React.MutableRefObject<HTMLElement | null>).current = el
+      ;(borderGlowRef as React.MutableRefObject<HTMLElement | null>).current = el
       bindParallax(el)
       // 转发 ref
       if (typeof ref === 'function') {
@@ -112,7 +126,7 @@ export const LiquidGlass = forwardRef<HTMLElement, LiquidGlassProps>(function Li
         ;(ref as React.MutableRefObject<HTMLElement | null>).current = el
       }
     },
-    [internalRef, bindParallax, ref],
+    [internalRef, borderGlowRef, bindParallax, ref],
   )
 
   const refractionStyle: CSSProperties =
@@ -129,15 +143,17 @@ export const LiquidGlass = forwardRef<HTMLElement, LiquidGlassProps>(function Li
     <Tag
       ref={combinedRef}
       onClick={disabled ? undefined : onClick}
+      onPointerMove={borderGlowProps.onPointerMove}
       role={role}
       tabIndex={tabIndex}
       aria-disabled={disabled || restProps['aria-disabled']}
-      className={`liquid-glass ${supported ? 'is-glass' : 'is-fallback'} ${disabled ? 'is-disabled' : ''} ${className}`}
+      className={`liquid-glass ${supported ? 'is-glass' : 'is-fallback'} ${disabled ? 'is-disabled' : ''} ${borderGlowProps.className} ${className}`}
       style={
         {
           borderRadius: radius,
           '--lg-tint': tint,
           ...refractionStyle,
+          ...borderGlowProps.style,
           ...style,
         } as CSSProperties
       }
@@ -145,6 +161,8 @@ export const LiquidGlass = forwardRef<HTMLElement, LiquidGlassProps>(function Li
       {...restProps}
     >
       <span className="liquid-glass__content">{children}</span>
+
+      {borderGlowEnabled && <span className="border-glow-edge" />}
 
       {supported && maps && (
         <LiquidGlassFilter

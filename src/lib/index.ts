@@ -4,6 +4,8 @@ export type { LiquidGlassProps } from './LiquidGlass'
 export { useLiquidGlass } from './useLiquidGlass'
 export { useGlassParallax } from './useGlassParallax'
 export { useBackgroundLuminance } from './useBackgroundLuminance'
+export { useBorderGlow } from './useBorderGlow'
+export type { BorderGlowOptions } from './useBorderGlow'
 export { generateLiquidGlassMaps } from './displacementMap'
 export type {
   LiquidGlassMapOptions,
