@@ -398,7 +398,7 @@ export function Components() {
               </div>
             </LiquidGlass>
             <LiquidGlass
-              borderGlow={{ intensity: 0.6, width: 20 }}
+              borderGlow={{ intensity: 0.6 }}
               style={{ padding: '24px 32px' }}
             >
               <div style={{ textAlign: 'center' }}>

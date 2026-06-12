@@ -7,8 +7,6 @@ export interface BorderGlowOptions {
   edgeSensitivity?: number
   /** 反光强度 (0-1+) */
   intensity?: number
-  /** 反光宽度 (px) */
-  width?: number
   /** 自动扫光动画 */
   animated?: boolean
 }
@@ -56,7 +54,6 @@ export function useBorderGlow(options: BorderGlowOptions = {}): BorderGlowState 
     enabled = true,
     edgeSensitivity = 40,
     intensity = 1.0,
-    width = 30,
     animated = false,
   } = options
 
@@ -130,7 +127,6 @@ export function useBorderGlow(options: BorderGlowOptions = {}): BorderGlowState 
     style: {
       '--border-glow-sensitivity': edgeSensitivity,
       '--border-glow-intensity': intensity,
-      '--border-glow-width': `${width}px`,
     } as React.CSSProperties,
     className: enabled ? 'has-border-glow' : '',
   }
