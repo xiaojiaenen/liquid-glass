@@ -44,10 +44,15 @@ export function GlassOnboarding({ pages, onFinish, onSkip, finishLabel = '开始
           <h2 style={{ margin: '0 0 12px', fontSize: 24, fontWeight: 700, color: textColors.primary, letterSpacing: -0.5 }}>{page.title}</h2>
           <p style={{ margin: '0 0 32px', fontSize: 15, lineHeight: 1.6, color: textColors.secondary, letterSpacing: -0.2 }}>{page.description}</p>
           {page.content}
-          <LiquidGlass as="button" onClick={goNext} radius={25} bezelWidth={14} glassThickness={50} refractionScale={0.618} blur={0.35} tint={isLast ? `${colors.blue}80` : tints.control}
-            style={{ width: '100%', height: 50, fontSize: 17, fontWeight: 600, color: textColors.primary, fontFamily: fontStack, letterSpacing: -0.3 }}>
+          <button onClick={goNext}
+            style={{
+              border: 'none', borderRadius: 25, background: isLast ? `${colors.blue}80` : tints.control,
+              color: textColors.primary, fontSize: 17, fontWeight: 600, fontFamily: fontStack,
+              letterSpacing: -0.3, cursor: 'pointer', width: '100%', height: 50,
+              transition: `background 0.25s ${spring.default}`,
+            }}>
             {isLast ? finishLabel : nextLabel}
-          </LiquidGlass>
+          </button>
         </LiquidGlass>
       </div>
       <div style={{ marginTop: 24 }}><GlassPageControl count={pages.length} current={currentPage} onChange={setCurrentPage} /></div>

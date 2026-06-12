@@ -47,20 +47,14 @@ export function GlassTabBar({
       }}
     >
       <div style={{ position: 'relative', display: 'flex', flex: 1 }}>
-        {/* 选中指示器 — 液态玻璃滑块 */}
-        <LiquidGlass
-          radius={radii.control}
-          bezelWidth={10}
-          glassThickness={38}
-          refractionScale={0.618}
-          blur={0.2}
-          tint="rgba(255,255,255,0.1)"
+        {/* 选中指示器 */}
+        <div
           style={{
-            position: 'absolute',
-            top: 0,
+            position: 'absolute', top: 0,
             left: `calc(${activeIdx} * (60px + 0px))`,
-            width: 60,
-            height: '100%',
+            width: 60, height: '100%',
+            borderRadius: radii.control,
+            background: 'rgba(255,255,255,0.1)',
             transition: `left 0.35s ${spring.default}`,
             pointerEvents: 'none',
           }}

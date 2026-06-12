@@ -23,10 +23,17 @@ export function GlassEmptyState({ icon, title, subtitle, actionLabel, onAction }
         <div style={{ marginTop: 24, transition: `transform 0.2s ${spring.default}` }}
           onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.03)' }}
           onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)' }}>
-          <LiquidGlass as="button" onClick={onAction} radius={radii.pill} bezelWidth={16} glassThickness={62} refractionScale={0.618} blur={0.35} tint={`${colors.blue}40`}
-            style={{ padding: '10px 24px', fontFamily: fontStack, fontSize: 15, fontWeight: 600, letterSpacing: -0.2, color: textColors.primary }}>
+          <button onClick={onAction}
+            style={{
+              border: 'none', borderRadius: radii.pill, padding: '10px 24px',
+              background: `${colors.blue}40`, color: textColors.primary, fontSize: 15,
+              fontWeight: 600, fontFamily: fontStack, letterSpacing: -0.2, cursor: 'pointer',
+              transition: `background 0.25s ${spring.default}, transform 0.2s ${spring.default}`,
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = `${colors.blue}60` }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = `${colors.blue}40` }}>
             {actionLabel}
-          </LiquidGlass>
+          </button>
         </div>
       )}
     </LiquidGlass>

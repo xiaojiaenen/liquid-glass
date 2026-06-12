@@ -120,24 +120,11 @@ export function GlassTabs({ tabs, value: controlled, onChange }: GlassTabsProps)
         {box && (
           <div
             style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              height: '100%',
-              borderRadius: 9,
-              background: tints.selected,
-              backdropFilter: 'blur(12px) saturate(1.6)',
-              WebkitBackdropFilter: 'blur(12px) saturate(1.6)',
-              border: '0.5px solid rgba(255,255,255,0.15)',
-              boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.2)',
-              transform: `translateX(${box.left}px)`,
-              width: box.width,
-              transition: ready
-                ? `transform 0.35s ${spring.default}, width 0.35s ${spring.default}`
-                : 'none',
-              pointerEvents: 'none',
-              zIndex: 1,
-              willChange: 'transform',
+              position: 'absolute', top: 0, left: 0, height: '100%',
+              borderRadius: 9, background: tints.selected,
+              transform: `translateX(${box.left}px)`, width: box.width,
+              transition: ready ? `transform 0.35s ${spring.default}, width 0.35s ${spring.default}` : 'none',
+              pointerEvents: 'none', zIndex: 1, willChange: 'transform',
             }}
           />
         )}

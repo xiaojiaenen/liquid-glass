@@ -46,7 +46,7 @@ export function GlassPagination({ total, current: controlledCurrent, defaultCurr
 function PageBtn({ children, active, disabled, onClick, textColors, colors }: { children: ReactNode; active?: boolean; disabled?: boolean; onClick?: () => void; tints: any; textColors: any; colors: any }) {
   return (
     <div style={{ position: 'relative' }}>
-      {active && <LiquidGlass radius={8} bezelWidth={8} glassThickness={28} refractionScale={0.618} blur={0.15} tint={`${colors.blue}66`} style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }} />}
+      {active && <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', borderRadius: 8, background: `${colors.blue}40` }} />}
       <button onClick={onClick} disabled={disabled}
         style={{
           position: 'relative', zIndex: 1, border: 'none', background: 'none',
