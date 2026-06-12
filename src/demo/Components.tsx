@@ -386,6 +386,47 @@ export function Components() {
           <GlassEmptyState icon="📦" title="暂无数据" subtitle="当前列表为空" actionLabel="添加内容" onAction={() => showToast('添加')} />
         </Section>
 
+        {/* ───── 边框发光 BorderGlow ───── */}
+        <Section title="边框发光 BorderGlow">
+          <p style={{ margin: '0 0 16px', fontSize: 14, opacity: 0.6 }}>鼠标悬停查看边框发光效果，光效跟随鼠标移动</p>
+          <div className="row">
+            <LiquidGlass borderGlow style={{ padding: '24px 32px' }}>
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: 32, marginBottom: 8 }}>✨</div>
+                <div style={{ fontSize: 16, fontWeight: 600 }}>默认发光</div>
+                <div style={{ fontSize: 13, opacity: 0.6, marginTop: 4 }}>悬停查看效果</div>
+              </div>
+            </LiquidGlass>
+            <LiquidGlass
+              borderGlow={{
+                colors: ['#22d3ee', '#a78bfa', '#fb923c'],
+                glowColor: '200 90 60',
+                edgeSensitivity: 50,
+              }}
+              style={{ padding: '24px 32px' }}
+            >
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: 32, marginBottom: 8 }}>🎨</div>
+                <div style={{ fontSize: 16, fontWeight: 600 }}>自定义颜色</div>
+                <div style={{ fontSize: 13, opacity: 0.6, marginTop: 4 }}>青紫橙渐变</div>
+              </div>
+            </LiquidGlass>
+            <LiquidGlass
+              borderGlow={{
+                animated: true,
+                colors: ['#f43f5e', '#3b82f6', '#10b981'],
+              }}
+              style={{ padding: '24px 32px' }}
+            >
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: 32, marginBottom: 8 }}>💫</div>
+                <div style={{ fontSize: 16, fontWeight: 600 }}>自动扫光</div>
+                <div style={{ fontSize: 13, opacity: 0.6, marginTop: 4 }}>页面加载时自动播放</div>
+              </div>
+            </LiquidGlass>
+          </div>
+        </Section>
+
         {/* ───── 拖动折射 ───── */}
         <Section title="拖动折射 DragGlass"><DragGlass /></Section>
 
