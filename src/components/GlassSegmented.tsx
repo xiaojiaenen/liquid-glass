@@ -21,6 +21,8 @@ export function GlassSegmented({
   const btnRefs = useRef<(HTMLButtonElement | null)[]>([])
   const [boxes, setBoxes] = useState<{ left: number; width: number }[]>([])
   const [ready, setReady] = useState(false)
+  const optionsRef = useRef(options)
+  optionsRef.current = options
 
   const select = (i: number) => {
     if (controlledValue === undefined) setInternal(i)
@@ -31,14 +33,15 @@ export function GlassSegmented({
     const container = containerRef.current
     if (!container) return
     const containerRect = container.getBoundingClientRect()
-    const result = options.map((_, i) => {
+    const opts = optionsRef.current
+    const result = opts.map((_, i) => {
       const btn = btnRefs.current[i]
       if (!btn) return { left: 0, width: 60 }
       const btnRect = btn.getBoundingClientRect()
       return { left: btnRect.left - containerRect.left, width: btnRect.width }
     })
     setBoxes(result)
-  }, [options])
+  }, [])
 
   useEffect(() => {
     measure()
