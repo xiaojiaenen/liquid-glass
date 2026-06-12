@@ -9,14 +9,13 @@
   position: relative;
 }
 
-/* 边框反光:覆盖在原边框上的渐变层 */
-.has-border-glow::before {
-  content: "";
+/* 边框反光:使用独立子元素承载，避免伪元素冲突 */
+.border-glow-effect {
   position: absolute;
   inset: -1px;
   border-radius: inherit;
   pointer-events: none;
-  z-index: 3;
+  z-index: 5;
   padding: 1px;
   background:
     conic-gradient(
@@ -42,14 +41,14 @@
 }
 
 /* 非 hover 时隐藏效果 */
-.has-border-glow:not(:hover):not(.border-glow-sweep-active)::before {
+.has-border-glow:not(:hover):not(.border-glow-sweep-active) .border-glow-effect {
   opacity: 0;
   transition: opacity 0.3s ease-out;
 }
 
 /* ──── 减少动效 ──── */
 @media (prefers-reduced-motion: reduce) {
-  .has-border-glow::before {
+  .has-border-glow::after {
     transition: none !important;
   }
 }

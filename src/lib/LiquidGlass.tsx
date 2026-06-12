@@ -160,6 +160,7 @@ export const LiquidGlass = forwardRef<HTMLElement, LiquidGlassProps>(function Li
       {...(Tag === 'button' ? { type: 'button' } : {})}
       {...restProps}
     >
+      {borderGlowEnabled && <span className="border-glow-effect" />}
       <span className="liquid-glass__content">{children}</span>
 
       {supported && maps && (
