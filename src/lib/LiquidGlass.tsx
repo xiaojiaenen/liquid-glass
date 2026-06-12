@@ -162,8 +162,6 @@ export const LiquidGlass = forwardRef<HTMLElement, LiquidGlassProps>(function Li
     >
       <span className="liquid-glass__content">{children}</span>
 
-      {borderGlowEnabled && <span className="border-glow-edge" />}
-
       {supported && maps && (
         <LiquidGlassFilter
           id={filterId}

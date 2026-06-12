@@ -1,20 +1,14 @@
 import { useRef, useCallback, useEffect, type RefObject } from 'react'
 
 export interface BorderGlowOptions {
-  /** 启用边框发光效果 */
+  /** 启用边框反光效果 */
   enabled?: boolean
   /** 边缘敏感度 (0-100)，越小越靠近边缘才触发 */
   edgeSensitivity?: number
-  /** 发光颜色 (HSL 空格分隔，如 "220 90 60") */
-  glowColor?: string
-  /** 发光强度倍率 (0-1+) */
-  glowIntensity?: number
-  /** 锥形扩散角度 (百分比) */
-  coneSpread?: number
-  /** 渐变颜色数组 */
-  colors?: string[]
-  /** 内部填充不透明度 */
-  fillOpacity?: number
+  /** 反光强度 (0-1+) */
+  intensity?: number
+  /** 反光宽度 (px) */
+  width?: number
   /** 自动扫光动画 */
   animated?: boolean
 }
@@ -28,38 +22,6 @@ export interface BorderGlowState {
     style: React.CSSProperties
     className: string
   }
-}
-
-function parseHSL(hslStr: string) {
-  const match = hslStr.match(/([\d.]+)\s*([\d.]+)%?\s*([\d.]+)%?/)
-  if (!match) return { h: 40, s: 80, l: 80 }
-  return { h: parseFloat(match[1]), s: parseFloat(match[2]), l: parseFloat(match[3]) }
-}
-
-function buildGlowVars(glowColor: string, intensity: number) {
-  const { h, s, l } = parseHSL(glowColor)
-  const base = `${h}deg ${s}% ${l}%`
-  const opacities = [100, 60, 50, 40, 30, 20, 10]
-  const keys = ['', '-60', '-50', '-40', '-30', '-20', '-10']
-  const vars: Record<string, string> = {}
-  for (let i = 0; i < opacities.length; i++) {
-    vars[`--glow-color${keys[i]}`] = `hsl(${base} / ${Math.min(opacities[i] * intensity, 100)}%)`
-  }
-  return vars
-}
-
-const GRADIENT_POSITIONS = ['80% 55%', '69% 34%', '8% 6%', '41% 38%', '86% 85%', '82% 18%', '51% 4%']
-const GRADIENT_KEYS = ['--gradient-one', '--gradient-two', '--gradient-three', '--gradient-four', '--gradient-five', '--gradient-six', '--gradient-seven']
-const COLOR_MAP = [0, 1, 2, 0, 1, 2, 1]
-
-function buildGradientVars(colors: string[]) {
-  const vars: Record<string, string> = {}
-  for (let i = 0; i < 7; i++) {
-    const c = colors[Math.min(COLOR_MAP[i], colors.length - 1)]
-    vars[GRADIENT_KEYS[i]] = `radial-gradient(at ${GRADIENT_POSITIONS[i]}, ${c} 0px, transparent 50%)`
-  }
-  vars['--gradient-base'] = `linear-gradient(${colors[0]} 0 100%)`
-  return vars
 }
 
 function easeOutCubic(x: number) { return 1 - Math.pow(1 - x, 3) }
@@ -86,18 +48,15 @@ function animateValue({ start = 0, end = 100, duration = 1000, delay = 0, ease =
 }
 
 /**
- * 为液态玻璃组件添加鼠标跟随边框发光效果。
- * 基于 react-bits 的 BorderGlow 组件实现。
+ * 为液态玻璃组件添加鼠标跟随边框反光效果。
+ * 模拟真实玻璃边缘的反光。
  */
 export function useBorderGlow(options: BorderGlowOptions = {}): BorderGlowState {
   const {
     enabled = true,
-    edgeSensitivity = 30,
-    glowColor = '40 80 80',
-    glowIntensity = 1.0,
-    coneSpread = 25,
-    colors = ['#c084fc', '#f472b6', '#38bdf8'],
-    fillOpacity = 0.5,
+    edgeSensitivity = 40,
+    intensity = 1.0,
+    width = 30,
     animated = false,
   } = options
 
@@ -141,8 +100,8 @@ export function useBorderGlow(options: BorderGlowOptions = {}): BorderGlowState 
     const edge = getEdgeProximity(card, x, y)
     const angle = getCursorAngle(card, x, y)
 
-    card.style.setProperty('--edge-proximity', `${(edge * 100).toFixed(3)}`)
-    card.style.setProperty('--cursor-angle', `${angle.toFixed(3)}deg`)
+    card.style.setProperty('--border-glow-proximity', `${(edge * 100).toFixed(3)}`)
+    card.style.setProperty('--border-glow-angle', `${angle.toFixed(3)}deg`)
   }, [getEdgeProximity, getCursorAngle])
 
   useEffect(() => {
@@ -151,32 +110,27 @@ export function useBorderGlow(options: BorderGlowOptions = {}): BorderGlowState 
     const angleStart = 110
     const angleEnd = 465
     card.classList.add('border-glow-sweep-active')
-    card.style.setProperty('--cursor-angle', `${angleStart}deg`)
+    card.style.setProperty('--border-glow-angle', `${angleStart}deg`)
 
-    animateValue({ duration: 500, onUpdate: v => card.style.setProperty('--edge-proximity', String(v)) })
+    animateValue({ duration: 500, onUpdate: v => card.style.setProperty('--border-glow-proximity', String(v)) })
     animateValue({ ease: easeInCubic, duration: 1500, end: 50, onUpdate: v => {
-      card.style.setProperty('--cursor-angle', `${(angleEnd - angleStart) * (v / 100) + angleStart}deg`)
+      card.style.setProperty('--border-glow-angle', `${(angleEnd - angleStart) * (v / 100) + angleStart}deg`)
     }})
     animateValue({ ease: easeOutCubic, delay: 1500, duration: 2250, start: 50, end: 100, onUpdate: v => {
-      card.style.setProperty('--cursor-angle', `${(angleEnd - angleStart) * (v / 100) + angleStart}deg`)
+      card.style.setProperty('--border-glow-angle', `${(angleEnd - angleStart) * (v / 100) + angleStart}deg`)
     }})
     animateValue({ ease: easeInCubic, delay: 2500, duration: 1500, start: 100, end: 0,
-      onUpdate: v => card.style.setProperty('--edge-proximity', String(v)),
+      onUpdate: v => card.style.setProperty('--border-glow-proximity', String(v)),
       onEnd: () => card.classList.remove('border-glow-sweep-active'),
     })
   }, [animated, enabled])
 
-  const glowVars = enabled ? buildGlowVars(glowColor, glowIntensity) : {}
-  const gradientVars = enabled ? buildGradientVars(colors) : {}
-
   const borderGlowProps = {
     onPointerMove: enabled ? handlePointerMove : () => {},
     style: {
-      '--edge-sensitivity': edgeSensitivity,
-      '--cone-spread': coneSpread,
-      '--fill-opacity': fillOpacity,
-      ...glowVars,
-      ...gradientVars,
+      '--border-glow-sensitivity': edgeSensitivity,
+      '--border-glow-intensity': intensity,
+      '--border-glow-width': `${width}px`,
     } as React.CSSProperties,
     className: enabled ? 'has-border-glow' : '',
   }
